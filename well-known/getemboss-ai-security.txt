@@ -1,0 +1,4 @@
+Contact: mailto:contact@getemboss.ai
+Expires: 2027-09-19T23:35:37.029Z
+Preferred-Languages: en
+Canonical: https://getemboss.ai/.well-known/security.txt

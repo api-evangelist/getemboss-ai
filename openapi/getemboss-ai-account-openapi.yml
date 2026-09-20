@@ -1,0 +1,5070 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /forms/quote:
+    post:
+      summary: Account Quote
+      operationId: account_quote_forms_quote_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_account_quote_forms_quote_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms:
+    post:
+      summary: Create Form
+      operationId: create_form_forms_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_form_forms_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      summary: List Forms
+      operationId: list_forms_forms_get
+      parameters:
+      - name: states
+        in: query
+        required: false
+        schema:
+          enum:
+          - ready
+          - all
+          type: string
+          default: ready
+          title: States
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormsListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}:
+    get:
+      summary: Get Form
+      operationId: get_form_forms__form_id__get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      summary: Delete Form
+      description: 'Spec 2.3: the documents go first, under every policy, then the row is soft
+
+        deleted. A form with work still running answers 409 rather than deleting
+
+        blobs out from under it.'
+      operationId: delete_form_forms__form_id__delete
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/contract:
+    get:
+      summary: Get Contract
+      operationId: get_contract_forms__form_id__contract_get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /usage:
+    get:
+      summary: Get Usage
+      operationId: get_usage_usage_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageResponse'
+  /forms/{form_id}/fillable:
+    get:
+      summary: Get Fillable
+      operationId: get_fillable_forms__form_id__fillable_get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/thumbnail:
+    get:
+      summary: Get Thumbnail
+      operationId: get_thumbnail_forms__form_id__thumbnail_get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /sessions:
+    post:
+      summary: Create Session
+      operationId: create_session_sessions_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /sessions/{sid}:
+    get:
+      summary: Get Session
+      operationId: get_session_sessions__sid__get
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /sessions/{sid}/fields:
+    put:
+      summary: Put Fields
+      operationId: put_fields_sessions__sid__fields_put
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /sessions/{sid}/fill:
+    post:
+      summary: Fill
+      operationId: fill_sessions__sid__fill_post
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /sessions/{sid}/pdf:
+    get:
+      summary: Session Pdf
+      operationId: session_pdf_sessions__sid__pdf_get
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/with-context:
+    post:
+      summary: Create With Context
+      operationId: create_with_context_forms_with_context_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_with_context_forms_with_context_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/with-context:
+    post:
+      summary: Fill Existing With Context
+      description: 'Standalone fill-from-context: fill an already-extracted form the caller
+
+        owns from context. Bills ONE with_context event (no re-extraction). The
+
+        form already exists, so `retention` is accepted for symmetry with the
+
+        other routes and validated, but otherwise ignored: the form''s own policy
+
+        (set at creation) is what governs it.'
+      operationId: fill_existing_with_context_forms__form_id__with_context_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_fill_existing_with_context_forms__form_id__with_context_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/with-context/{job_id}:
+    get:
+      summary: Get With Context
+      operationId: get_with_context_forms_with_context__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/prepare:
+    post:
+      summary: Prepare Existing
+      description: 'Prepare an already-extracted form the caller owns: one with_context event,
+
+        a proposal instead of a rendered PDF. The form already exists, so `retention`
+
+        is accepted for symmetry and validated, but otherwise ignored: the form''s own
+
+        policy (set at creation) is what governs it.'
+      operationId: prepare_existing_forms__form_id__prepare_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_prepare_existing_forms__form_id__prepare_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/prepare:
+    post:
+      summary: Prepare New
+      description: 'Extract a fresh PDF and prepare it in one call: create + with_context.'
+      operationId: prepare_new_forms_prepare_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_prepare_new_forms_prepare_post'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /proposals/{proposal_id}/commit:
+    post:
+      summary: Commit
+      operationId: commit_proposals__proposal_id__commit_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $defs:
+                CommitValue:
+                  description: 'One caller decision. A null value SKIPS the field (a deliberate blank),
+
+                    which is not the same as omitting it (leave whatever the proposal holds).'
+                  properties:
+                    field_id:
+                      title: Field Id
+                      type: integer
+                    value:
+                      title: Value
+                    note:
+                      anyOf:
+                      - type: string
+                      - type: 'null'
+                      title: Note
+                  required:
+                  - field_id
+                  title: CommitValue
+                  type: object
+              properties:
+                values:
+                  default: []
+                  items:
+                    $ref: '#/$defs/CommitValue'
+                  title: Values
+                  type: array
+                confirm:
+                  default: []
+                  items:
+                    type: integer
+                  title: Confirm
+                  type: array
+                policy:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Policy
+                idempotency_key:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Idempotency Key
+                package:
+                  default: false
+                  title: Package
+                  type: boolean
+              title: CommitRequest
+              type: object
+  /proposals/{proposal_id}:
+    get:
+      summary: Get Proposal
+      description: 'The proposal as its holder reads it. Lives here rather than in
+
+        proposals.py because it shares this module''s auth rule exactly: the owner, or
+
+        an anonymous pay-door payer holding a token minted for THIS proposal. That
+
+        second case is why it cannot sit on the proposals router, which app.py mounts
+
+        behind a blanket require_owner.
+
+
+        A token-bearing read gets the token echoed back as commit_token, so the same
+
+        response an owner reads carries, for a payer, the credential they commit with.
+
+        An owner never sees the field: their API key already is their proof.'
+      operationId: get_proposal_proposals__proposal_id__get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /proposals/{proposal_id}/receipt:
+    get:
+      summary: Receipt
+      operationId: receipt_proposals__proposal_id__receipt_get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /proposals/{proposal_id}/pdf:
+    get:
+      summary: Commit Pdf
+      operationId: commit_pdf_proposals__proposal_id__pdf_get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/verify:
+    post:
+      summary: Verify Filled Pdf
+      description: 'Verify a filled PDF the caller already holds against this form''s contract.
+
+
+        Standalone because the caller may have rendered elsewhere, or filled by hand,
+
+        and still wants the machine-readable answer to "is this document done". No
+
+        model call: the same extraction.verify.check a commit runs, on a state read
+
+        back out of the uploaded document.
+
+
+        This router carries no require_owner dependency (commit authorises itself, so
+
+        it must accept proposal tokens), so this route calls require_owner directly.
+
+        Verify is owner-only: there is no proposal here to bear a token.
+
+
+        request.state.owner already set is treated as pre-authorised, same as
+
+        _authorise above: MCP''s owner_request and A2A''s _fake_request splice a
+
+        resolved owner onto a request-shaped object before calling this route
+
+        function directly and carry no real bearer credentials of their own for
+
+        require_owner to read.'
+      operationId: verify_filled_pdf_forms__form_id__verify_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_verify_filled_pdf_forms__form_id__verify_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /proposals/{proposal_id}/attachments:
+    post:
+      summary: Add Attachment
+      operationId: add_attachment_proposals__proposal_id__attachments_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_add_attachment_proposals__proposal_id__attachments_post'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /proposals/{proposal_id}/attachments/{n}:
+    delete:
+      summary: Remove Attachment
+      operationId: remove_attachment_proposals__proposal_id__attachments__n__delete
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      - name: n
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: N
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/preview-fill:
+    post:
+      summary: Preview Fill
+      operationId: preview_fill_forms__form_id__preview_fill_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          title: Form Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_preview_fill_forms__form_id__preview_fill_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewFillResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/suggest-mapping:
+    post:
+      summary: Suggest Mapping Endpoint
+      operationId: suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MappingSuggestion'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/{form_id}/fill-batch:
+    post:
+      summary: Fill Batch
+      description: 'on_row: optional async (batch_id, row_number, total, result_dict) callback,
+
+        threaded straight into _run_batch (see its own docstring). None for every
+
+        FastAPI-routed call (REST''s own request body has no such field -- this is a
+
+        plain extra kwarg, not a Form()/Body() field, so it is never bound from the
+
+        wire); the A2A executor is the only caller that passes one, by calling this
+
+        function directly as a Python coroutine rather than through routing.
+
+
+        `retention`: the form already exists, so this is accepted for symmetry
+
+        with the other routes and validated, but otherwise ignored: the form''s
+
+        own policy (set at creation) is what governs it. Checked with
+
+        isinstance(str), not `is not None`: fill_batch is also called directly as
+
+        a plain coroutine (quotes.py''s execute_quote resume, accounts.py''s
+
+        admin_fill_batch), bypassing FastAPI''s own request parsing -- there, an
+
+        omitted `retention` kwarg leaves the parameter at its literal default,
+
+        the Form(None) marker object itself, not None (mirrors why `on_row`
+
+        above uses a plain None default rather than a Form marker).'
+      operationId: fill_batch_forms__form_id__fill_batch_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      - name: on_row
+        in: query
+        required: false
+        schema:
+          title: On Row
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_fill_batch_forms__form_id__fill_batch_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/fill-batch/{batch_id}:
+    get:
+      summary: Batch Status
+      operationId: batch_status_forms_fill_batch__batch_id__get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/fill-batch/{batch_id}/rows/{n}/pdf:
+    get:
+      summary: Batch Row Pdf
+      operationId: batch_row_pdf_forms_fill_batch__batch_id__rows__n__pdf_get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      - name: n
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: N
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /forms/fill-batch/{batch_id}/zip:
+    get:
+      summary: Batch Zip
+      operationId: batch_zip_forms_fill_batch__batch_id__zip_get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /fax:
+    post:
+      summary: Send Fax
+      description: 'POST /fax: multipart (`to` + one or more PDF `files`, sent as one fax) or
+
+        JSON ({"to", then exactly one of "job_id", "form_id", "pdf_url",
+
+        "pdf_base64"}). JSON references resolve to the owner''s stored PDF through
+
+        service/fax_source.py; multipart bytes go straight to the fax service.
+
+
+        Honours Idempotency-Key (plan 2 task 5): a client-side retry with the same
+
+        key replays the original job''s response instead of submitting a second
+
+        fax. Independent of (and in addition to) create_fax_job''s own artifact+
+
+        destination dedupe window, which catches a retry that used a fresh
+
+        Idempotency-Key or none at all.'
+      operationId: send_fax_fax_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                to:
+                  type: string
+                  description: Destination fax number, in E.164 form.
+                files:
+                  items:
+                    type: string
+                    format: binary
+                  type: array
+                  description: One or more PDFs, faxed as a single combined document.
+              type: object
+              required:
+              - to
+              - files
+          application/json:
+            schema:
+              properties:
+                to:
+                  type: string
+                  description: Destination fax number, in E.164 form.
+                sources:
+                  items:
+                    properties:
+                      artifact_id:
+                        type: string
+                        description: A prior artifact's id.
+                      artifact_token:
+                        type: string
+                        description: The capability token for an anonymous artifact_id.
+                      pages:
+                        type: string
+                        description: An optional page range, such as 1-3,7.
+                    type: object
+                    required:
+                    - artifact_id
+                  type: array
+                  maxItems: 20
+                  description: A list of prior artifacts, faxed together as one packet.
+                artifact_id:
+                  type: string
+                  description: A prior artifact's id.
+                artifact_token:
+                  type: string
+                  description: The capability token for an anonymous artifact_id.
+                job_id:
+                  type: string
+                  description: A ready context/fill job's id.
+                form_id:
+                  type: string
+                  description: A ready form's id.
+                pdf_url:
+                  type: string
+                  description: A URL to fetch the PDF from.
+                pdf_base64:
+                  type: string
+                  description: The PDF, base64-encoded.
+              type: object
+              required:
+              - to
+              description: Send exactly one of sources, artifact_id, job_id, form_id, pdf_url, or pdf_base64; it resolves to the caller's stored PDF.
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /fax/{job_id}:
+    get:
+      summary: Get Fax
+      operationId: get_fax_fax__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /artifacts/{artifact_id}:
+    get:
+      summary: Get Artifact
+      operationId: get_artifact_artifacts__artifact_id__get
+      parameters:
+      - name: artifact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Artifact Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /artifacts/{artifact_id}/content:
+    get:
+      summary: Get Artifact Content
+      operationId: get_artifact_content_artifacts__artifact_id__content_get
+      parameters:
+      - name: artifact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Artifact Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /utilities/{skill}:
+    post:
+      summary: Run a free PDF utility
+      description: 'POST /utilities/{skill}: run one of the free PDF utilities (compose_pdf,
+
+        merge_pdf, extract_pages, delete_pages, reorder_pages, rotate_pages,
+
+        inspect_pdf) synchronously against prior artifacts, returning the result
+
+        inline. Account callers authenticate with a Bearer key; anonymous callers
+
+        send no credential and a valid artifact_token on every source.'
+      operationId: run_utility_utilities__skill__post
+      parameters:
+      - name: skill
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Skill
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: compose_pdf and merge_pdf take sources; extract_pages, delete_pages, rotate_pages, reorder_pages, and inspect_pdf take a single artifact_id (plus pages for extract_pages/delete_pages, order for reorder_pages, or rotations for rotate_pages).
+              properties:
+                sources:
+                  type: array
+                  maxItems: 20
+                  description: 'For compose_pdf and merge_pdf: a list of prior artifacts, combined into one PDF (merge_pdf takes whole files: no pages or rotate).'
+                  items:
+                    type: object
+                    properties:
+                      artifact_id:
+                        type: string
+                        description: A prior artifact's id.
+                      artifact_token:
+                        type: string
+                        description: The capability token for an anonymous artifact_id.
+                      pages:
+                        type: string
+                        description: An optional page range, such as 1-3,7.
+                      rotate:
+                        type: integer
+                        enum:
+                        - 90
+                        - 180
+                        - 270
+                        description: An optional rotation, in degrees.
+                    required:
+                    - artifact_id
+                artifact_id:
+                  type: string
+                  description: 'For the single-source skills (extract_pages, delete_pages, reorder_pages, rotate_pages, inspect_pdf): the artifact to operate on.'
+                artifact_token:
+                  type: string
+                  description: 'For pay-per-call callers, alongside artifact_id: the capability token for an anonymous artifact_id.'
+                pages:
+                  type: string
+                  description: A selection like 1-3,7 (1-based); required by extract_pages and delete_pages.
+                order:
+                  type: array
+                  items:
+                    type: integer
+                  description: 'reorder_pages: every page number exactly once.'
+                rotations:
+                  type: array
+                  description: 'rotate_pages: a list of page-range/degree pairs.'
+                  items:
+                    type: object
+                    properties:
+                      pages:
+                        type: string
+                        description: A selection like 1-3,7.
+                      degrees:
+                        type: integer
+                        enum:
+                        - 90
+                        - 180
+                        - 270
+      security: []
+  /forms/read:
+    post:
+      summary: Read Form
+      operationId: read_form_forms_read_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_read_form_forms_read_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /app/login:
+    post:
+      summary: App Login
+      operationId: app_login_app_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppLoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /app/refresh:
+    post:
+      summary: App Refresh
+      operationId: app_refresh_app_refresh_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppRefreshRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /app/logout:
+    post:
+      summary: App Logout
+      operationId: app_logout_app_logout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppLogoutRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /users:
+    post:
+      summary: Signup
+      operationId: signup_users_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/verify:
+    post:
+      summary: Verify
+      operationId: verify_users_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/login:
+    post:
+      summary: Login
+      operationId: login_users_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/verify/resend:
+    post:
+      summary: Verify Resend
+      description: 'Reissue the verification code and link for an unverified account. The
+
+        answer is {"ok": true} for every email; the token fields are present only
+
+        when there is something to send, so the endpoint cannot be used to probe
+
+        which addresses are registered (spec 4.3).'
+      operationId: verify_resend_users_verify_resend_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/login/token:
+    post:
+      summary: Login With Token
+      description: 'Redeem the one-time login token /users/verify handed out (spec 5.3):
+
+        the site''s credentials provider calls this from the /verify page so the
+
+        person who clicked the emailed link is signed in without a password.'
+      operationId: login_with_token_users_login_token_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginTokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/reset/request:
+    post:
+      summary: Reset Request
+      operationId: reset_request_users_reset_request_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/reset/confirm:
+    post:
+      summary: Reset Confirm
+      operationId: reset_confirm_users_reset_confirm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetConfirmBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /keys:
+    post:
+      summary: Create Key
+      operationId: create_key_keys_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateKeyBody'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      summary: List Keys
+      operationId: list_keys_keys_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /keys/{key_id}:
+    delete:
+      summary: Delete Key
+      operationId: delete_key_keys__key_id__delete
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      summary: Patch Key
+      operationId: patch_key_keys__key_id__patch
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyPatchBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/account:
+    get:
+      summary: Admin Get Account
+      description: 'The account page''s own row: who this owner is, and the retention default
+
+        every form they create afterwards inherits (spec section 3). Admin-gated with
+
+        an owner param, like every other route on this router; the dashboard reads its
+
+        signed-in user''s owner here.'
+      operationId: admin_get_account_admin_account_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      summary: Admin Patch Account
+      description: 'Flip the account default. Affects forms created afterwards only: an
+
+        existing form keeps the policy it was created with.'
+      operationId: admin_patch_account_admin_account_patch
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/usage:
+    get:
+      summary: Admin Usage
+      description: 'Admin-only: usage for an arbitrary owner (the dashboard reads its logged-in
+
+        user''s owner here). Whole router is behind require_admin. Mirrors the product
+
+        GET /usage shape, but takes owner as a query param instead of the api-key state.'
+      operationId: admin_usage_admin_usage_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/usage/detail:
+    get:
+      summary: Admin Usage Detail
+      operationId: admin_usage_detail_admin_usage_detail_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      - name: month
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Month
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/billing/breakdown:
+    get:
+      summary: Admin Billing Breakdown
+      operationId: admin_billing_breakdown_admin_billing_breakdown_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      - name: month
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Month
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingBreakdownResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms:
+    get:
+      summary: Admin Forms
+      operationId: admin_forms_admin_forms_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Q
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 12
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormsListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      summary: Admin Create Form
+      description: 'Admin act-as-owner create-fillable-form (the batch-fill web page). Delegates to
+
+        the owner-scoped forms.create_form, which reads request.state.owner for billing +
+
+        ownership.'
+      operationId: admin_create_form_admin_forms_post
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_admin_create_form_admin_forms_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/batch-runs:
+    get:
+      summary: Admin Batch Runs
+      operationId: admin_batch_runs_admin_forms_batch_runs_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchRunsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/batch-counts:
+    get:
+      summary: Admin Batch Counts
+      operationId: admin_batch_counts_admin_forms_batch_counts_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchCountsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/layouts:
+    get:
+      summary: Admin Layouts
+      description: 'The reuse readout for shared form_layouts rows: kind, hits, page count,
+
+        match_baseline, title and timestamps. The table carries no owner or form
+
+        id, so there is nothing here to scope or leak. match_baseline is the
+
+        per-row loose bar (spec 1.4): an operator reading a row with many
+
+        loose_hits and a low baseline is looking at the one shape of row worth
+
+        checking by hand.'
+      operationId: admin_layouts_admin_layouts_get
+      parameters:
+      - name: top
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Top
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/{form_id}:
+    delete:
+      summary: Admin Delete Form
+      operationId: admin_delete_form_admin_forms__form_id__delete
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      summary: Admin Form Status
+      description: 'Admin act-as-owner form status poll. Delegates to owner-scoped forms.get_form
+
+        (which owner-scopes via request.state.owner / owned_or_404).'
+      operationId: admin_form_status_admin_forms__form_id__get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/{form_id}/thumbnail:
+    get:
+      summary: Admin Form Thumbnail
+      operationId: admin_form_thumbnail_admin_forms__form_id__thumbnail_get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Form Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/usage/trend:
+    get:
+      summary: Admin Usage Trend
+      operationId: admin_usage_trend_admin_usage_trend_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 30
+          title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageTrendResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/usage/events:
+    get:
+      summary: Admin Usage Events
+      operationId: admin_usage_events_admin_usage_events_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      - name: range
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 24h
+          title: Range
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Page Size
+      - name: kinds
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Kinds
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/with-context:
+    post:
+      summary: Admin Create With Context
+      description: 'Admin act-as-owner context fill (the /fill web page). Runs the owner''s
+
+        billing gate; meters one with_context event for that owner.'
+      operationId: admin_create_with_context_admin_forms_with_context_post
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_admin_create_with_context_admin_forms_with_context_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/with-context/{job_id}:
+    get:
+      summary: Admin Context Status
+      operationId: admin_context_status_admin_forms_with_context__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/with-context/{job_id}/render:
+    post:
+      summary: Admin Context Render
+      operationId: admin_context_render_admin_forms_with_context__job_id__render_post
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/with-context/{job_id}/pdf:
+    get:
+      summary: Admin Context Pdf
+      operationId: admin_context_pdf_admin_forms_with_context__job_id__pdf_get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/{form_id}/with-context:
+    post:
+      summary: Admin Fill Existing
+      description: 'Admin act-as-owner standalone fill: fill an existing ready form owned by
+
+        `owner` from context. Bills one with_context event.'
+      operationId: admin_fill_existing_admin_forms__form_id__with_context_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_admin_fill_existing_admin_forms__form_id__with_context_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/web-token/limits:
+    get:
+      summary: Admin Web Token Limits
+      description: The engine's upload limits, so the website never hardcodes a number.
+      operationId: admin_web_token_limits_admin_web_token_limits_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebTokenLimitsResponse'
+  /admin/web-token:
+    post:
+      summary: Admin Mint Web Token
+      description: 'Mint a 15-minute, refresh-less web token so the signed-in browser can
+
+        upload straight to the owner routes (spec 2026-09-09-web-direct-upload).
+
+        The plaintext is returned once and never logged.'
+      operationId: admin_mint_web_token_admin_web_token_post
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/{form_id}/suggest-mapping:
+    post:
+      summary: Admin Suggest Mapping
+      description: 'Admin act-as-owner spreadsheet->field mapping suggestion (the batch-fill web
+
+        page). Delegates to the owner-scoped batch.suggest_mapping_endpoint, which reads
+
+        request.state.owner for owner-scoping + with_context metering. admin_acting skips
+
+        the anti-abuse rate limit; billing still applies. This 2-segment route cannot be
+
+        shadowed by the 1-segment /admin/forms/{form_id} above.'
+      operationId: admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MappingSuggestion'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/{form_id}/fill-batch:
+    post:
+      summary: Admin Fill Batch
+      description: 'Admin act-as-owner batch fill (the batch-fill web page). Delegates to the
+
+        owner-scoped batch.fill_batch, which reads request.state.owner for owner-scoping
+
+        (owned_or_404), billing (standard_fill per row), and per-row metering. admin_acting
+
+        skips the anti-abuse rate limit; billing still applies. This 2-segment route cannot
+
+        be shadowed by the 1-segment /admin/forms/{form_id} above.'
+      operationId: admin_fill_batch_admin_forms__form_id__fill_batch_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_admin_fill_batch_admin_forms__form_id__fill_batch_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/fill-batch/{batch_id}:
+    get:
+      summary: Admin Batch Status
+      description: 'Admin act-as-owner batch-fill status poll (the batch-fill web page). Delegates
+
+        to the owner-scoped batch.batch_status, which owner-scopes via request.state.owner
+
+        (owned_or_404). `fill-batch` is a static segment so this cannot be shadowed by the
+
+        1-segment /admin/forms/{form_id} route above. No rate limit/billing on this GET;
+
+        admin_acting set for uniformity with the other admin act-as-owner routes.'
+      operationId: admin_batch_status_admin_forms_fill_batch__batch_id__get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/forms/fill-batch/{batch_id}/zip:
+    get:
+      summary: Admin Batch Zip
+      description: 'Admin act-as-owner batch-fill zip download (the batch-fill web page). Delegates
+
+        to the owner-scoped batch.batch_zip, which owner-scopes via request.state.owner
+
+        (owned_or_404). `fill-batch` is a static segment so this cannot be shadowed by the
+
+        1-segment /admin/forms/{form_id} route above. No rate limit/billing on this GET;
+
+        admin_acting set for uniformity with the other admin act-as-owner routes.'
+      operationId: admin_batch_zip_admin_forms_fill_batch__batch_id__zip_get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/billing/setup-intent:
+    post:
+      summary: Admin Billing Setup Intent
+      operationId: admin_billing_setup_intent_admin_billing_setup_intent_post
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetupIntentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/billing/payment-method:
+    get:
+      summary: Admin Billing Payment Method
+      operationId: admin_billing_payment_method_admin_billing_payment_method_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethodResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/billing/invoices:
+    get:
+      summary: Admin Billing Invoices
+      operationId: admin_billing_invoices_admin_billing_invoices_get
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoicesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/billing/confirm:
+    post:
+      summary: Admin Billing Confirm
+      operationId: admin_billing_confirm_admin_billing_confirm_post
+      parameters:
+      - name: owner
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Owner
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethodResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/billing/run-invoicing:
+    post:
+      summary: Admin Run Invoicing
+      description: 'Admin-gated monthly billing run. Idempotent (billing_runs claim) + safe by default
+
+        (preview unless BILLING_ENABLED and not dry_run). Per-owner isolation: one owner''s error
+
+        becomes {status:''error''} and the batch continues.'
+      operationId: admin_run_invoicing_admin_billing_run_invoicing_post
+      parameters:
+      - name: period
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Period
+      - name: owner
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner
+      - name: dry_run
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Dry Run
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/nudges/run:
+    post:
+      summary: Admin Run Nudges
+      description: 'Admin-gated hourly nudge run. Idempotent per (owner, kind) via nudges_sent; dry_run
+
+        lists who would be emailed and claims nothing. Also doubles as the nightly maintenance
+
+        tick: purges expired OAuth rows (download links, codes, stale pending grants),
+
+        terminal a2a_tasks rows older than 30 days (the A2A server''s own retention policy,
+
+        service/a2a_store.py''s purge_expired), expired x402 quotes plus their staged
+
+        R2 objects (service/quotes.py''s purge_expired_quotes), and ownerless proposals
+
+        that expired before their caller ever committed (service/commits.py''s
+
+        auto_commit_expired, so a paid anonymous prepare still ends in a file under
+
+        its named policy) before the nudge pass runs, each step best-effort so one
+
+        purge failure never blocks the others or nudges.'
+      operationId: admin_run_nudges_admin_nudges_run_post
+      parameters:
+      - name: owner
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner
+      - name: dry_run
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Dry Run
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/retention/sweep:
+    post:
+      summary: Admin Retention Sweep
+      description: 'Admin-gated maintenance tick (spec 2.5 retention; send_fax spec section 9):
+
+        called every ten minutes by the emboss-retention-cron Railway service. Runs the
+
+        ephemeral-retention sweep, then the fax timeout sweep and the fax artifact
+
+        reaper, each fail-soft. dry_run lists what is due and touches nothing.'
+      operationId: admin_retention_sweep_admin_retention_sweep_post
+      parameters:
+      - name: dry_run
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Dry Run
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 200
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/library/{slug}/store:
+    post:
+      summary: Admin Library Store
+      description: 'Store one fetched copy. Called by scripts/seed_library.py, which does the
+
+        fetching: this process never reaches a government site, so the network
+
+        policy for the seed lives in one script rather than in the service.
+
+
+        `page_count` is ACCEPTED AND IGNORED. The seed script still sends it, so
+
+        dropping the field would 422 a caller that is otherwise correct, but the
+
+        route parses the bytes itself and stores what it read. The only two facts
+
+        the caller supplies that this route trusts are the slug and the revision
+
+        label, and the revision is a label for a person, never a decision input.'
+      operationId: admin_library_store_admin_library__slug__store_post
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_admin_library_store_admin_library__slug__store_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/library/check:
+    post:
+      summary: Admin Library Check
+      description: 'The weekly freshness check. Re-fetches every catalogue URL, compares the
+
+        hash with the active row, writes one library_checks row each, and changes
+
+        NOTHING that is served.'
+      operationId: admin_library_check_admin_library_check_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /admin/library:
+    get:
+      summary: Admin Library
+      description: 'Every catalogue form with its active revision and last check status. A
+
+        slug that has never been seeded shows a null revision, which is the readout
+
+        that says a seed run is owed.'
+      operationId: admin_library_admin_library_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /admin/library/misses:
+    get:
+      summary: Admin Library Misses
+      description: 'The searches that found nothing, most frequent first: the list of forms
+
+        people wanted that the library does not have.'
+      operationId: admin_library_misses_admin_library_misses_get
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 30
+          title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/library/{slug}/accept:
+    post:
+      summary: Admin Library Accept
+      description: 'Accept a changed form: fetch again, store the new copy, make it active,
+
+        run make-fillable on it, and keep the old row inactive rather than deleting
+
+        it, so a form filed against the previous revision can still be explained.'
+      operationId: admin_library_accept_admin_library__slug__accept_post
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /library:
+    get:
+      summary: Get Library
+      description: 'With no query: every ACTIVE form, public, no auth. Only forms whose
+
+        bytes are actually stored are listed, because a caller cannot create from
+
+        a catalogue entry that has never been seeded.
+
+
+        With a query: the same rows filtered by service/library.py''s search rule,
+
+        owner auth, and every result or miss is counted. A miss is the library''s
+
+        most useful signal, so it is recorded with the query itself.'
+      operationId: get_library_library_get
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Q
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /pricing:
+    get:
+      summary: Public Price List
+      operationId: public_price_list_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /pay:
+    get:
+      summary: Pay Index
+      description: 'A small JSON index of the paid ops and their docs -- a discovery
+
+        anchor for mppx validate and curious agents, per the design doc''s
+
+        Discovery section.'
+      operationId: pay_index_pay_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /pay/openapi.json:
+    get:
+      summary: Pay Openapi Manifest
+      description: 'The MPP pay manifest (MPPscan shape) at the origin ROOT, which is the
+
+        only location discovery tools read; /pay/openapi.json is an alias kept for
+
+        links already published. FastAPI''s own schema is at /internal/openapi.json.
+
+        Imported lazily: pay_manifest reads _OPS_INDEX from here.'
+      operationId: pay_openapi_manifest_pay_openapi_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /openapi.json:
+    get:
+      summary: Pay Openapi Manifest
+      description: 'The MPP pay manifest (MPPscan shape) at the origin ROOT, which is the
+
+        only location discovery tools read; /pay/openapi.json is an alias kept for
+
+        links already published. FastAPI''s own schema is at /internal/openapi.json.
+
+        Imported lazily: pay_manifest reads _OPS_INDEX from here.'
+      operationId: pay_openapi_manifest_openapi_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /pay/llms.txt:
+    get:
+      summary: Pay Llms Txt
+      description: Floor-plus-pointer llms.txt for the pay door (from-prices + links).
+      operationId: pay_llms_txt_pay_llms_txt_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /pay/pricing:
+    get:
+      summary: Pay Pricing Alias
+      description: The public price list beside /pay/quote; same body as GET /pricing.
+      operationId: pay_pricing_alias_pay_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /pay/quote:
+    post:
+      summary: Pay Quote
+      description: 'Free, stateless inspect-before-pay: page count, whether the PDF is
+
+        already fillable, and the exact price of every op for THIS PDF, computed
+
+        with the same engine function the 402 uses. No quote row, no staging.
+
+        Shares the per-IP quote throttle with the 402 path.'
+      operationId: pay_quote_pay_quote_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_pay_quote_pay_quote_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /pay/{op}:
+    post:
+      summary: Pay
+      description: 'Thin wrapper: catches ANY HTTPException raised anywhere in this
+
+        door''s call graph (quotes.claim_quote''s 404/409/410, quotes.execute_quote''s
+
+        post-settle failure re-raise, auth.enforce_throttle''s 429, this module''s
+
+        own op-name 404) and normalizes it to the SAME Problem Details shape
+
+        every other rejection on this door already returns, rather than letting
+
+        it escape as FastAPI''s default {"detail": ...} JSON body -- see
+
+        _http_exception_to_problem''s own docstring (Fix round 1). A JSON content
+
+        type takes the pay_body branch; multipart is unchanged.'
+      operationId: pay_pay__op__post
+      parameters:
+      - name: op
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Op
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_pay_pay__op__post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /pay/jobs/{job_id}:
+    get:
+      summary: Pay Job Status
+      description: 'Free poll: token = HMAC(job_id, server secret) minted in the 202. No
+
+        payment, no auth account -- per the design doc''s retry step 6. Every
+
+        rejection here also normalizes through _http_exception_to_problem (Fix
+
+        round 1), for the same consistency reason as pay()''s own wrapper --
+
+        Problem Details across the whole /pay* surface, not just POST /pay/{op}.'
+      operationId: pay_job_status_pay_jobs__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Job Id
+      - name: token
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /.well-known/oauth-authorization-server:
+    get:
+      summary: As Metadata
+      operationId: as_metadata__well_known_oauth_authorization_server_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /.well-known/oauth-protected-resource/mcp:
+    get:
+      summary: Rs Metadata
+      operationId: rs_metadata__well_known_oauth_protected_resource_mcp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /.well-known/{_rest}:
+    options:
+      summary: Preflight
+      operationId: preflight__well_known___rest__options
+      parameters:
+      - name: _rest
+        in: path
+        required: true
+        schema:
+          type: string
+          title: ' Rest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /oauth/{_rest}:
+    options:
+      summary: Preflight
+      operationId: preflight_oauth___rest__options
+      parameters:
+      - name: _rest
+        in: path
+        required: true
+        schema:
+          type: string
+          title: ' Rest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /oauth/register:
+    post:
+      summary: Register
+      operationId: register_oauth_register_post
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /oauth/authorize:
+    get:
+      summary: Authorize
+      operationId: authorize_oauth_authorize_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /oauth/token:
+    post:
+      summary: Token
+      operationId: token_oauth_token_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /oauth/revoke:
+    post:
+      summary: Revoke
+      operationId: revoke_oauth_revoke_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /admin/oauth/pending/{pid}:
+    get:
+      summary: Pending
+      operationId: pending_admin_oauth_pending__pid__get
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Pid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/oauth/consent:
+    post:
+      summary: Consent
+      operationId: consent_admin_oauth_consent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/oauth/grants:
+    get:
+      summary: Grants
+      operationId: grants_admin_oauth_grants_get
+      parameters:
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/oauth/clients:
+    get:
+      summary: Clients Since
+      description: 'Registrations since a date (default seven days), for the acquisition
+
+        report: which directories, gateways and reviewers have connected. Only
+
+        names, sites, redirect hosts, source, time and a grant count leave.'
+      operationId: clients_since_admin_oauth_clients_get
+      parameters:
+      - name: since
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Since
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/oauth/grants/{gid}:
+    delete:
+      summary: Revoke Grant
+      operationId: revoke_grant_admin_oauth_grants__gid__delete
+      parameters:
+      - name: gid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Gid
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /d/{token}:
+    get:
+      summary: Redeem
+      operationId: redeem_d__token__get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /stripe/webhook:
+    post:
+      summary: Stripe Webhook
+      operationId: stripe_webhook_stripe_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /webhooks/fax:
+    post:
+      summary: Fax Webhook
+      operationId: fax_webhook_webhooks_fax_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /health:
+    get:
+      summary: Health
+      description: 'Liveness probe: confirms the process is up. Returns no backend or model
+
+        details (a deploy health check only needs a 200).'
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+components:
+  schemas:
+    ActivityEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        created_at:
+          type: string
+          title: Created At
+        kind:
+          type: string
+          title: Kind
+        key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Id
+        key_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Label
+        pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Pages
+        context_pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Context Pages
+        form_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Id
+      type: object
+      required:
+      - id
+      - created_at
+      - kind
+      - key_id
+      - key_label
+      - pages
+      - context_pages
+      - form_id
+      title: ActivityEvent
+    ActivityResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/ActivityEvent'
+          type: array
+          title: Events
+        total_count:
+          type: integer
+          title: Total Count
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - events
+      - total_count
+      - page
+      - page_size
+      title: ActivityResponse
+    AppLoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        device_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Label
+      type: object
+      required:
+      - email
+      - password
+      title: AppLoginRequest
+    AppLogoutRequest:
+      properties:
+        refresh_token:
+          type: string
+          title: Refresh Token
+      type: object
+      required:
+      - refresh_token
+      title: AppLogoutRequest
+    AppRefreshRequest:
+      properties:
+        refresh_token:
+          type: string
+          title: Refresh Token
+      type: object
+      required:
+      - refresh_token
+      title: AppRefreshRequest
+    BatchCountsResponse:
+      properties:
+        counts:
+          additionalProperties:
+            $ref: '#/components/schemas/BatchFormCount'
+          type: object
+          title: Counts
+      type: object
+      required:
+      - counts
+      title: BatchCountsResponse
+    BatchCreated:
+      properties:
+        batch_id:
+          type: string
+          title: Batch Id
+      type: object
+      required:
+      - batch_id
+      title: BatchCreated
+    BatchFormCount:
+      properties:
+        runs:
+          type: integer
+          title: Runs
+        last_status:
+          type: string
+          title: Last Status
+        last_at:
+          type: string
+          title: Last At
+      type: object
+      required:
+      - runs
+      - last_status
+      - last_at
+      title: BatchFormCount
+    BatchRun:
+      properties:
+        id:
+          type: string
+          title: Id
+        form_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Id
+        form_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Name
+        status:
+          type: string
+          title: Status
+        total:
+          type: integer
+          title: Total
+        filled:
+          type: integer
+          title: Filled
+        failed:
+          type: integer
+          title: Failed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        created_at:
+          type: string
+          title: Created At
+      type: object
+      required:
+      - id
+      - status
+      - total
+      - filled
+      - failed
+      - created_at
+      title: BatchRun
+    BatchRunsResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/BatchRun'
+          type: array
+          title: Runs
+        total_count:
+          type: integer
+          title: Total Count
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - runs
+      - total_count
+      - page_size
+      title: BatchRunsResponse
+    BatchStatus:
+      properties:
+        status:
+          type: string
+          title: Status
+        total:
+          type: integer
+          title: Total
+        filled:
+          type: integer
+          title: Filled
+        failed:
+          type: integer
+          title: Failed
+        results:
+          items: {}
+          type: array
+          title: Results
+          default: []
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+      type: object
+      required:
+      - status
+      - total
+      - filled
+      - failed
+      title: BatchStatus
+    BillingBreakdownResponse:
+      properties:
+        month:
+          type: string
+          title: Month
+        rows:
+          items:
+            $ref: '#/components/schemas/BreakdownRow'
+          type: array
+          title: Rows
+        total_cents:
+          type: integer
+          title: Total Cents
+      type: object
+      required:
+      - month
+      - rows
+      - total_cents
+      title: BillingBreakdownResponse
+    Body_account_quote_forms_quote_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+      type: object
+      required:
+      - file
+      title: Body_account_quote_forms_quote_post
+    Body_add_attachment_proposals__proposal_id__attachments_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        for:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: For
+      type: object
+      required:
+      - file
+      title: Body_add_attachment_proposals__proposal_id__attachments_post
+    Body_admin_create_form_admin_forms_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_admin_create_form_admin_forms_post
+    Body_admin_create_with_context_admin_forms_with_context_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+      type: object
+      required:
+      - file
+      title: Body_admin_create_with_context_admin_forms_with_context_post
+    Body_admin_fill_batch_admin_forms__form_id__fill_batch_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        mapping:
+          type: string
+          title: Mapping
+      type: object
+      required:
+      - file
+      - mapping
+      title: Body_admin_fill_batch_admin_forms__form_id__fill_batch_post
+    Body_admin_fill_existing_admin_forms__form_id__with_context_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+      type: object
+      title: Body_admin_fill_existing_admin_forms__form_id__with_context_post
+    Body_admin_library_store_admin_library__slug__store_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        sha256:
+          type: string
+          title: Sha256
+        revision:
+          type: string
+          title: Revision
+          default: ''
+        page_count:
+          type: integer
+          title: Page Count
+          default: 0
+        make_fillable:
+          type: string
+          title: Make Fillable
+          default: 'true'
+      type: object
+      required:
+      - file
+      - sha256
+      title: Body_admin_library_store_admin_library__slug__store_post
+    Body_admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post
+    Body_create_form_forms_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+        library:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Library
+      type: object
+      title: Body_create_form_forms_post
+    Body_create_with_context_forms_with_context_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+        library:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Library
+      type: object
+      title: Body_create_with_context_forms_with_context_post
+    Body_fill_batch_forms__form_id__fill_batch_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        mapping:
+          type: string
+          title: Mapping
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      required:
+      - file
+      - mapping
+      title: Body_fill_batch_forms__form_id__fill_batch_post
+    Body_fill_existing_with_context_forms__form_id__with_context_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      title: Body_fill_existing_with_context_forms__form_id__with_context_post
+    Body_pay_pay__op__post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        context_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Text
+        context_urls:
+          items:
+            type: string
+          type: array
+          title: Context Urls
+          default: []
+        values:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Values
+        policy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Policy
+        mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mode
+        package:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package
+        to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: To
+      type: object
+      title: Body_pay_pay__op__post
+    Body_pay_quote_pay_quote_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        context_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Text
+        context_urls:
+          items:
+            type: string
+          type: array
+          title: Context Urls
+          default: []
+        values:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Values
+      type: object
+      title: Body_pay_quote_pay_quote_post
+    Body_prepare_existing_forms__form_id__prepare_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      title: Body_prepare_existing_forms__form_id__prepare_post
+    Body_prepare_new_forms_prepare_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      required:
+      - file
+      title: Body_prepare_new_forms_prepare_post
+    Body_preview_fill_forms__form_id__preview_fill_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        locked:
+          type: string
+          title: Locked
+          default: '{}'
+        asked_field_ids:
+          type: string
+          title: Asked Field Ids
+          default: 'null'
+      type: object
+      title: Body_preview_fill_forms__form_id__preview_fill_post
+    Body_read_form_forms_read_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        form_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Id
+      type: object
+      required:
+      - file
+      title: Body_read_form_forms_read_post
+    Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+    Body_verify_filled_pdf_forms__form_id__verify_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_verify_filled_pdf_forms__form_id__verify_post
+    BreakdownRow:
+      properties:
+        kind:
+          type: string
+          title: Kind
+        label:
+          type: string
+          title: Label
+        ops:
+          type: integer
+          title: Ops
+        free_applied:
+          type: integer
+          title: Free Applied
+        included_pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Included Pages
+        additional_pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Additional Pages
+        base_cents:
+          type: integer
+          title: Base Cents
+        additional_cents:
+          type: integer
+          title: Additional Cents
+        total_cents:
+          type: integer
+          title: Total Cents
+      type: object
+      required:
+      - kind
+      - label
+      - ops
+      - free_applied
+      - included_pages
+      - additional_pages
+      - base_cents
+      - additional_cents
+      - total_cents
+      title: BreakdownRow
+    ConsentBody:
+      properties:
+        req:
+          type: string
+          title: Req
+        user_id:
+          type: string
+          title: User Id
+        decision:
+          type: string
+          title: Decision
+      type: object
+      required:
+      - req
+      - user_id
+      - decision
+      title: ConsentBody
+    ContextJobCreated:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+          default: processing
+      type: object
+      required:
+      - job_id
+      title: ContextJobCreated
+    ContextJobStatus:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+        session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Id
+        proposal_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proposal Id
+        result:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Result
+        receipt_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Url
+        pdf_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pdf Url
+        package_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package Url
+        report:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Report
+        error:
+          anyOf:
+          - $ref: '#/components/schemas/ErrorDetail'
+          - type: 'null'
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+        artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact Id
+        artifacts:
+          items: {}
+          type: array
+          title: Artifacts
+          default: []
+      type: object
+      required:
+      - job_id
+      - status
+      title: ContextJobStatus
+    ContractResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        contract:
+          additionalProperties: true
+          type: object
+          title: Contract
+      type: object
+      required:
+      - id
+      - contract
+      title: ContractResponse
+    CreateKeyBody:
+      properties:
+        owner:
+          type: string
+          title: Owner
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+      type: object
+      required:
+      - owner
+      title: CreateKeyBody
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    FieldUpdate:
+      properties:
+        field_id:
+          type: integer
+          title: Field Id
+        value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - field_id
+      - value
+      title: FieldUpdate
+    FieldsRequest:
+      properties:
+        updates:
+          items:
+            $ref: '#/components/schemas/FieldUpdate'
+          type: array
+          title: Updates
+      type: object
+      required:
+      - updates
+      title: FieldsRequest
+    FormCreated:
+      properties:
+        form_id:
+          type: string
+          title: Form Id
+        status:
+          type: string
+          title: Status
+        library:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Library
+        source_artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Artifact Id
+      type: object
+      required:
+      - form_id
+      - status
+      title: FormCreated
+    FormStatus:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        schema_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Schema Version
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+          default: []
+        reused_layout:
+          type: boolean
+          title: Reused Layout
+          default: false
+        library:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Library
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+        artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact Id
+        source_artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Artifact Id
+      type: object
+      required:
+      - id
+      - status
+      title: FormStatus
+    FormSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          title: Created At
+        has_thumbnail:
+          type: boolean
+          title: Has Thumbnail
+          default: false
+        no_fields:
+          type: boolean
+          title: No Fields
+          default: false
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      title: FormSummary
+    FormsListResponse:
+      properties:
+        forms:
+          items:
+            $ref: '#/components/schemas/FormSummary'
+          type: array
+          title: Forms
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - forms
+      - total
+      - limit
+      - offset
+      title: FormsListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InvoiceRow:
+      properties:
+        period:
+          type: string
+          title: Period
+        amount_cents:
+          type: integer
+          title: Amount Cents
+        status:
+          type: string
+          title: Status
+        hosted_invoice_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hosted Invoice Url
+        invoice_pdf:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Pdf
+      type: object
+      required:
+      - period
+      - amount_cents
+      - status
+      title: InvoiceRow
+    InvoicesResponse:
+      properties:
+        invoices:
+          items:
+            $ref: '#/components/schemas/InvoiceRow'
+          type: array
+          title: Invoices
+      type: object
+      required:
+      - invoices
+      title: InvoicesResponse
+    KeyPatchBody:
+      properties:
+        action:
+          anyOf:
+          - type: string
+            enum:
+            - enable
+            - disable
+          - type: 'null'
+          title: Action
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+      type: object
+      title: KeyPatchBody
+    LoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginRequest
+    LoginTokenRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        login_token:
+          type: string
+          title: Login Token
+      type: object
+      required:
+      - email
+      - login_token
+      title: LoginTokenRequest
+    MappingSuggestion:
+      properties:
+        mapping:
+          additionalProperties: true
+          type: object
+          title: Mapping
+        unmapped_columns:
+          items:
+            type: string
+          type: array
+          title: Unmapped Columns
+          default: []
+      type: object
+      required:
+      - mapping
+      title: MappingSuggestion
+    PaymentMethodResponse:
+      properties:
+        has_payment_method:
+          type: boolean
+          title: Has Payment Method
+        brand:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Brand
+        last4:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last4
+      type: object
+      required:
+      - has_payment_method
+      title: PaymentMethodResponse
+    PreviewFillResponse:
+      properties:
+        filled:
+          items: {}
+          type: array
+          title: Filled
+          default: []
+        changed:
+          items: {}
+          type: array
+          title: Changed
+          default: []
+        photo_notes:
+          items: {}
+          type: array
+          title: Photo Notes
+          default: []
+        gap_topics:
+          items: {}
+          type: array
+          title: Gap Topics
+          default: []
+        directive:
+          type: string
+          title: Directive
+          default: ask_gap
+      type: object
+      title: PreviewFillResponse
+    ProposalResponse:
+      properties:
+        proposal_id:
+          type: string
+          title: Proposal Id
+        form_id:
+          type: string
+          title: Form Id
+        status:
+          type: string
+          title: Status
+        policy:
+          type: string
+          title: Policy
+        mode:
+          type: string
+          title: Mode
+        expires_at:
+          type: string
+          title: Expires At
+        fields:
+          items: {}
+          type: array
+          title: Fields
+        questions:
+          items: {}
+          type: array
+          title: Questions
+        confirmations:
+          items: {}
+          type: array
+          title: Confirmations
+          default: []
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        attachments:
+          items: {}
+          type: array
+          title: Attachments
+          default: []
+        summary:
+          additionalProperties: true
+          type: object
+          title: Summary
+        error:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Error
+        commit_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Commit Token
+        package_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package Url
+      type: object
+      required:
+      - proposal_id
+      - form_id
+      - status
+      - policy
+      - mode
+      - expires_at
+      - fields
+      - questions
+      - requirements
+      - summary
+      title: ProposalResponse
+      description: 'The agent-facing view of a proposal: per-field states with evidence, the
+
+        questions still worth asking, what the form needs beyond values, and counts.'
+    ResendRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - turnstile_token
+      title: ResendRequest
+    ResetConfirmBody:
+      properties:
+        token:
+          type: string
+          title: Token
+        new_password:
+          type: string
+          title: New Password
+      type: object
+      required:
+      - token
+      - new_password
+      title: ResetConfirmBody
+    ResetRequestBody:
+      properties:
+        email:
+          type: string
+          title: Email
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - turnstile_token
+      title: ResetRequestBody
+    Retention:
+      properties:
+        policy:
+          type: string
+          title: Policy
+        documents_deleted_after:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Documents Deleted After
+        documents_deleted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Documents Deleted At
+      type: object
+      required:
+      - policy
+      title: Retention
+    SessionCreate:
+      properties:
+        form_id:
+          type: string
+          title: Form Id
+      type: object
+      required:
+      - form_id
+      title: SessionCreate
+    SetupIntentResponse:
+      properties:
+        client_secret:
+          type: string
+          title: Client Secret
+      type: object
+      required:
+      - client_secret
+      title: SetupIntentResponse
+    SignupRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - password
+      - turnstile_token
+      title: SignupRequest
+    UploadLimits:
+      properties:
+        max_upload_bytes:
+          type: integer
+          title: Max Upload Bytes
+        max_request_bytes:
+          type: integer
+          title: Max Request Bytes
+        max_context_files:
+          type: integer
+          title: Max Context Files
+      type: object
+      required:
+      - max_upload_bytes
+      - max_request_bytes
+      - max_context_files
+      title: UploadLimits
+    UsageCounts:
+      properties:
+        create:
+          type: integer
+          title: Create
+          default: 0
+        with_context:
+          type: integer
+          title: With Context
+          default: 0
+        standard_fill:
+          type: integer
+          title: Standard Fill
+          default: 0
+        verify:
+          type: integer
+          title: Verify
+          default: 0
+        read:
+          type: integer
+          title: Read
+          default: 0
+        package:
+          type: integer
+          title: Package
+          default: 0
+        send_fax:
+          type: integer
+          title: Send Fax
+          default: 0
+        utility:
+          type: integer
+          title: Utility
+          default: 0
+      type: object
+      title: UsageCounts
+      description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
+    UsageDayRow:
+      properties:
+        date:
+          type: string
+          title: Date
+        create:
+          type: integer
+          title: Create
+          default: 0
+        with_context:
+          type: integer
+          title: With Context
+          default: 0
+        standard_fill:
+          type: integer
+          title: Standard Fill
+          default: 0
+        verify:
+          type: integer
+          title: Verify
+          default: 0
+      type: object
+      required:
+      - date
+      title: UsageDayRow
+    UsageDetailResponse:
+      properties:
+        month:
+          type: string
+          title: Month
+        by_day:
+          items:
+            $ref: '#/components/schemas/UsageDayRow'
+          type: array
+          title: By Day
+        by_kind:
+          $ref: '#/components/schemas/UsageCounts'
+        by_key:
+          items:
+            $ref: '#/components/schemas/UsageKeyRow'
+          type: array
+          title: By Key
+        month_total:
+          type: integer
+          title: Month Total
+      type: object
+      required:
+      - month
+      - by_day
+      - by_kind
+      - by_key
+      - month_total
+      title: UsageDetailResponse
+    UsageKeyRow:
+      properties:
+        key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Id
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+        last4:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last4
+        counts:
+          $ref: '#/components/schemas/UsageCounts'
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - key_id
+      - label
+      - last4
+      - counts
+      - total
+      title: UsageKeyRow
+    UsageResponse:
+      properties:
+        owner:
+          type: string
+          title: Owner
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        period:
+          type: string
+          title: Period
+        total:
+          $ref: '#/components/schemas/UsageCounts'
+        period_counts:
+          $ref: '#/components/schemas/UsageCounts'
+        total_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        total_ctx_tokens:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_ctx_tokens:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        total_context_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_context_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+      type: object
+      required:
+      - owner
+      - period
+      - total
+      - period_counts
+      title: UsageResponse
+    UsageTrendResponse:
+      properties:
+        by_day:
+          items:
+            $ref: '#/components/schemas/UsageDayRow'
+          type: array
+          title: By Day
+      type: object
+      required:
+      - by_day
+      title: UsageTrendResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VerifyRequest:
+      properties:
+        token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+      type: object
+      title: VerifyRequest
+    WebTokenLimitsResponse:
+      properties:
+        api_base:
+          type: string
+          title: Api Base
+        limits:
+          $ref: '#/components/schemas/UploadLimits'
+      type: object
+      required:
+      - api_base
+      - limits
+      title: WebTokenLimitsResponse
+    WebTokenResponse:
+      properties:
+        api_base:
+          type: string
+          title: Api Base
+        limits:
+          $ref: '#/components/schemas/UploadLimits'
+        access_token:
+          type: string
+          title: Access Token
+        expires_in:
+          type: integer
+          title: Expires In
+      type: object
+      required:
+      - api_base
+      - limits
+      - access_token
+      - expires_in
+      title: WebTokenResponse
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write

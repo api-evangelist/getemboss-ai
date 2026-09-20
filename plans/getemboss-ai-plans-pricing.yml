@@ -1,0 +1,76 @@
+generated: '2026-09-19'
+method: probed
+source: https://api.getemboss.ai/pricing
+docs: https://getemboss.ai/pricing
+effective: '2026-09-07'
+currency: USD
+model: Usage-based, per call, in cents; no subscription, no contracts, no minimums, no per-seat pricing; a monthly free allowance; an anonymous pay-per-call door priced per job.
+plan_count: 3
+summary: >-
+  Read from the machine-readable price list GET https://api.getemboss.ai/pricing (public, cached an hour) and
+  cross-checked against https://getemboss.ai/pricing, which is rendered from the same JSON (the page embeds the
+  identical pricing object). Prices changed on 2026-09-06 (a context fill now includes verification); the list
+  is effective 2026-09-07.
+plans:
+- id: free-monthly-allowance
+  name: Free every month
+  price: 0
+  currency: USD
+  period: month
+  description: Every account gets a monthly allowance with no card on file; add a payment method only when you go past it.
+  included:
+  - 5 forms created
+  - 5 context fills
+  - 5 standard fills
+  - 5 verifications
+  - 5 reads
+  - 5 submission packages
+  limits:
+    page_cap: Each free operation applies only to a document of 5 pages or fewer (free_page_cap 5); context fills count the form and its context documents together.
+    fax: No free faxes (send_fax free_per_month 0).
+    overage: A request past the allowance with no card on file returns 402 (over_free_tier / over_page_cap).
+- id: pay-as-you-go
+  name: Pay per call (account)
+  price: usage
+  currency: USD
+  period: per call
+  description: Billed to the account per operation once the free allowance is used; no minimum, monthly invoicing.
+  entries:
+  - {kind: create, label: Make a PDF fillable (extraction), flat_cents: 5, cap_pages: 5, overage_per_page_cents: 1, note: 'Extract once, store the fillable form, fill as many times as you want paying only per fill.'}
+  - {kind: with_context, label: Context fill (infer answers from documents), flat_cents: 3, cap_pages: 5, overage_per_page_cents: 2, note: 'Form and context pages counted together; includes verification since 2026-09-06.'}
+  - {kind: standard_fill, label: Standard fill (you supply the values), flat_cents: 2, cap_pages: null, overage_per_page_cents: 0, note: Flat, any length.}
+  - {kind: verify, label: Verify a filled form, flat_cents: 1, cap_pages: 5, overage_per_page_cents: 1}
+  - {kind: read, label: Read a filled form back, flat_cents: 1, cap_pages: null, overage_per_page_cents: 0}
+  - {kind: package, label: Submission package, flat_cents: 2, cap_pages: null, overage_per_page_cents: 0}
+  - {kind: send_fax, label: Send a PDF by fax, flat_cents: 0, cap_pages: 0, overage_per_page_cents: 3, note: 'Per transmitted page, billed at delivery; a failed fax is not charged.'}
+  batch_fill:
+    column_mapping: 3 cents per batch (one context fill) — free if you map columns yourself
+    per_row: 2 cents per filled form (one standard fill), any length
+    example: 500 forms from a spreadsheet ≈ 3¢ + 500 × 2¢ ≈ $10.03
+  worked_examples:
+    extraction_by_pages: {1: 5¢, 5: 5¢, 8: 8¢, 10: 10¢, 20: 20¢}
+    context_fill_by_pages: {1: 3¢, 5: 3¢, 10: 13¢, 15: 23¢, 20: 33¢}
+- id: pay-per-call-door
+  name: Pay per job (anonymous, no account)
+  price: usage
+  currency: USD
+  period: per job
+  description: >-
+    Anonymous x402 (USDC on Base, or gasless via Circle Gateway) or MPP (Tempo USDC.e, or a card via Stripe
+    Shared Payment Tokens) payment per operation on https://api.getemboss.ai/pay; always ephemeral; a free quote
+    returns the exact price first. Prices are dynamic by page count between a floor and a ceiling.
+  entries:
+  - {op: make-fillable, floor_cents: 5, ceiling_cents: 100}
+  - {op: fill-with-context, floor_cents: 8, ceiling_cents: 1293}
+  - {op: fill, floor_cents: 7, ceiling_cents: 102}
+  - {op: read, floor_cents: 1, ceiling_cents: 1}
+  - {op: fax, floor_cents: 3, ceiling_cents: 300}
+  limits:
+    card_minimum: 0.50 USD per operation on the card rail (stablecoins pay the exact price)
+    quote_validity: 24 hours
+    anonymous_quotes: limited per IP address per hour
+  payment_rails: [x402 USDC on Base (eip155:8453), x402 via Circle Gateway on every supported chain, MPP Tempo USDC.e, MPP Stripe card]
+enterprise_contact: null
+notes:
+- 'The pricing JSON is also embedded verbatim in the website HTML (PricingProvider), so the page and the endpoint cannot drift.'
+- 'Fees are non-refundable except free-tier credits or where required by law (https://getemboss.ai/terms); a failed paid fax is refunded.'

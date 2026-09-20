@@ -1,0 +1,1 @@
+{"resource":"https://api.getemboss.ai/mcp","authorization_servers":["https://api.getemboss.ai"],"scopes_supported":["forms:read","forms:write"],"bearer_methods_supported":["header"],"resource_name":"Emboss","resource_documentation":"https://getemboss.ai/docs/claude"}

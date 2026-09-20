@@ -1,18 +1,211 @@
 aid: getemboss-ai
 name: Emboss
-description: 'Emboss is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the
+  fields and returns a fillable AcroForm, fills the form from structured values or from supporting documents
+  (proposing every answer with its source, asking about what is missing), verifies the result, reads a filled
+  form back into labelled values, batch-fills one copy per spreadsheet row, packages the filled form with its
+  attachments and a receipt, and faxes the result to any US, Canadian or Mexican fax number. Usage-based
+  pricing in cents with a monthly free allowance and no subscription. The same engine is exposed through four
+  doors on api.getemboss.ai: a 115-operation authenticated REST API (OpenAPI 3.1, Bearer API key or OAuth 2.1
+  with dynamic client registration), a remote MCP server (20 tools, OAuth-protected, listed in the MCP
+  registry), a signed A2A 1.0 agent card with 23 skills, and an anonymous pay-per-call door priced per job over
+  x402 (USDC on Base) or MPP (Tempo stablecoin or card). Every document is deleted 60-70 minutes after the last
+  activity under ephemeral processing.
+image: https://getemboss.ai/emboss-logo-512.png
 url: https://raw.githubusercontent.com/api-evangelist/getemboss-ai/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: 'enrichment pass local-v3 2026-09-19 (was stub / harvest)'
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
+- PDF
+- Forms
+- Document Processing
+- Form Filling
+- Fax
+- Data Extraction
+- agent-native
+- MCP
+- A2A
+- x402
+- Pay-per-call
+- Government Forms
 - Company
-apis: []
+tags_raw:
+- PDF
+- Forms
+- Document processing
+- Form filling
+- Fax
+- Data extraction
+- Agent-native
+- MCP
+- A2A
+- x402
+- Pay-per-call
+- Government forms
+apis:
+- aid: getemboss-ai:emboss-account-api
+  name: Emboss Account API
+  description: >-
+    The authenticated developer API on api.getemboss.ai: create fillable forms (or start from the public library
+    of US federal forms), fill them from data with a standard-fill session or from documents with a context fill,
+    prepare/commit/verify with an evidence-carrying proposal and receipt, batch fill from a spreadsheet, read a
+    filled PDF back, send and track faxes, walk artifact lineage, and run seven free PDF utilities. Bearer API key
+    (sk_live_...) with Idempotency-Key on the create/fill/fax writes, optional signed callbacks, and per-request
+    retention control. The harvested contract is the FastAPI schema behind the provider's Swagger UI; it also
+    carries the dashboard's admin, user-auth and OAuth-server routes.
+  humanURL: https://getemboss.ai/docs/reference/create-form
+  baseURL: https://api.getemboss.ai
+  tags:
+  - PDF
+  - Forms
+  - Form Filling
+  - Fax
+  - Data Extraction
+  properties:
+  - type: OpenAPI
+    url: openapi/getemboss-ai-account-openapi.yml
+  - type: OpenAPI
+    name: Provider-hosted OpenAPI (FastAPI)
+    url: https://api.getemboss.ai/internal/openapi.json
+  - type: Overlay
+    url: overlays/getemboss-ai-account-overlay.yaml
+  - type: Documentation
+    url: https://getemboss.ai/docs
+  - type: APIReference
+    url: https://getemboss.ai/docs/reference/create-form
+  - type: Console
+    url: https://api.getemboss.ai/docs
+  - type: GettingStarted
+    url: https://getemboss.ai/docs/quickstart
+  - type: Authentication
+    url: authentication/getemboss-ai-authentication.yml
+  - type: Authentication
+    url: https://getemboss.ai/docs/authentication
+  - type: OAuthScopes
+    url: scopes/getemboss-ai-scopes.yml
+  - type: Conventions
+    url: conventions/getemboss-ai-conventions.yml
+  - type: Idempotency
+    url: conventions/getemboss-ai-conventions.yml
+  - type: ErrorCatalog
+    url: errors/getemboss-ai-problem-types.yml
+  - type: ErrorCatalog
+    url: https://getemboss.ai/docs/reference/errors
+  - type: DataModel
+    url: data-model/getemboss-ai-data-model.yml
+  - type: RateLimits
+    url: rate-limits/getemboss-ai-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/getemboss-ai-sandbox.yml
+  - type: Webhooks
+    url: asyncapi/getemboss-ai-callbacks.yml
+  - type: Webhooks
+    url: https://getemboss.ai/docs/callbacks
+  - type: AgentSkill
+    url: skills/getemboss-ai-fill-from-data.md
+  - type: AgentSkill
+    url: skills/getemboss-ai-prepare-commit-fax.md
+- aid: getemboss-ai:emboss-pay-per-call-api
+  name: Emboss Pay-per-call API
+  description: >-
+    The anonymous pay door at api.getemboss.ai/pay: make fillable, fill from data, fill with context, read a
+    filled form back, and fax, each priced per job by page count, plus a free stateless quote. No account or key —
+    the first request answers 402 with an x402 challenge (USDC on Base, or gasless via Circle Gateway) and an MPP
+    challenge (Tempo USDC.e or a card via Stripe Shared Payment Tokens); resend the identical request with the
+    payment credential and poll a tokened status URL. Always ephemeral. The OpenAPI carries x-payment-info on
+    every operation and is the entry Emboss publishes in its ARD/AIR catalogue.
+  humanURL: https://getemboss.ai/docs/pay-per-call
+  baseURL: https://api.getemboss.ai/pay
+  tags:
+  - x402
+  - Pay-per-call
+  - PDF
+  - Forms
+  - Fax
+  properties:
+  - type: OpenAPI
+    url: openapi/getemboss-ai-pay-per-call-openapi.yml
+  - type: OpenAPI
+    name: Provider-hosted OpenAPI with x-payment-info
+    url: https://api.getemboss.ai/openapi.json
+  - type: Overlay
+    url: overlays/getemboss-ai-pay-per-call-overlay.yaml
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call
+  - type: Documentation
+    name: Pay per call with MPP
+    url: https://getemboss.ai/docs/pay-per-call/mpp
+  - type: Documentation
+    name: Pay per job with x402
+    url: https://getemboss.ai/docs/pay-per-call/x402
+  - type: LLMsTxt
+    url: llms/getemboss-ai-pay-llms.txt
+  - type: LLMsTxt
+    url: https://api.getemboss.ai/pay/llms.txt
+  - type: Plans
+    url: plans/getemboss-ai-plans-pricing.yml
+  - type: Conventions
+    url: conventions/getemboss-ai-conventions.yml
+  - type: ErrorCatalog
+    url: errors/getemboss-ai-problem-types.yml
+  - type: AgentSkill
+    url: skills/getemboss-ai-pay-per-call-anonymous.md
+- name: Emboss MCP Server
+  description: >-
+    Remote Model Context Protocol server at https://api.getemboss.ai/mcp (Streamable HTTP) exposing twenty
+    form-filling tools under forms:read / forms:write scopes. OAuth 2.1 with PKCE and dynamic client
+    registration (RFC 8414 + RFC 9728 metadata published; anonymous tools/list answers 401), or a static Emboss
+    API key as Bearer. Listed in the MCP registry as io.github.edwinorange/emboss and packaged as a Claude Code
+    plugin and a Gemini CLI / Antigravity extension. No stdio package exists.
+  humanURL: https://getemboss.ai/docs/mcp-tools
+  baseURL: https://api.getemboss.ai/mcp
+  tags:
+  - MCP
+  - agent-native
+  - PDF
+  properties:
+  - type: MCPServer
+    url: mcp/getemboss-ai-mcp.yml
+  - type: MCPServer
+    url: https://api.getemboss.ai/mcp
+  - type: ToolCrosswalk
+    url: mcp/getemboss-ai-tool-crosswalk.yml
+  - type: Documentation
+    url: https://getemboss.ai/docs/mcp-tools
+  - type: GettingStarted
+    url: https://getemboss.ai/docs/claude
+  - type: OAuthScopes
+    url: scopes/getemboss-ai-scopes.yml
+  - type: AgentSkill
+    url: skills/getemboss-ai-emboss-SKILL.md
+- name: Emboss A2A Agent
+  description: >-
+    Agent2Agent interface at https://api.getemboss.ai/a2a (JSON-RPC, A2A 1.0) discovered through a signed agent
+    card served at /.well-known/agent-card.json on both getemboss.ai and api.getemboss.ai. Twenty-three skills
+    covering the whole engine, including quote_job/execute_quote and the seven free PDF utilities. Bearer API key
+    or OAuth 2.1, or anonymous pay-per-job with the a2a-x402 extension (USDC on Base). The card's Ed25519 JWS
+    verifies against did:web:getemboss.ai.
+  humanURL: https://getemboss.ai/docs/a2a
+  baseURL: https://api.getemboss.ai/a2a
+  tags:
+  - A2A
+  - agent-native
+  - x402
+  properties:
+  - type: AgentCard
+    url: a2a/getemboss-ai-a2a.yml
+  - type: AgentCard
+    url: https://api.getemboss.ai/.well-known/agent-card.json
+  - type: ToolCrosswalk
+    url: mcp/getemboss-ai-tool-crosswalk.yml
+  - type: Documentation
+    url: https://getemboss.ai/docs/a2a
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -21,3 +214,108 @@ maintainers:
 common:
 - type: Website
   url: https://getemboss.ai/
+- type: DeveloperPortal
+  url: https://getemboss.ai/docs
+- type: Documentation
+  url: https://getemboss.ai/docs
+- type: APIReference
+  url: https://getemboss.ai/docs/reference/create-form
+- type: GettingStarted
+  url: https://getemboss.ai/docs/quickstart
+- type: Console
+  url: https://api.getemboss.ai/docs
+- type: GitHubOrganization
+  url: https://github.com/GetEmboss-ai
+- type: Pricing
+  url: https://getemboss.ai/pricing
+- type: Pricing
+  name: Machine-readable price list
+  url: https://api.getemboss.ai/pricing
+- type: SignUp
+  url: https://getemboss.ai/signup
+- type: Login
+  url: https://getemboss.ai/login
+- type: TermsOfService
+  url: https://getemboss.ai/terms
+- type: PrivacyPolicy
+  url: https://getemboss.ai/privacy
+- type: Integrations
+  url: https://getemboss.ai/integrations
+- type: Glossary
+  url: https://getemboss.ai/glossary
+- type: LLMsTxt
+  url: llms/getemboss-ai-llms.txt
+- type: LLMsTxt
+  url: https://getemboss.ai/llms.txt
+- type: LLMsTxt
+  name: API host llms.txt
+  url: https://api.getemboss.ai/llms.txt
+- type: Packages
+  url: packages/getemboss-ai-packages.yml
+- type: WellKnown
+  url: well-known/getemboss-ai-well-known.yml
+- type: SecurityTxt
+  url: well-known/getemboss-ai-security.txt
+- type: SecurityTxt
+  url: https://getemboss.ai/.well-known/security.txt
+- type: AICatalog
+  url: https://getemboss.ai/.well-known/ard.json
+- type: MCPServer
+  url: mcp/getemboss-ai-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/getemboss-ai-tool-crosswalk.yml
+- type: AgentCard
+  url: a2a/getemboss-ai-a2a.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Conformance
+  url: conformance/getemboss-ai-conformance.yml
+- type: Authentication
+  url: authentication/getemboss-ai-authentication.yml
+- type: OAuthScopes
+  url: scopes/getemboss-ai-scopes.yml
+- type: Conventions
+  url: conventions/getemboss-ai-conventions.yml
+- type: Idempotency
+  url: conventions/getemboss-ai-conventions.yml
+- type: ErrorCatalog
+  url: errors/getemboss-ai-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/getemboss-ai-lifecycle.yml
+- type: ChangeLog
+  url: changelog/getemboss-ai-changelog.yml
+- type: DataModel
+  url: data-model/getemboss-ai-data-model.yml
+- type: Plans
+  url: plans/getemboss-ai-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/getemboss-ai-rate-limits.yml
+- type: Sandbox
+  url: sandbox/getemboss-ai-sandbox.yml
+- type: Webhooks
+  url: asyncapi/getemboss-ai-callbacks.yml
+- type: Overlay
+  url: overlays/getemboss-ai-account-overlay.yaml
+- type: Overlay
+  url: overlays/getemboss-ai-pay-per-call-overlay.yaml
+- type: DomainSecurity
+  url: security/getemboss-ai-domain-security.yml
+- type: Security
+  url: https://getemboss.ai/security
+- type: VulnerabilityDisclosure
+  url: security/getemboss-ai-vulnerability-disclosure.yml
+- type: Regulatory
+  url: regulatory/getemboss-ai-regulatory-posture.yml
+- type: Subprocessors
+  url: https://getemboss.ai/subprocessors
+- type: DataSubjectRequest
+  url: https://getemboss.ai/privacy
+- type: DataResidency
+  url: https://getemboss.ai/subprocessors
+- type: AITransparency
+  url: https://getemboss.ai/docs/ephemeral-processing
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 47
+  pass: local-v3

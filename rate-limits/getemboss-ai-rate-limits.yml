@@ -1,0 +1,45 @@
+generated: '2026-09-19'
+method: searched
+source: https://getemboss.ai/docs/bulk-runs
+docs: https://getemboss.ai/docs/reference/errors
+limit_count: 2
+summary: >-
+  Emboss documents a rate limit qualitatively — 429 "Too many requests: rate limited; back off and retry" on the
+  errors page and on most reference pages — and gives ONE number, in the bulk-runs guide: "the default is 60
+  requests per window". The window length, the partition (per key vs per account vs per IP) and any burst are
+  not stated. A second, separate limit applies to anonymous pay-door quotes (per IP, per hour, unnumbered).
+  No rate-limit headers are documented, and none were observed on live responses.
+rate_limits:
+- name: Default request rate limit
+  scope: unspecified (the docs say "the rate limit"; keys are account-scoped so per-account is implied, not stated)
+  limit: 60
+  window: 'unspecified ("per window")'
+  metric: request
+  burst: null
+  domains: [api.getemboss.ai]
+  applies_to: Every authenticated endpoint; 429 rows appear on create-form, fill-with-context, batch, fax, read-and-package and library reference pages.
+  evidence: 'https://getemboss.ai/docs/bulk-runs — "cap how many are in flight so you don''t blow past the rate limit (the default is 60 requests per window)"'
+  note: The word "default" implies the limit can be raised, but no process for raising it is published.
+- name: Anonymous pay-door quotes
+  scope: per-ip
+  limit: null
+  window: 1 hour
+  metric: quote request
+  burst: null
+  domains: [api.getemboss.ai]
+  applies_to: [POST /pay/quote, A2A quote_job for anonymous callers]
+  evidence: 'https://getemboss.ai/docs/pay-per-call/x402 — "Anonymous quotes are limited per IP address and hour; a limited caller receives a rate-limit error and can retry in the next hour."'
+exhaustion:
+  status: 429
+  body: JSON with a human-readable message (account API); Problem Details on the pay door
+headers:
+  response: []
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header is documented. Live unauthenticated responses on
+    2026-09-19 (GET /health 200, GET /usage 401) carried only hosting headers (x-railway-request-id,
+    x-hikari-trace). An agent cannot read remaining quota from a response; the documented strategy is
+    exponential backoff (1s, 2s, 4s) and keeping bulk concurrency at 5-10 in flight.
+guidance:
+  backoff: exponential, 1s → 2s → 4s
+  polling: 1-2 s with backoff to 5 s max on job status; ~20 s over MCP
+  bulk_concurrency: 5-10 in flight

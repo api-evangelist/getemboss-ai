@@ -1,0 +1,169 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://getemboss.ai/docs/quickstart, /docs/authentication, /docs/reference/create-form, /docs/reference/fill-with-context,
+  /docs/reference/read-and-package, /docs/reference/fax, /docs/reference/sessions, /docs/callbacks, /docs/tracking-jobs,
+  /docs/bulk-runs, /docs/ephemeral-processing, /docs/artifacts, /docs/pay-per-call/mpp, /docs/pay-per-call/x402,
+  /docs/send-fax, /terms; cross-read with openapi/getemboss-ai-account-openapi.yml and openapi/getemboss-ai-pay-per-call-openapi.yml.
+description: >-
+  How Emboss's HTTP surface behaves across operations: bearer API-key auth (plus OAuth 2.1 for MCP/A2A and two
+  machine-payment schemes on the anonymous pay door), an Idempotency-Key on the create/fill/fax writes, offset
+  pagination on the one list endpoint, async jobs polled or called back, an immutable artifact lineage, and a
+  60-70 minute ephemeral retention window that governs what can be undone.
+base_url: https://api.getemboss.ai
+api_style: REST over HTTPS; JSON or multipart/form-data requests (PDFs as pdf_url, pdf_base64 or a multipart file); JSON responses; binary downloads for PDFs
+
+authentication:
+  scheme: 'Authorization: Bearer sk_live_...'
+  key_scope: Owner-scoped — a key can only read and mutate the forms and sessions created with that same key; another owner's resource returns 404, not 403.
+  alternatives:
+    oauth2: Authorization-code + PKCE at https://api.getemboss.ai/oauth/authorize, used by MCP and A2A clients; scopes forms:read, forms:write.
+    payment: 'Pay door: "Authorization: Payment <credential>" (MPP) after a 402 challenge, or an x402 payment header; no account.'
+    artifact_token: Anonymous callers prove ownership of a result with artifact_token next to artifact_id.
+  docs: https://getemboss.ai/docs/authentication
+  detail: authentication/getemboss-ai-authentication.yml
+
+idempotency:
+  supported: true
+  coverage: partial
+  mechanism: Idempotency-Key request header (any unique string, e.g. a UUID) on create-type requests; idempotency_key JSON body field on commit.
+  scope:
+  - create_form_forms_post
+  - create_with_context_forms_with_context_post
+  - fill_existing_with_context_forms__form_id__with_context_post
+  - send_fax_fax_post
+  - commit_proposals__proposal_id__commit_post
+  applies_to: >-
+    POST /forms, POST /forms/with-context, POST /forms/{form_id}/with-context and POST /fax honour the header;
+    POST /proposals/{proposal_id}/commit takes idempotency_key in the body. The remaining public writes — sessions
+    (create, put fields, fill), prepare, verify, read, fill-batch, suggest-mapping, attachments, utilities, keys,
+    delete — document no replay protection, and the bulk-runs guide says "There's no automatic idempotency across
+    a batch ... Resubmitting a form just creates a new one."
+  key_format: Client-generated unique string.
+  retention: 24 hours, scoped to the account.
+  conflict_behavior: >-
+    Retrying with the same key returns the original job instead of creating a new one ("so you're never charged
+    twice for the same submission"). A request that is rejected with any 4xx does not consume the key — fix the
+    cause and retry with the same key. Fax additionally dedupes the same artifact to the same destination within
+    ten minutes independently of the header (returns the same job with deduplicated true).
+  spec_declared: false
+  spec_note: Neither OpenAPI declares the Idempotency-Key parameter; it is documented in the reference pages only.
+  docs: https://getemboss.ai/docs/reference/create-form
+
+pagination:
+  style: offset
+  endpoints: [list_forms_forms_get]
+  request_params:
+    states: ready (default) or all
+    limit: page size, default 100, clamped 1..200 — honoured only with states=all
+    offset: rows to skip, default 0 — honoured only with states=all
+  response_fields:
+    forms: array
+    total: full count with states=all; with states=ready it is the number of rows returned (fixed 100-row page)
+    limit: echoed
+    offset: echoed
+  mcp_variant: MCP list_forms pages by cursor / next_cursor (limit up to 50) — a different pagination style from the REST endpoint it wraps.
+  docs: https://getemboss.ai/docs/reference/create-form
+
+async_jobs:
+  pattern: 202 with job_id / form_id / batch_id and status processing; poll GET /forms/{id}, GET /forms/with-context/{job_id}, GET /forms/fill-batch/{batch_id}, GET /fax/{job_id}, or the pay door's status_url (HMAC-tokened, no auth).
+  polling_guidance: Poll every 1-2 seconds with backoff to 5 s max (docs); MCP tools advise ~20 s.
+  callbacks: Optional callback_url on create/with-context jobs; one POST on terminal state, signed X-Emboss-Signature (see asyncapi/getemboss-ai-callbacks.yml). Best-effort with a few retries; polling remains authoritative.
+
+artifacts:
+  mechanism: Every file has an opaque immutable artifact_id (sha256, produced_by, inputs, used_by); results chain by id into fax and the free utilities without download.
+  docs: https://getemboss.ai/docs/artifacts
+
+field_expansion:
+  supported: false
+metadata:
+  supported: false
+  note: No metadata/custom-attributes field on any resource; proposals accept a per-value note.
+request_tracing:
+  request_id_header: null
+  observed: Responses carry x-railway-request-id and x-hikari-trace (hosting-platform headers, undocumented); no Emboss-documented request-id.
+versioning:
+  scheme: none
+  detail: lifecycle/getemboss-ai-lifecycle.yml
+error_envelope:
+  media_type: 'application/json ({"detail": ...}) on the account API; application/problem+json on the pay door; {"error": {"code","message"}} on job/callback payloads'
+  rfc9457: partial
+  detail: errors/getemboss-ai-problem-types.yml
+  docs: https://getemboss.ai/docs/reference/errors
+rate_limits:
+  signal_status: 429
+  headers: none documented (no RateLimit-*/X-RateLimit-*/Retry-After observed on live 200 or 401 responses)
+  detail: rate-limits/getemboss-ai-rate-limits.yml
+webhooks:
+  signing_header: X-Emboss-Signature
+  verification: sha256= + HMAC-SHA256 over the raw body with the account's callback signing secret; constant-time compare
+  detail: asyncapi/getemboss-ai-callbacks.yml
+payments_on_the_wire:
+  mpp: 402 with WWW-Authenticate Payment (tempo USDC.e at exact price; stripe card with 0.50 USD minimum); resend with Authorization Payment; 202 carries a Payment-Receipt header.
+  x402: same 402 carries a PAYMENT-REQUIRED header; accepts USDC on Base (eip155:8453) plus one gasless Circle Gateway entry per supported chain; EIP-3009 TransferWithAuthorization.
+  quote_first: POST /pay/quote and POST /forms/quote are free and stateless; a pay-door quote_id is payable for 24 hours.
+  docs: https://getemboss.ai/docs/pay-per-call
+
+dry_run_mode:
+  status: partial
+  affordances:
+  - {operation: account_quote_forms_quote_post, effect: prices every route for a document and says whether the free tier covers it; free, stateless, never metered}
+  - {operation: pay_quote, effect: exact price per operation for the pay door; free}
+  - {operation: prepare_new_forms_prepare_post, effect: proposes every answer with evidence WITHOUT writing into the PDF; commit is the separate write}
+  - {operation: preview_fill_forms__form_id__preview_fill_post, effect: preview a fill before rendering}
+  - {operation: verify_filled_pdf_forms__form_id__verify_post, effect: checks a filled PDF against the contract with no model call}
+  gap: No sandbox or test mode; see sandbox/getemboss-ai-sandbox.yml.
+
+reversibility:
+  grade: verified
+  summary: >-
+    Emboss states a window for every reversal it offers and says plainly which actions cannot be taken back.
+    Deletion is the main reversal path and it is one-way; the important agent-facing guarantees are that nothing
+    is charged until a fax is delivered, that a paid fax that fails is refunded, and that documents disappear on
+    their own inside a stated window.
+  read_only: false
+  surfaces:
+  - write: create_form_forms_post / create_with_context_forms_with_context_post (upload + detect)
+    reversal: delete_form_forms__form_id__delete
+    window: 'Any time the form has no detection or fill still running (409 otherwise); documents are removed first under every retention policy, then the row is soft-deleted. Permanent — no restore.'
+    docs: https://getemboss.ai/docs/reference/create-form
+  - write: add_attachment_proposals__proposal_id__attachments_post
+    reversal: remove_attachment_proposals__proposal_id__attachments__n__delete
+    window: 'Before the proposal is committed or expires (409 after either); 410 once the form was swept.'
+    docs: https://getemboss.ai/docs/reference/read-and-package
+  - write: commit_proposals__proposal_id__commit_post
+    reversal: re-commit (up to 10 commits per proposal, free within the billed prepare); no undo of a rendered PDF
+    window: 'Until the proposal expires; each commit is a new artifact, prior artifacts are never altered.'
+    docs: https://getemboss.ai/docs/mcp-tools
+  - write: fill_sessions__sid__fill_post (render a standard fill)
+    reversal: none — the session becomes terminal (409 on further writes); start a new session
+    window: n/a
+    docs: https://getemboss.ai/docs/reference/sessions
+  - write: send_fax_fax_post
+    reversal: none — a fax in flight cannot be cancelled; the reversal is financial
+    window: 'Billed only at delivery; "a fax that fails is not charged"; on the pay door "a failed paid fax is refunded (automatically on card, by support for stablecoins)". Duplicate sends of the same artifact to the same number are collapsed for ten minutes.'
+    docs: https://getemboss.ai/docs/send-fax
+  - write: patch_key_keys__key_id__patch (disable)
+    reversal: re-enable via the same operation / dashboard
+    window: 'Any time — "This is reversible: re-enable the key in the dashboard whenever you need it again." Revoke (delete_key_keys__key_id__delete) is permanent.'
+    docs: https://getemboss.ai/docs/authentication
+  - write: any pay-door operation (money)
+    reversal: none for a completed job — "fees are non-refundable" except free-tier credits or where required by law; x402 settlement failure after a successful run charges nothing
+    window: 'Quotes expire after 24 hours; a rejected x402 attempt on A2A consumes the quote nonce (ask for a new quote), on the pay door a fresh 402 is issued.'
+    docs: https://getemboss.ai/docs/pay-per-call/x402
+  - write: any document upload
+    reversal: automatic deletion under ephemeral processing
+    window: '60 to 70 minutes after the last activity on a form (sweep every ten minutes); read-back stores nothing at all.'
+    docs: https://getemboss.ai/docs/ephemeral-processing
+
+other_conventions:
+- name: Ownership isolation
+  detail: 404 rather than 403 across owners.
+- name: Retention override
+  detail: retention body field (ephemeral | account_default) on POST /forms, /forms/with-context, /forms/{id}/with-context, /forms/prepare, /forms/{id}/prepare, /forms/{id}/fill-batch.
+- name: Phone numbers
+  detail: E.164 (e.g. +15025551212); destinations masked in receipts and logs.
+- name: Page selections
+  detail: comma-separated 1-based ranges, e.g. 1-3,7.
+- name: Money
+  detail: Prices in cents with usd strings; free tier 5 of each billed kind per month on documents of 5 pages or fewer.

@@ -1,0 +1,26 @@
+# Emboss pay-per-call (MPP)
+
+Agents pay Emboss per operation over HTTP using the Machine Payments Protocol (MPP). No account. Send the request, get a 402 with a payment challenge, pay, resend with the credential, get a 202 with a job to poll.
+
+## Operations
+- POST https://api.getemboss.ai/pay/make-fillable: Turn a flat or scanned PDF form into a fillable PDF with detected fields. Also: detect form fields in a PDF; add fillable fields to a document; extract a PDF form schema; make a government or business form fillable; XFA forms; Adobe LiveCycle forms; Adobe dynamic forms. Price from 0.05 USD.
+- POST https://api.getemboss.ai/pay/fill-with-context: Fill a PDF form using facts found in supporting documents. Also: fill a PDF form from DOCX, spreadsheets, images, JSON, or other documents; pre-fill a government form from supporting paperwork; complete an application from a resume or company details; extract answers from context documents into a form. Price from 0.08 USD.
+- POST https://api.getemboss.ai/pay/fill: Fill a PDF form from structured data such as JSON or key-value answers. Also: fill a PDF form from JSON; populate form fields from data; complete a PDF application from known values; write answers into a form. Price from 0.07 USD.
+- POST https://api.getemboss.ai/pay/read: Read the values out of a filled PDF form, labelled by field, with a completeness verdict when the form is known. Also: extract form data; get values from a filled PDF; read a completed form back into data; pull the answers out of a filled application; turn a filled PDF into JSON. Price from 0.01 USD.
+- POST https://api.getemboss.ai/pay/fax: Send a PDF to a fax number and track delivery, priced per transmitted page. Also: fax a PDF; send a document by fax; fax this form to an agency; transmit a PDF to a fax line; outbound fax from an agent. Price from 0.03 USD.
+- Free price check: POST https://api.getemboss.ai/pay/quote (page count, already fillable, exact prices).
+- Bodies: JSON (pdf_url or pdf_base64 plus fields) or multipart (file plus form fields).
+
+Prices above are base prices for short forms and scale with form length; the exact amount for a request is always in the 402 challenge. Full pricing: https://getemboss.ai/pricing
+
+## Payment methods
+- Tempo stablecoin (USDC.e) at the exact quoted price.
+- Stripe Shared Payment Tokens (cards via Link); card payments have a 0.50 USD minimum.
+- Also payable with x402 (USDC on Base): the same 402 carries a PAYMENT-REQUIRED header.
+- x402 payers can also pay gaslessly on every chain Circle Gateway supports (entries with extra.name GatewayWalletBatched in the same 402).
+
+## Discovery
+- Ops index: https://api.getemboss.ai/pay
+- OpenAPI manifest with x-payment-info: https://api.getemboss.ai/openapi.json
+- Guide: https://getemboss.ai/docs/pay-per-call/mpp
+- Other doors (account API, MCP, A2A): https://api.getemboss.ai/llms.txt

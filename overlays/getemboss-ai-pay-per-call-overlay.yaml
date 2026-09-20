@@ -1,0 +1,21 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Emboss pay-per-call API
+  version: 1.0.0
+  x-generated: '2026-09-19'
+  x-method: generated
+extends: openapi/getemboss-ai-pay-per-call-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-source: https://api.getemboss.ai/openapi.json
+    x-apievangelist-note: >-
+      Anonymous x402/MPP door. Every paid operation answers 402 first with the exact price; the free
+      pay_quote operation prices a document without payment. Always runs under ephemeral processing.
+- target: $
+  update:
+    tags:
+    - name: forms
+      description: Pay-per-call PDF form operations (make fillable, fill, fill with context, read, fax, quote).
+- target: $.paths['/pay/quote'].post
+  update: {x-free: true, x-stateless: true}

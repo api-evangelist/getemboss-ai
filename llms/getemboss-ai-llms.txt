@@ -1,0 +1,132 @@
+# Emboss
+
+Emboss is a PDF form-filling API for developers. Upload a flat PDF and Emboss detects the fields, builds a JSON contract, and returns a filled, fillable PDF. Authenticate every request with a Bearer API key.
+
+## Pricing
+Usage-based: pay per form, no subscription. Extraction and fill are billed separately, with a free tier. See https://getemboss.ai/pricing.
+
+## Try it in the browser
+Fill a PDF form without code (upload form + context docs, download the filled PDF): https://getemboss.ai/fill
+Batch fill PDF forms from a spreadsheet (upload one form + a CSV/Excel, get one filled PDF per row as a ZIP): https://getemboss.ai/batch-fill
+
+## Documentation
+- [Quickstart](https://getemboss.ai/docs/quickstart) (markdown: https://getemboss.ai/docs/quickstart.md)
+- [Authentication](https://getemboss.ai/docs/authentication) (markdown: https://getemboss.ai/docs/authentication.md)
+- [How Emboss works](https://getemboss.ai/docs/how-emboss-works) (markdown: https://getemboss.ai/docs/how-emboss-works.md)
+- [Use Emboss in Claude](https://getemboss.ai/docs/claude) (markdown: https://getemboss.ai/docs/claude.md)
+- [Use Emboss in ChatGPT](https://getemboss.ai/docs/chatgpt) (markdown: https://getemboss.ai/docs/chatgpt.md)
+- [Use Emboss in Grok](https://getemboss.ai/docs/grok) (markdown: https://getemboss.ai/docs/grok.md)
+- [Use Emboss in Gemini](https://getemboss.ai/docs/gemini) (markdown: https://getemboss.ai/docs/gemini.md)
+- [Use Emboss in Antigravity](https://getemboss.ai/docs/antigravity) (markdown: https://getemboss.ai/docs/antigravity.md)
+- [Use Emboss from agent frameworks (A2A)](https://getemboss.ai/docs/a2a) (markdown: https://getemboss.ai/docs/a2a.md)
+- [MCP tools reference](https://getemboss.ai/docs/mcp-tools) (markdown: https://getemboss.ai/docs/mcp-tools.md)
+- [Pay per call](https://getemboss.ai/docs/pay-per-call) (markdown: https://getemboss.ai/docs/pay-per-call.md)
+- [Pay per call with MPP](https://getemboss.ai/docs/pay-per-call/mpp) (markdown: https://getemboss.ai/docs/pay-per-call/mpp.md)
+- [Pay per job with x402](https://getemboss.ai/docs/pay-per-call/x402) (markdown: https://getemboss.ai/docs/pay-per-call/x402.md)
+- [Fill from your data](https://getemboss.ai/docs/fill-from-data) (markdown: https://getemboss.ai/docs/fill-from-data.md)
+- [Fill from context docs](https://getemboss.ai/docs/fill-from-context) (markdown: https://getemboss.ai/docs/fill-from-context.md)
+- [Prepare, commit and verify](https://getemboss.ai/docs/prepare-commit-verify) (markdown: https://getemboss.ai/docs/prepare-commit-verify.md)
+- [Ephemeral processing](https://getemboss.ai/docs/ephemeral-processing) (markdown: https://getemboss.ai/docs/ephemeral-processing.md)
+- [Read a filled form back](https://getemboss.ai/docs/read-filled-form) (markdown: https://getemboss.ai/docs/read-filled-form.md)
+- [XFA forms](https://getemboss.ai/docs/xfa-forms) (markdown: https://getemboss.ai/docs/xfa-forms.md)
+- [The submission package](https://getemboss.ai/docs/submission-package) (markdown: https://getemboss.ai/docs/submission-package.md)
+- [Available forms](https://getemboss.ai/docs/library)
+- [Send a fax](https://getemboss.ai/docs/send-fax) (markdown: https://getemboss.ai/docs/send-fax.md)
+- [Batch fill](https://getemboss.ai/docs/batch-fill) (markdown: https://getemboss.ai/docs/batch-fill.md)
+- [Bulk runs](https://getemboss.ai/docs/bulk-runs) (markdown: https://getemboss.ai/docs/bulk-runs.md)
+- [The contract shape](https://getemboss.ai/docs/the-contract-shape) (markdown: https://getemboss.ai/docs/the-contract-shape.md)
+- [Tracking jobs](https://getemboss.ai/docs/tracking-jobs) (markdown: https://getemboss.ai/docs/tracking-jobs.md)
+- [Artifacts and lineage](https://getemboss.ai/docs/artifacts) (markdown: https://getemboss.ai/docs/artifacts.md)
+- [Free PDF utilities](https://getemboss.ai/docs/pdf-utilities) (markdown: https://getemboss.ai/docs/pdf-utilities.md)
+- [Callbacks](https://getemboss.ai/docs/callbacks) (markdown: https://getemboss.ai/docs/callbacks.md)
+
+## API Reference
+- [Forms](https://getemboss.ai/docs/reference/create-form) (markdown: https://getemboss.ai/docs/reference/create-form.md)
+- [Get the contract](https://getemboss.ai/docs/reference/get-contract) (markdown: https://getemboss.ai/docs/reference/get-contract.md)
+- [Fill with context](https://getemboss.ai/docs/reference/fill-with-context) (markdown: https://getemboss.ai/docs/reference/fill-with-context.md)
+- [Batch fill](https://getemboss.ai/docs/reference/batch) (markdown: https://getemboss.ai/docs/reference/batch.md)
+- [Standard fill](https://getemboss.ai/docs/reference/sessions) (markdown: https://getemboss.ai/docs/reference/sessions.md)
+- [Usage & health](https://getemboss.ai/docs/reference/usage) (markdown: https://getemboss.ai/docs/reference/usage.md)
+- [Read a filled form and the submission package](https://getemboss.ai/docs/reference/read-and-package) (markdown: https://getemboss.ai/docs/reference/read-and-package.md)
+- [Send a fax](https://getemboss.ai/docs/reference/fax) (markdown: https://getemboss.ai/docs/reference/fax.md)
+- [Artifacts](https://getemboss.ai/docs/reference/artifacts) (markdown: https://getemboss.ai/docs/reference/artifacts.md)
+- [Free PDF utilities](https://getemboss.ai/docs/reference/utilities) (markdown: https://getemboss.ai/docs/reference/utilities.md)
+- [The form library](https://getemboss.ai/docs/reference/library) (markdown: https://getemboss.ai/docs/reference/library.md)
+- [Trust and verification](https://getemboss.ai/docs/reference/trust) (markdown: https://getemboss.ai/docs/reference/trust.md)
+- [Errors & status codes](https://getemboss.ai/docs/reference/errors) (markdown: https://getemboss.ai/docs/reference/errors.md)
+
+## API Endpoints
+Base host: https://api.getemboss.ai
+- POST /forms: Create a form (auth required)
+- GET /forms/{id}: Get a form (auth required)
+- GET /forms: List your forms (auth required)
+- DELETE /forms/{id}: Delete a form (auth required)
+- GET /forms/{id}/contract: Get the contract (auth required)
+- POST /forms/{form_id}/with-context: Fill an existing form with context (auth required)
+- POST /forms/with-context: Fill with context (auth required)
+- GET /forms/with-context/{job_id}: Get the fill job (auth required)
+- POST /forms/{form_id}/suggest-mapping: Suggest a column mapping (auth required)
+- POST /forms/{form_id}/fill-batch: Start a batch fill (auth required)
+- GET /forms/fill-batch/{batch_id}: Get batch status (auth required)
+- GET /forms/fill-batch/{batch_id}/rows/{n}/pdf: Download a row PDF (auth required)
+- GET /forms/fill-batch/{batch_id}/zip: Download all rows as ZIP (auth required)
+- POST /sessions: Create a session (auth required)
+- GET /sessions/{id}: Get session state (auth required)
+- PUT /sessions/{id}/fields: Direct field fill (auth required)
+- POST /sessions/{id}/fill: Render the filled PDF (auth required)
+- GET /sessions/{id}/pdf: Download the PDF (auth required)
+- GET /usage: Usage (auth required)
+- POST /forms/quote: Quote (auth required)
+- GET /health: Health (public)
+- POST /forms/read: Read a filled form back (auth required)
+- POST /proposals/{proposal_id}/attachments: Attach a document to a proposal (auth required)
+- DELETE /proposals/{proposal_id}/attachments/{n}: Remove an attachment (auth required)
+- GET /proposals/{proposal_id}: Read a proposal (auth required)
+- POST /proposals/{proposal_id}/commit: Commit a proposal, optionally as a package (auth required)
+- POST /fax: Send a fax (auth required)
+- GET /fax/{job_id}: Get a fax receipt (auth required)
+- GET /artifacts/{artifact_id}: Get an artifact (auth required)
+- GET /artifacts/{artifact_id}/content: Get an artifact's content (auth required)
+- POST /utilities/compose_pdf: Compose a PDF (auth required)
+- POST /utilities/merge_pdf: Merge whole PDFs (auth required)
+- POST /utilities/extract_pages: Extract pages (auth required)
+- POST /utilities/delete_pages: Delete pages (auth required)
+- POST /utilities/reorder_pages: Reorder pages (auth required)
+- POST /utilities/rotate_pages: Rotate pages (auth required)
+- POST /utilities/inspect_pdf: Inspect a PDF (auth required)
+- GET /library: List or search the library (public)
+- GET /.well-known/ard.json: The catalogue and how to verify an entry (public)
+- GET /.well-known/did.json: The DID document (public)
+- GET /.well-known/mcp.json: The MCP server record (public)
+
+## Integrations
+- [Integrations](https://getemboss.ai/integrations): Plug Emboss into your automation stack, or build your own integration on the API.
+- [Claude](https://getemboss.ai/integrations/claude): Fill PDF forms in Claude.
+- [n8n](https://getemboss.ai/integrations/n8n): Fill PDF forms in n8n workflows.
+- [Pipedream](https://getemboss.ai/integrations/pipedream): Fill PDF forms in Pipedream workflows.
+- [Zapier](https://getemboss.ai/integrations/zapier): Fill PDF forms in Zapier workflows.
+- [Make](https://getemboss.ai/integrations/make): Fill PDF forms in Make scenarios.
+
+## Use cases
+- [Fill PDF forms in Claude](https://getemboss.ai/use-cases/fill-pdf-forms-in-claude)
+- [Fill PDFs from your data via API](https://getemboss.ai/use-cases/fill-pdfs-from-your-data)
+- [Bulk-fill PDF forms with the API](https://getemboss.ai/use-cases/bulk-fill-pdfs)
+- [Batch fill PDF forms from a spreadsheet](https://getemboss.ai/use-cases/batch-fill-from-spreadsheet)
+- [Turn a flat PDF into a fillable form via API](https://getemboss.ai/use-cases/flat-pdf-to-fillable)
+- [Pre-fill PDF forms from context documents via API](https://getemboss.ai/use-cases/prefill-from-context)
+- [Send a fax from an agent](https://getemboss.ai/use-cases/send-a-fax-from-an-agent)
+
+## Glossary
+- [Model Context Protocol (MCP)](https://getemboss.ai/glossary/model-context-protocol)
+- [MCP server](https://getemboss.ai/glossary/mcp-server)
+- [Fillable PDF](https://getemboss.ai/glossary/fillable-pdf)
+- [Flat vs. fillable PDF](https://getemboss.ai/glossary/flat-vs-fillable-pdf)
+- [Form field detection](https://getemboss.ai/glossary/form-field-detection)
+- [PDF form](https://getemboss.ai/glossary/pdf-form)
+- [AcroForm](https://getemboss.ai/glossary/acroform)
+- [XFA](https://getemboss.ai/glossary/xfa)
+- [Form flattening](https://getemboss.ai/glossary/pdf-form-flattening)
+- [Signature field](https://getemboss.ai/glossary/pdf-signature-field)
+- [OCR for forms](https://getemboss.ai/glossary/ocr-for-forms)
+- [Checkbox and radio fields](https://getemboss.ai/glossary/pdf-checkbox-field)
+- [Filling a PDF from data](https://getemboss.ai/glossary/fill-pdf-from-data)

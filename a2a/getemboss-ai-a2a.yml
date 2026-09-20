@@ -1,0 +1,185 @@
+generated: '2026-09-19'
+method: probed
+source: https://api.getemboss.ai/.well-known/agent-card.json
+card:
+  file: a2a/getemboss-ai-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: api.getemboss.ai
+  note: >-
+    The card is served on BOTH hosts and at BOTH paths, byte-identical: api.getemboss.ai and getemboss.ai each
+    answer /.well-known/agent-card.json (canonical) and /.well-known/agent.json (legacy) with the same 23,281-byte
+    document (cmp confirmed identical bytes across hosts). The API host serves it as application/a2a+json, the
+    apex as application/json. Emboss's own docs say this mirroring is deliberate — "bytes unchanged, so its own
+    signature verifies on either host" (https://getemboss.ai/docs/reference/trust). The API host is recorded as
+    the discovery host because it is the one the harvest lead, the ARD catalogue entry
+    (urn:air:getemboss.ai:a2a:emboss), x-service-info.a2a in the pay-door OpenAPI and the A2A guide all name.
+  ownership: >-
+    Not in question. provider.organization is "Emboss" with provider.url https://getemboss.ai; the declared
+    interface https://api.getemboss.ai/a2a is on the same host that serves both Emboss OpenAPIs and the MCP
+    endpoint; securitySchemes describe "An Emboss API key (sk_...)" and point at https://getemboss.ai/docs/authentication;
+    documentationUrl is https://getemboss.ai/docs/a2a; and the card carries a JWS signature whose kid
+    (emboss-a2a-1) resolves through did:web:getemboss.ai at /.well-known/did.json and /.well-known/a2a-jwks.json.
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://api.getemboss.ai/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/a2a+json; charset=utf-8
+  body_bytes: 23281
+  body_parses_as: JSON object with AgentCard shape (name, version, capabilities, skills, supportedInterfaces, securitySchemes, provider, signatures)
+  corroborating_probes:
+  - url: https://api.getemboss.ai/.well-known/agent.json
+    http_status: 200
+    note: Legacy path, same bytes.
+  - url: https://getemboss.ai/.well-known/agent-card.json
+    http_status: 200
+    note: Apex mirror, same bytes, served as application/json.
+  - url: https://getemboss.ai/.well-known/agent.json
+    http_status: 200
+  - url: https://api.getemboss.ai/a2a
+    http_status: 405
+    note: GET on the declared interface returns 405 Method Not Allowed — the endpoint exists and expects the JSON-RPC POST the card declares.
+  - url: https://api.getemboss.ai/a2a
+    http_status: 200
+    note: >-
+      An anonymous JSON-RPC POST with an unknown method returned {"error":{"code":-32601,"message":"Method not found"}}
+      — a live JSON-RPC 2.0 responder, not a documentation page. No authenticated call was made.
+  - url: https://api.getemboss.ai/.well-known/did.json
+    http_status: 200
+    note: DID document for did:web:getemboss.ai carrying the Ed25519 verification method emboss-a2a-1 that signs the card.
+  - url: https://api.getemboss.ai/.well-known/a2a-jwks.json
+    http_status: 200
+    note: JWKS with the same Ed25519 key (kid emboss-a2a-1). The apex 404s this path; the card's jku header names the API host.
+  - url: https://api.getemboss.ai/.well-known/ard.json
+    http_status: 200
+    note: Emboss's ARD/AIR catalogue lists the card as urn:air:getemboss.ai:a2a:emboss, type application/a2a-agent-card+json, with a signed trust manifest.
+agent_card:
+  name: Emboss
+  description: >-
+    Emboss turns any PDF form into a fillable one, fills it from data or supporting documents, reads a filled form
+    back, and faxes the result to any fax number. Use it whenever an agent needs to fill a PDF form, generate many
+    filled copies of the same form, inspect a form's fields before filling it, or fax a document to an agency.
+  version: 1.0.0
+  documentation_url: https://getemboss.ai/docs/a2a
+  provider:
+    organization: Emboss
+    url: https://getemboss.ai
+  supported_interfaces:
+  - url: https://api.getemboss.ai/a2a
+    protocol_binding: JSONRPC
+    protocol_version: '1.0'
+  capabilities:
+    streaming: true
+    push_notifications: false
+    extensions:
+    - uri: https://github.com/google-a2a/a2a-x402/v0.1
+      required: false
+      description: Pay per job over A2A with x402 (USDC on Base) for anonymous callers with no Emboss account.
+  default_input_modes: [application/pdf, text/csv, application/json]
+  default_output_modes: [application/pdf, application/json]
+  security_schemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearer_format: Emboss API key (sk_...)
+    oauth2:
+      type: oauth2
+      flow: authorizationCode
+      authorization_url: https://api.getemboss.ai/oauth/authorize
+      token_url: https://api.getemboss.ai/oauth/token
+      scopes: [forms:read, forms:write]
+  security_requirements:
+  - bearer: [forms:read, forms:write]
+  - oauth2: [forms:read, forms:write]
+  signatures:
+    count: 1
+    alg: EdDSA
+    kid: emboss-a2a-1
+    jku: https://api.getemboss.ai/.well-known/a2a-jwks.json
+  skill_count: 23
+  skills:
+  - {id: make_fillable, name: Make a PDF fillable, paid: true}
+  - {id: fill_form, name: Fill a form from data, paid: true}
+  - {id: fill_from_context, name: Fill a form from context documents, paid: true}
+  - {id: prepare, name: Prepare a form from documents, paid: true}
+  - {id: fill_batch, name: Batch fill forms from a spreadsheet, paid: true}
+  - {id: suggest_mapping, name: Suggest a column-to-field mapping, paid: true}
+  - {id: find_forms, name: Find previously processed forms, paid: false}
+  - {id: find_form, name: Find a blank government form, paid: false}
+  - {id: get_form, name: Get a form's status and field inventory, paid: false}
+  - {id: commit, name: Commit a proposal, paid: false, note: free within the billed prepare; a package build is billed}
+  - {id: verify, name: Check a filled form, paid: true}
+  - {id: read_form, name: Read a filled form back, paid: true}
+  - {id: attach, name: Attach a document to a proposal, paid: false}
+  - {id: quote_job, name: Get a price quote for filling a PDF form, paid: false}
+  - {id: execute_quote, name: Run a previously quoted job, paid: true}
+  - {id: send_fax, name: Send a PDF by fax, paid: true}
+  - {id: compose_pdf, name: Compose a PDF from artifacts, paid: false}
+  - {id: merge_pdf, name: Merge PDFs, paid: false}
+  - {id: extract_pages, name: Extract pages, paid: false}
+  - {id: delete_pages, name: Delete pages, paid: false}
+  - {id: reorder_pages, name: Reorder pages, paid: false}
+  - {id: rotate_pages, name: Rotate pages, paid: false}
+  - {id: inspect_pdf, name: Inspect a PDF, paid: false}
+  skills_note: >-
+    Every skill declares id, name, description, tags, inputModes, outputModes and three or four worked examples.
+    The paid/free split above is read from each skill's own description ("Free." prefix on the seven PDF
+    utilities; pricing text on the paid ones) and from https://getemboss.ai/docs/pay-per-call/x402.
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: '1.0'
+  preferred_transport: null
+  transport: JSONRPC (via supportedInterfaces[0].protocolBinding)
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  optional_fields:
+    default_input_modes: true
+    default_output_modes: true
+    preferred_transport: false
+  grade_basis: >-
+    Graded against the A2A 1.0.0 hard checks, on the same basis as all/leadping/a2a/leadping-a2a.yml.
+    capabilities is an OBJECT (pass) with streaming, pushNotifications and a typed extensions[] list.
+    protocolVersion is present (pass), declared as "1.0" on supportedInterfaces[0] — where A2A 1.0.0 carries it
+    after supportedInterfaces[] replaced the 0.3-era top-level url/preferredTransport/protocolVersion triple.
+    skills is an ARRAY (pass) of 23 fully-populated skills. defaultInputModes and defaultOutputModes are both
+    declared. preferredTransport is absent because 1.0.0 superseded it with supportedInterfaces[].protocolBinding,
+    which the card declares (JSONRPC); its absence is spec-current, not a gap. The card additionally carries a
+    JWS signature block (EdDSA, kid emboss-a2a-1) verifiable against the published DID document and JWKS, which
+    is rare in the catalog.
+  deviations:
+  - field: protocolVersion
+    observed: carried on supportedInterfaces[0], not at the top level
+    note: >-
+      A reader written against A2A 0.3.0 will find no top-level protocolVersion. Recorded because both card
+      shapes coexist in the wild, not because Emboss is out of spec — the card is consistently 1.0-shaped
+      (supportedInterfaces, protocolBinding, securityRequirements).
+  - field: securitySchemes
+    observed: flat OpenAPI-style objects (type/scheme/flows) rather than the protobuf-JSON oneof wrapper
+    note: >-
+      The opposite choice from Leadping's card. Readable by any OpenAPI-literate client; a strict protobuf-JSON
+      reader expecting httpAuthSecurityScheme/oauth2SecurityScheme wrapper keys will not find them.
+  - field: skills[].security
+    observed: absent on every skill
+    note: >-
+      Per-skill security requirements are not declared; the card-level securityRequirements apply to all 23.
+      The x402 extension's description says anonymous callers can pay per job for the paid skills, but no skill
+      says which of the three access paths (API key, OAuth, x402) it accepts — that is prose in the description.
+  - field: signatures[0].protected
+    observed: jku https://api.getemboss.ai/.well-known/a2a-jwks.json
+    note: >-
+      The jku is only served on the API host (the apex 404s /.well-known/a2a-jwks.json), so verification of the
+      apex-served copy still depends on the API host being reachable. The DID document at /.well-known/did.json
+      is served on both hosts and carries the same key.
+surface_relationship:
+  note: >-
+    Emboss publishes four agent-facing doors that are projections of ONE engine, and says so ("the pay door runs
+    the same engine"). A2A: 23 skills at https://api.getemboss.ai/a2a, the widest surface — it is the only door
+    carrying quote_job/execute_quote and the seven free PDF utilities as named skills. MCP: 20 tools at
+    https://api.getemboss.ai/mcp (see mcp/getemboss-ai-mcp.yml). REST account API: 115 operations at
+    https://api.getemboss.ai (openapi/getemboss-ai-account-openapi.yml). Pay-per-call door: 6 anonymous
+    x402/MPP operations under /pay (openapi/getemboss-ai-pay-per-call-openapi.yml). The crosswalk in
+    mcp/getemboss-ai-tool-crosswalk.yml binds skills and tools to their REST operationIds.

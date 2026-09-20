@@ -1,0 +1,126 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  Derived from openapi/getemboss-ai-account-openapi.yml and openapi/getemboss-ai-pay-per-call-openapi.yml, the
+  fetched discovery documents under well-known/, the agent card under a2a/, and the Emboss docs
+  (authentication, errors, callbacks, pay-per-call/mpp, pay-per-call/x402, reference/trust, xfa-forms).
+  Every entry names the exact location the claim was read from.
+standards:
+- id: oauth2
+  conforms: true
+  evidence: openapi/getemboss-ai-account-openapi.yml components.securitySchemes.oauth2 (authorizationCode flow, authorizationUrl https://api.getemboss.ai/oauth/authorize, tokenUrl https://api.getemboss.ai/oauth/token, scopes forms:read + forms:write); live https://api.getemboss.ai/.well-known/oauth-authorization-server
+- id: oauth2-pkce
+  conforms: true
+  evidence: well-known/getemboss-ai-oauth-authorization-server.json code_challenge_methods_supported ["S256"]
+- id: rfc8414-authorization-server-metadata
+  conforms: true
+  evidence: https://api.getemboss.ai/.well-known/oauth-authorization-server returned 200 with issuer, authorization_endpoint, token_endpoint, registration_endpoint, revocation_endpoint, grant_types_supported, scopes_supported
+- id: rfc9728-protected-resource-metadata
+  conforms: true
+  evidence: https://api.getemboss.ai/.well-known/oauth-protected-resource/mcp returned 200 (resource https://api.getemboss.ai/mcp, authorization_servers, scopes_supported, bearer_methods_supported); the 401 on POST /mcp names it in WWW-Authenticate resource_metadata
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: well-known/getemboss-ai-oauth-authorization-server.json registration_endpoint https://api.getemboss.ai/oauth/register; operation register_oauth_register_post in the account OpenAPI
+- id: rfc7009-token-revocation
+  conforms: true
+  evidence: revocation_endpoint https://api.getemboss.ai/oauth/revoke in the AS metadata; operation revoke_oauth_revoke_post
+- id: oauth-client-id-metadata-document
+  conforms: true
+  evidence: well-known/getemboss-ai-oauth-authorization-server.json client_id_metadata_document_supported true
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration 404 on getemboss.ai and api.getemboss.ai; no openIdConnect securityScheme in either spec
+- id: http-bearer-api-key
+  conforms: true
+  evidence: components.securitySchemes.bearer (type http, scheme bearer, bearerFormat "Emboss API key (sk_...)") in both specs; https://getemboss.ai/docs/authentication
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: https://getemboss.ai/.well-known/security.txt 200 with Contact, Expires, Preferred-Languages, Canonical (well-known/getemboss-ai-security.txt)
+- id: rfc9457-problem-details
+  conforms: partial
+  evidence: >-
+    The pay door normalises every rejection to Problem Details ("the SAME Problem Details shape every other
+    rejection on this door already returns" — pay_pay__op__post and pay_job_status_pay_jobs__job_id__get
+    descriptions in openapi/getemboss-ai-account-openapi.yml) and a swept form's 410 carries "the retention
+    sentence as the problem detail" (https://getemboss.ai/docs/ephemeral-processing). The account API's
+    declared error shapes are FastAPI's {"detail": ...} and HTTPValidationError, plus an {"error": {"code",
+    "message"}} envelope on job and callback payloads — not application/problem+json.
+- id: rfc7517-jwks
+  conforms: true
+  evidence: https://api.getemboss.ai/.well-known/a2a-jwks.json 200 (one OKP/Ed25519 key, kid emboss-a2a-1)
+- id: w3c-did-core
+  conforms: true
+  evidence: https://getemboss.ai/.well-known/did.json and https://api.getemboss.ai/.well-known/did.json 200 — did:web:getemboss.ai with a JsonWebKey2020 verification method and an AICatalog service
+- id: rfc8785-json-canonicalization
+  conforms: true
+  evidence: https://getemboss.ai/docs/reference/trust — ARD trust manifests are signed as a detached JWS over the RFC 8785 canonical form; digest sha256 over the canonical entry
+- id: a2a-1.0
+  conforms: true
+  evidence: a2a/getemboss-ai-agent-card.json (supportedInterfaces[0].protocolVersion "1.0", protocolBinding JSONRPC); live JSON-RPC responder at https://api.getemboss.ai/a2a; graded conformant in a2a/getemboss-ai-a2a.yml
+- id: a2a-x402-extension
+  conforms: true
+  evidence: agent card capabilities.extensions[0].uri https://github.com/google-a2a/a2a-x402/v0.1; https://getemboss.ai/docs/pay-per-call/x402
+- id: mcp-streamable-http
+  conforms: true
+  evidence: well-known/getemboss-ai-mcp.json remotes[0].type streamable-http url https://api.getemboss.ai/mcp; POST /mcp answers with an MCP-shaped OAuth challenge
+- id: mcp-registry-server-json
+  conforms: true
+  evidence: well-known/getemboss-ai-mcp.json $schema https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json, name io.github.edwinorange/emboss
+- id: x402
+  conforms: true
+  evidence: openapi/getemboss-ai-pay-per-call-openapi.yml x-payment-info.protocols[] x402 entries (scheme exact, network eip155:8453, USDC asset) on every /pay/* operation; https://getemboss.ai/docs/pay-per-call/x402 (PAYMENT-REQUIRED header, EIP-3009 TransferWithAuthorization)
+- id: mpp-machine-payments-protocol
+  conforms: true
+  evidence: x-payment-info.protocols[] mpp entries (tempo charge, stripe charge) on every /pay/* operation; https://getemboss.ai/docs/pay-per-call/mpp (402 + WWW-Authenticate Payment, Authorization Payment credential, Payment-Receipt header)
+- id: ard-air-catalog
+  conforms: true
+  evidence: https://getemboss.ai/.well-known/ard.json specVersion 1.0 with signed trustManifest per entry; robots.txt "Agentmap:" line; <link rel="ard"> in the site head
+- id: llms-txt
+  conforms: true
+  evidence: https://getemboss.ai/llms.txt, https://api.getemboss.ai/llms.txt, https://api.getemboss.ai/pay/llms.txt all 200; every docs page has a .md twin
+- id: idempotency-key-header
+  conforms: partial
+  evidence: Idempotency-Key header documented on POST /forms, POST /forms/with-context, POST /forms/{form_id}/with-context and POST /fax (24-hour, account-scoped; https://getemboss.ai/docs/reference/create-form) and an idempotency_key body field on POST /proposals/{id}/commit — not on the rest of the write surface. See conventions/getemboss-ai-conventions.yml idempotency.coverage partial.
+- id: pagination-offset
+  conforms: true
+  evidence: GET /forms parameters states/limit/offset and FormsListResponse {forms,total,limit,offset} in openapi/getemboss-ai-account-openapi.yml; MCP list_forms uses cursor/next_cursor instead
+- id: rfc8594-sunset-deprecation-headers
+  conforms: false
+  evidence: No Sunset or Deprecation header documented; no deprecated:true operation in either spec
+- id: json-api
+  conforms: false
+  evidence: no application/vnd.api+json anywhere in the specs
+- id: scim
+  conforms: false
+  evidence: no urn:ietf:params:scim schema or /scim path
+- id: odata
+  conforms: false
+  evidence: no $metadata surface
+- id: webhooks-hmac-signature
+  conforms: true
+  evidence: X-Emboss-Signature sha256=HMAC-SHA256(raw body) on callback POSTs — https://getemboss.ai/docs/callbacks (asyncapi/getemboss-ai-callbacks.yml)
+domain_standards:
+  note: >-
+    Emboss's market is PDF form processing. The contract declares the two PDF form standards that market has —
+    ISO 32000 AcroForm interactive forms and Adobe XFA — in operation descriptions, not merely on a marketing page.
+    Reward-only; no sector regime lists a required standard for this product category.
+  standards:
+  - id: iso-32000-acroform
+    conforms: true
+    evidence: >-
+      openapi/getemboss-ai-pay-per-call-openapi.yml paths./pay/make-fillable.post.description ("Turn a flat or
+      scanned PDF form into a fillable PDF with detected fields ... add fillable fields to a document ... extract a
+      PDF form schema"); the provider-published skill says the output is "a real AcroForm PDF with detected
+      fields" (skills/getemboss-ai-emboss-SKILL.md); glossary https://getemboss.ai/glossary/acroform.
+  - id: adobe-xfa
+    conforms: true
+    evidence: >-
+      Same operation description names "XFA forms; Adobe LiveCycle forms; Adobe dynamic forms"; the
+      x-service-info-linked ARD entry tags "xfa"; https://getemboss.ai/docs/xfa-forms documents xfa_data and
+      xfa_render outputs on a fill of an XFA form.
+compliance_program:
+  published: false
+  note: >-
+    No certifications (SOC 2, ISO 27001, HIPAA, PCI) are claimed anywhere on getemboss.ai; /security describes
+    handling (TLS in transit, hashed keys, ephemeral deletion) and /subprocessors lists provider categories with
+    regions, but neither is a compliance program. No Compliance pointer is emitted.

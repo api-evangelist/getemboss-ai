@@ -1,0 +1,73 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  Sitemap https://getemboss.ai/sitemap.xml (no changelog URL), live probes of https://getemboss.ai/changelog,
+  /docs/changelog and https://api.getemboss.ai/changelog.json (404 on 2026-09-19), https://getemboss.ai/pricing
+  (dated price change), https://api.getemboss.ai/pricing (effective date), and the GitHub releases API for
+  GetEmboss-ai/emboss-claude-plugin.
+api_changelog_published: false
+note: >-
+  Emboss publishes NO changelog for the API itself. The only dated change statements on the API surface are on
+  the pricing page ("Prices changed on 2026-09-06: a context fill now includes verification") and in the
+  machine-readable price list (effective 2026-09-07). The first-party Claude Code plugin carries a dated GitHub
+  release stream (seven releases in three weeks) whose titles describe API-visible additions (artifact chaining,
+  fax, verify), and that is recorded below as the nearest thing to a release history — it is a client's changelog,
+  not the API's. No ChangeLog pointer is emitted for the API.
+scheme: none (API); semver tags on the plugin
+current_version:
+  api: unversioned
+  pay_per_call_spec: 1.1.0
+  claude_plugin: 1.5.1
+  mcp_registry_record: 1.5.0
+  n8n_node: 1.0.4
+entries:
+- date: '2026-09-07'
+  surface: pricing
+  category: changed
+  breaking: false
+  summary: Price list effective date (GET https://api.getemboss.ai/pricing effective 2026-09-07).
+- date: '2026-09-06'
+  surface: pricing
+  category: changed
+  breaking: false
+  summary: 'Prices changed: a context fill now includes verification (https://getemboss.ai/pricing).'
+- date: '2026-09-17'
+  surface: emboss-claude-plugin
+  version: v1.5.1
+  category: release
+  source: https://github.com/GetEmboss-ai/emboss-claude-plugin/releases/tag/v1.5.1
+- date: '2026-09-13'
+  surface: emboss-claude-plugin
+  version: v1.5.0
+  category: release
+  source: https://github.com/GetEmboss-ai/emboss-claude-plugin/releases/tag/v1.5.0
+- date: '2026-09-13'
+  surface: emboss-claude-plugin
+  version: v1.4.0
+  category: release
+- date: '2026-09-13'
+  surface: emboss-claude-plugin
+  version: v1.3.0
+  category: release
+  summary: 'v1.3.0: chain by artifact_id'
+- date: '2026-09-12'
+  surface: emboss-claude-plugin
+  version: v1.2.0
+  category: release
+- date: '2026-09-12'
+  surface: emboss-claude-plugin
+  version: v1.1.0
+  category: release
+- date: '2026-08-29'
+  surface: emboss-claude-plugin
+  version: v1.0.0
+  category: release
+- date: '2026-06-15'
+  surface: n8n-nodes-emboss
+  version: 1.0.4
+  category: release
+  source: https://registry.npmjs.org/n8n-nodes-emboss
+probes:
+- {url: 'https://getemboss.ai/changelog', status: 404}
+- {url: 'https://getemboss.ai/docs/changelog', status: 404}
+- {url: 'https://api.getemboss.ai/changelog.json', status: 404}

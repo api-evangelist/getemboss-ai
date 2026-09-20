@@ -1,0 +1,93 @@
+generated: '2026-09-19'
+method: searched
+source: openapi/getemboss-ai-account-openapi.yml and openapi/getemboss-ai-pay-per-call-openapi.yml (derived baseline by derive-authentication.py) upgraded from https://getemboss.ai/docs/authentication, /docs/mcp-tools, /docs/a2a, /docs/pay-per-call/mpp, /docs/pay-per-call/x402, /docs/artifacts and the live discovery documents under well-known/
+docs: https://getemboss.ai/docs/authentication
+summary:
+  types: [http, oauth2, payment]
+  api_key_in: [header]
+  oauth2_flows: [authorizationCode]
+  note: >-
+    Four ways in, matched to four doors. (1) Bearer API key on the account REST API, A2A and (as a fallback) MCP.
+    (2) OAuth 2.1 authorization code + PKCE with dynamic client registration on MCP and A2A. (3) Machine payment
+    in place of identity on the anonymous pay door — an MPP "Authorization: Payment" credential or an x402
+    EIP-3009 authorization answering a 402. (4) artifact_token as a capability token that lets an anonymous
+    caller reuse a file it paid for. GET /health and GET /library need nothing.
+schemes:
+- name: bearer
+  type: http
+  scheme: bearer
+  bearerFormat: Emboss API key (sk_...)
+  header: 'Authorization: Bearer sk_live_...'
+  key_prefix: sk_live_
+  description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+  sources: [openapi/getemboss-ai-account-openapi.yml, a2a/getemboss-ai-agent-card.json]
+  issuance: Created, rotated, disabled and revoked in the dashboard (Dashboard > Account > API keys); also the REST operations create_key_keys_post / list_keys_keys_get / patch_key_keys__key_id__patch / delete_key_keys__key_id__delete.
+  storage: Keys are stored hashed, never in plain text (https://getemboss.ai/security).
+  scope: Owner-scoped — a key can only read and mutate the forms and sessions created with that same key; a request for another owner's resource returns 404, not 403, so existence is not leaked across accounts.
+  lifecycle:
+    states: [active, disabled, revoked]
+    disabled: Requests return 401; reversible — re-enable in the dashboard.
+    revoked: Requests return 401; permanent — issue a new key.
+    rotation: Create the new key, move traffic, then revoke the old one.
+  rejections:
+    401: No Authorization header or a malformed one; a well-formed but unknown, disabled or revoked key.
+    404: A valid key reaching a resource it does not own.
+    402: Over the monthly free tier with no card on file.
+    429: Over the request rate limit.
+  test_mode: none — sk_live_ is the only prefix; see sandbox/getemboss-ai-sandbox.yml
+- name: oauth2
+  type: oauth2
+  issuer: https://api.getemboss.ai
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.getemboss.ai/oauth/authorize
+    tokenUrl: https://api.getemboss.ai/oauth/token
+    scopes: 2
+    pkce: S256
+    grant_types: [authorization_code, refresh_token]
+    registration_endpoint: https://api.getemboss.ai/oauth/register
+    revocation_endpoint: https://api.getemboss.ai/oauth/revoke
+    token_endpoint_auth_methods: [none, client_secret_post]
+    client_id_metadata_document_supported: true
+  description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+  sources: [openapi/getemboss-ai-account-openapi.yml, well-known/getemboss-ai-oauth-authorization-server.json, well-known/getemboss-ai-oauth-protected-resource-mcp.json, a2a/getemboss-ai-agent-card.json]
+  used_by: [MCP (https://api.getemboss.ai/mcp — 401 challenge carries resource_metadata), A2A (card securitySchemes.oauth2), account API (spec global security)]
+  discovery: RFC 8414 metadata at https://api.getemboss.ai/.well-known/oauth-authorization-server; RFC 9728 metadata at https://api.getemboss.ai/.well-known/oauth-protected-resource/mcp
+  consent: Dashboard shows pending consents and granted apps (admin_oauth_* operations); users disconnect under Dashboard > Account > Connected apps.
+  detail: scopes/getemboss-ai-scopes.yml
+- name: payment-mpp
+  type: payment
+  scheme: 'Authorization: Payment <credential>'
+  challenge: '402 with WWW-Authenticate: Payment (one challenge per method: tempo USDC.e at the exact price; stripe card via Shared Payment Tokens with a 0.50 USD minimum)'
+  receipt: Payment-Receipt response header on the 202
+  applies_to: https://api.getemboss.ai/pay/* (openapi/getemboss-ai-pay-per-call-openapi.yml, x-payment-info.protocols[].mpp)
+  docs: https://getemboss.ai/docs/pay-per-call/mpp
+  note: An Authorization header that does not use the Payment scheme is answered with a fresh 402 rather than a 400.
+- name: payment-x402
+  type: payment
+  scheme: x402 payment header carrying a signed EIP-3009 TransferWithAuthorization
+  challenge: 'the same 402 carries a PAYMENT-REQUIRED header; accepts USDC on Base (eip155:8453) first, then one gasless GatewayWalletBatched entry per chain Circle Gateway supports'
+  applies_to: [https://api.getemboss.ai/pay/*, A2A tasks via the a2a-x402 extension (TASK_STATE_INPUT_REQUIRED with x402.payment.required)]
+  docs: https://getemboss.ai/docs/pay-per-call/x402
+  note: Quotes expire after 24 hours; on A2A a failed attempt consumes the quote nonce, on the pay door a fresh 402 is issued.
+- name: artifact_token
+  type: capability-token
+  location: request body, next to artifact_id (per source entry in sources[])
+  description: Issued to anonymous pay-door callers with each result; proves ownership of an artifact so it can be reused in a later paid operation or a free utility without an account.
+  docs: https://getemboss.ai/docs/artifacts
+  sources: [openapi/getemboss-ai-pay-per-call-openapi.yml (202 response artifact_token)]
+- name: status_url_token
+  type: capability-token
+  location: query parameter token on GET /pay/jobs/{job_id}
+  description: HMAC(job_id, server secret) minted in the 202; lets an anonymous payer poll a job with no account.
+  sources: [openapi/getemboss-ai-account-openapi.yml pay_job_status_pay_jobs__job_id__get description]
+public_endpoints:
+- GET /health
+- GET /library
+- GET /pricing
+- POST /pay/quote
+- GET /.well-known/* discovery documents
+spec_gap: >-
+  The account spec declares bearer + oauth2 globally but the Idempotency-Key header, the payment schemes and the
+  artifact_token are documented only in prose; the pay spec declares security [] on each operation and expresses
+  payment through x-payment-info rather than a securityScheme.

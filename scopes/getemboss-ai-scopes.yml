@@ -1,0 +1,43 @@
+generated: '2026-09-19'
+method: searched
+source: openapi/getemboss-ai-account-openapi.yml (derived baseline by derive-oauth-scopes.py) upgraded from https://getemboss.ai/docs/mcp-tools and the live RFC 8414 / RFC 9728 metadata under well-known/
+docs: https://getemboss.ai/docs/mcp-tools#scopes
+discovery:
+  authorization_server_metadata: well-known/getemboss-ai-oauth-authorization-server.json
+  protected_resource_metadata: well-known/getemboss-ai-oauth-protected-resource-mcp.json
+  scopes_supported: [forms:read, forms:write]
+  note: Both discovery documents list exactly the two scopes the spec declares; there are no hidden or undocumented scopes.
+schemes:
+- name: oauth2
+  source: openapi/getemboss-ai-account-openapi.yml
+  issuer: https://api.getemboss.ai
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.getemboss.ai/oauth/authorize
+    tokenUrl: https://api.getemboss.ai/oauth/token
+    pkce: S256
+    refresh: true
+    registration_endpoint: https://api.getemboss.ai/oauth/register
+    revocation_endpoint: https://api.getemboss.ai/oauth/revoke
+    token_endpoint_auth_methods: [none, client_secret_post]
+  description: Sign in with your Emboss account. Used by MCP clients and A2A clients; the account REST API also accepts an OAuth token per the spec's global security.
+  resources:
+  - https://api.getemboss.ai/mcp
+  - https://api.getemboss.ai/a2a
+  - 'https://api.getemboss.ai (account API — spec global security [{bearer}, {oauth2: [forms:read, forms:write]}])'
+scopes:
+- scope: forms:read
+  description: Read your forms
+  flows: [authorizationCode]
+  sources: [openapi/getemboss-ai-account-openapi.yml, well-known/getemboss-ai-oauth-authorization-server.json]
+  grants_mcp_tools: [list_forms, get_form, get_usage, find_form, get_job, get_batch, get_proposal, get_fax]
+- scope: forms:write
+  description: Create and fill forms
+  flows: [authorizationCode]
+  sources: [openapi/getemboss-ai-account-openapi.yml, well-known/getemboss-ai-oauth-authorization-server.json]
+  grants_mcp_tools: [create_form, delete_form, fill_form, fill_form_from_context, prepare_form, commit_proposal, verify_form, read_form, add_attachment, suggest_mapping, fill_batch, send_fax]
+  note: '"everything else" per the docs — delete_form, read_form and add_attachment sit under write even though delete and attach are free and read_form stores nothing.'
+behaviour:
+  insufficient_scope: A tool call that needs a scope the connection does not have returns insufficient_scope; the fix is to disconnect (Dashboard > Account > Connected apps) and reconnect granting both permissions.
+  api_key_equivalence: An API key (sk_live_) is not scoped — it carries the whole owner's surface; the agent card's securityRequirements nonetheless list both scope names under bearer as well as oauth2.
+  granularity_gap: Two scopes cover a 20-tool / 115-operation surface; there is no per-resource or read-only-billing scope, and no scope distinguishes the paid writes (fill, fax) from the free ones (delete, attach).

@@ -1,0 +1,211 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/getemboss-ai-account-openapi.yml (73 component schemas) and openapi/getemboss-ai-pay-per-call-openapi.yml,
+  cross-read with https://getemboss.ai/docs/artifacts, /docs/tracking-jobs, /docs/prepare-commit-verify and /docs/reference/sessions.
+  Schema names were checked against the spec by script.
+summary: 'Form is the root: sessions, context jobs, proposals and batches hang off form_id. Every file is an Artifact
+  with an opaque immutable artifact_id and a lineage graph (produced_by / inputs / used_by), which is how results
+  chain into a fax or a free utility without downloading. The FastAPI spec links by id field in request bodies and
+  path parameters, not by $ref nesting — the 73 schemas are mostly request bodies and flat responses, so the graph
+  below is read from path parameters, response fields and the docs rather than from $ref edges.'
+id_style:
+  format: UUID v4 strings (form_id, session_id, job_id, proposal_id, batch_id, artifact_id, quote_id)
+  prefixes_published: false
+  note: Credentials are prefixed (sk_live_ API keys); resource ids are not. Library forms use human slugs (irs-w-9).
+entities:
+- name: Form
+  description: Uploaded (or library-sourced) PDF whose fields Emboss detected; owner-scoped by API key.
+  schemas:
+  - FormCreated
+  - FormStatus
+  - FormSummary
+  - FormsListResponse
+  - ContractResponse
+  - Retention
+  relationships:
+  - has_many: Session
+    via: form_id
+  - has_many: ContextJob
+    via: form_id
+  - has_many: Proposal
+    via: form_id
+  - has_many: Batch
+    via: form_id
+  - has_one: Artifact
+    via: artifact_id (fillable PDF) / source_artifact_id (upload)
+  - belongs_to: Account
+    via: owner
+  - belongs_to: LibraryForm
+    via: library slug (optional)
+- name: Session
+  description: 'A standard fill: values put directly on a form, rendered once, then terminal.'
+  schemas:
+  - SessionCreate
+  - FieldUpdate
+  - FieldsRequest
+  relationships:
+  - belongs_to: Form
+    via: form_id
+  - has_one: Artifact
+    via: artifact_id (filled PDF)
+- name: ContextJob
+  description: Asynchronous fill-with-context job; ready state carries a session_id and artifacts[].
+  schemas:
+  - ContextJobCreated
+  - ContextJobStatus
+  relationships:
+  - belongs_to: Form
+    via: form_id
+  - has_one: Session
+    via: session_id
+  - has_many: Artifact
+    via: artifacts[].artifact_id
+- name: Proposal
+  description: 'Output of prepare: every field''s candidate values with evidence, open questions, attachments; committed
+    into a filled PDF + receipt (+ package).'
+  schemas:
+  - ProposalResponse
+  - Body_prepare_new_forms_prepare_post
+  - Body_prepare_existing_forms__form_id__prepare_post
+  relationships:
+  - belongs_to: Form
+    via: form_id
+  - has_many: Attachment
+    via: attachments[].n
+  - has_many: Commit
+    via: job_id per commit (up to 10)
+  - has_one: Receipt
+    via: receipt_proposals__proposal_id__receipt_get
+- name: Attachment
+  description: Supporting document attached to a proposal before commit.
+  schemas:
+  - Body_add_attachment_proposals__proposal_id__attachments_post
+  relationships:
+  - belongs_to: Proposal
+    via: proposal_id
+- name: Batch
+  description: 'A fill-batch run: one filled copy per spreadsheet row.'
+  schemas:
+  - BatchCreated
+  - BatchStatus
+  - BatchRun
+  - BatchRunsResponse
+  - MappingSuggestion
+  relationships:
+  - belongs_to: Form
+    via: form_id
+  - has_many: Artifact
+    via: row artifacts (role row)
+- name: FaxJob
+  description: Outbound fax; working → delivered | failed; billed per page at delivery.
+  schemas: []
+  relationships:
+  - has_one: Artifact
+    via: artifact_id (transmitted copy)
+  - has_many: Artifact
+    via: source_artifact_ids
+- name: Artifact
+  description: Every file Emboss makes or receives, with sha256, produced_by, inputs and used_by lineage; immutable
+    bytes.
+  schemas: []
+  relationships:
+  - belongs_to: Process
+    via: produced_by
+  - has_many: Artifact
+    via: inputs / used_by (lineage graph)
+- name: LibraryForm
+  description: Blank US federal form Emboss already knows (slug, agency, revision).
+  schemas: []
+  relationships:
+  - has_many: Form
+    via: library slug on create
+- name: Account
+  description: The API-key owner; usage, billing and retention default.
+  schemas:
+  - UsageResponse
+  - UsageCounts
+  - UsageDetailResponse
+  - BillingBreakdownResponse
+  - InvoicesResponse
+  - PaymentMethodResponse
+  relationships:
+  - has_many: ApiKey
+    via: owner
+  - has_many: Form
+    via: owner
+  - has_one: Retention
+    via: account retention default
+- name: ApiKey
+  description: sk_live_ credential; active | disabled | revoked.
+  schemas:
+  - CreateKeyBody
+  - KeyPatchBody
+  relationships:
+  - belongs_to: Account
+    via: owner
+- name: Quote
+  description: Free, stateless price for a document; pay-door quotes carry a quote_id valid 24 hours.
+  schemas:
+  - Body_account_quote_forms_quote_post
+  - Body_pay_quote_pay_quote_post
+  relationships:
+  - has_one: PayJob
+    via: quote_id
+- name: PayJob
+  description: Anonymous pay-door job polled at status_url with an HMAC token; carries artifact_id + artifact_token.
+  schemas:
+  - Body_pay_pay__op__post
+  relationships:
+  - belongs_to: Quote
+    via: quote_id
+  - has_many: Artifact
+    via: artifacts[] with artifact_token
+state_machines:
+- entity: Form
+  states:
+  - processing
+  - ready
+  - failed
+  source: https://getemboss.ai/docs/tracking-jobs
+- entity: Session
+  states:
+  - open
+  - completed
+  note: 409 on writes after completion
+  source: https://getemboss.ai/docs/reference/sessions
+- entity: ContextJob
+  states:
+  - processing
+  - ready
+  - failed
+- entity: Proposal
+  states:
+  - open
+  - committed
+  - expired
+  note: 409 once committed or expired; an uncommitted proposal is auto-committed when it expires (receipt marks
+    it auto)
+  source: https://getemboss.ai/docs/prepare-commit-verify
+- entity: Batch
+  states:
+  - running
+  - complete
+  - failed
+- entity: FaxJob
+  states:
+  - working
+  - delivered
+  - failed
+  source: https://getemboss.ai/docs/send-fax
+- entity: Artifact
+  states:
+  - present
+  - gone
+  note: gone after the ephemeral sweep; metadata route still 200, bytes 410
+  source: https://getemboss.ai/docs/artifacts
+- entity: ApiKey
+  states:
+  - active
+  - disabled
+  - revoked
+  source: https://getemboss.ai/docs/authentication

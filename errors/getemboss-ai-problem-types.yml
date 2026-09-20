@@ -1,0 +1,112 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://getemboss.ai/docs/reference/errors (the status-code table), https://getemboss.ai/docs/authentication,
+  /docs/callbacks, /docs/ephemeral-processing, /docs/pay-per-call/x402, /docs/mcp-tools and the reference pages,
+  cross-read with the declared responses in openapi/getemboss-ai-account-openapi.yml and
+  openapi/getemboss-ai-pay-per-call-openapi.yml.
+docs: https://getemboss.ai/docs/reference/errors
+format: mixed
+envelopes:
+- surface: Account REST API
+  media_type: application/json
+  shape: '{"detail": "<message>"}  (FastAPI default) — validation failures return {"detail": [ValidationError...]} (HTTPValidationError, 422)'
+  evidence: components.schemas.HTTPValidationError and ValidationError in the account spec; observed live 401 body {"detail":"missing credentials"} on GET /usage
+  note: Errors carry a human-readable message; there is no published registry of machine codes for REST responses beyond the 402 body codes below.
+- surface: Jobs and callbacks
+  media_type: application/json
+  shape: '{"status": "failed", "error": {"code": "<code>", "message": "<message>"}}'
+  evidence: components.schemas.ErrorDetail {code, message}; https://getemboss.ai/docs/callbacks payload examples
+- surface: Pay-per-call door (/pay/*)
+  media_type: application/problem+json
+  rfc9457: true
+  evidence: >-
+    pay_pay__op__post description — "normalizes it to the SAME Problem Details shape every other rejection on this
+    door already returns ... Problem Details across the whole /pay* surface"; a swept form's 410 carries the
+    retention sentence as the problem detail (https://getemboss.ai/docs/ephemeral-processing).
+- surface: MCP tools
+  shape: tool error codes (insufficient_scope, unauthenticated, bad_request, unsupported_file, not_ready, over_free_tier, over_page_cap)
+  evidence: https://getemboss.ai/docs/mcp-tools; skills/getemboss-ai-emboss-SKILL.md
+- surface: A2A x402 payment step
+  shape: task error codes INSUFFICIENT_FUNDS, INVALID_SIGNATURE, EXPIRED_PAYMENT, DUPLICATE_NONCE
+  evidence: https://getemboss.ai/docs/pay-per-call/x402
+retry_guidance: 2xx success; 4xx rejected and should not be retried unchanged; 5xx server-side and safe to retry; 410 is not an error to retry (https://getemboss.ai/docs/ephemeral-processing).
+problem_types:
+- status: 400
+  title: Bad request
+  detail: Malformed input, missing file, invalid JSON, a private/loopback/non-https callback_url, or an unrecognised utility skill name.
+  remediation: Fix the input; do not retry unchanged.
+- status: 401
+  title: Unauthorized
+  detail: No Authorization header, a malformed one, or a well-formed but unknown, disabled or revoked API key. On /mcp the 401 is an OAuth challenge with WWW-Authenticate resource_metadata.
+  remediation: 'Send "Authorization: Bearer sk_live_..." or complete the OAuth flow; a disabled key can be re-enabled in the dashboard, a revoked one cannot.'
+- status: 402
+  title: Payment required
+  detail: >-
+    Account API: over the monthly free tier (5 create / 5 context fill / 5 standard fill / 5 verify / 5 read / 5
+    package, each on a document of 5 pages or fewer) with no payment method on file. Body carries code
+    over_free_tier or over_page_cap and billing_url. Pay door: the normal first response — a payment challenge
+    (WWW-Authenticate: Payment for MPP and a PAYMENT-REQUIRED header for x402) naming the exact price.
+  codes: [over_free_tier, over_page_cap]
+  remediation: Add a payment method at billing_url, or pay the challenge and resend the identical request.
+- status: 404
+  title: Not found
+  detail: No such resource, or it belongs to another owner — a valid key reaching another account's resource returns 404, not 403, so existence is not leaked. Also an unknown library slug ("no library form named <slug>").
+- status: 409
+  title: Conflict
+  detail: Resource not ready (detection pending), session already completed (terminal), proposal already committed or expired, or a form with work still running on DELETE.
+  remediation: Poll until ready; open a new session or proposal.
+- status: 410
+  title: Gone
+  detail: The form's documents were deleted under its retention policy (ephemeral sweep, 60-70 minutes after last activity). The receipt route still answers 200 with values redacted; artifact metadata answers 200 with status gone.
+  remediation: Not retryable. Re-upload if the document is still needed.
+- status: 413
+  title: Payload too large
+  detail: File over 10 MB, over 100 pages, more than 5 context files, or more than 30 MB total.
+- status: 422
+  title: Unprocessable entity
+  detail: Field validation failed (unknown field id, invalid value, missing required multipart file). Declared on 95 of 115 account operations as HTTPValidationError.
+- status: 429
+  title: Too many requests
+  detail: Over the request rate limit (the docs' default is 60 requests per window); anonymous pay-door quotes are also limited per IP per hour.
+  remediation: Back off exponentially (1s, 2s, 4s) and retry; lower concurrency in bulk runs.
+- status: 500
+  title: Server error
+  detail: An unexpected failure; safe to retry.
+- status: 503
+  title: Service unavailable
+  detail: The library form's stored copy could not be read ("library copy unavailable"), or the fax provider did not accept the job.
+  remediation: Retry.
+job_error_codes:
+- code: context_fill_failed
+  surface: job.failed callback / GET /forms/with-context/{job_id}
+- code: form_processing_failed
+  surface: form.failed callback / GET /forms/{form_id}
+mcp_tool_error_codes:
+- code: insufficient_scope
+  meaning: The OAuth connection lacks forms:write (or forms:read) for this tool; reconnect granting both scopes.
+- code: unauthenticated
+  meaning: Not signed in to Emboss.
+- code: bad_request
+  meaning: e.g. fill_form with flatten:true (reserved).
+- code: unsupported_file
+  meaning: Only PDFs are accepted; export the document to PDF first.
+- code: not_ready
+  meaning: send_fax given a job_id that is still processing.
+- code: over_free_tier
+  meaning: This month's free operations are used up and no payment method is on file.
+- code: over_page_cap
+  meaning: The form exceeds the 5-page free limit.
+a2a_payment_error_codes:
+- {code: INSUFFICIENT_FUNDS, meaning: payer's USDC balance below the quoted amount}
+- {code: INVALID_SIGNATURE, meaning: signature does not verify against the EIP-3009 authorization}
+- {code: EXPIRED_PAYMENT, meaning: authorization validBefore falls inside the job's runtime window}
+- {code: DUPLICATE_NONCE, meaning: that authorization's nonce was already used}
+fax_failure_categories:
+  field: failure_category
+  values: [destination, delivery, timeout, vendor]
+  note: Each failed receipt says whether it is retryable and carries the refund state; a failed fax is not charged.
+spec_gap: >-
+  Neither OpenAPI declares 400/401/402/404/409/410/413/429/500/503 responses — the account spec declares only
+  2xx and 422 (FastAPI defaults) and the pay spec declares 402/202/400/413 on the paid ops. The table above is the
+  docs' error reference, which is richer than the contract.

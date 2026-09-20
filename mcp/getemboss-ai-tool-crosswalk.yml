@@ -1,0 +1,423 @@
+generated: '2026-09-19'
+method: derived
+source: 'Derived by aligning the MCP tool list in mcp/getemboss-ai-mcp.yml (from https://getemboss.ai/docs/mcp-tools)
+  and the 23 A2A skills in a2a/getemboss-ai-agent-card.json with the two harvested OpenAPIs: openapi/getemboss-ai-account-openapi.yml
+  (115 operations, source https://api.getemboss.ai/internal/openapi.json) and openapi/getemboss-ai-pay-per-call-openapi.yml
+  (6 operations, source https://api.getemboss.ai/openapi.json). Every operationId below was checked against the
+  specs by script; none was invented.'
+purpose: Bind each agent-facing tool/skill to the REST operation(s) that back it, so a tool inherits a REAL input
+  contract (the operation's parameters + requestBody) even though the live MCP tools/list is auth-gated. Emboss
+  says the four doors run one engine; this file shows where the projections diverge.
+surfaces:
+  rest_openapi: openapi/getemboss-ai-account-openapi.yml (account API, 115 ops incl. admin/internal); openapi/getemboss-ai-pay-per-call-openapi.yml
+    (anonymous pay door, 6 ops)
+  graphql: null
+  mcp: https://api.getemboss.ai/mcp — tools/list gated (401 OAuth challenge); tool names from the docs
+  a2a: https://api.getemboss.ai/a2a — skills from the published agent card (23)
+crosswalk:
+- tool: list_forms
+  category: forms
+  rest:
+  - list_forms_forms_get
+  binding: rest
+  confidence: high
+- tool: get_form
+  category: forms
+  rest:
+  - get_form_forms__form_id__get
+  - get_contract_forms__form_id__contract_get
+  binding: rest
+  confidence: medium
+  note: The tool returns status AND the field inventory plus download_url; REST splits that across GET /forms/{form_id}
+    (status), GET /forms/{form_id}/contract (fields) and GET /forms/{form_id}/fillable (the PDF).
+- tool: get_usage
+  category: account
+  rest:
+  - get_usage_usage_get
+  binding: rest
+  confidence: high
+- tool: find_form
+  category: library
+  rest:
+  - get_library_library_get
+  binding: rest
+  confidence: high
+  note: GET /library is public (no key); the tool counts lookups against the account.
+- tool: create_form
+  category: forms
+  rest:
+  - create_form_forms_post
+  binding: rest
+  confidence: high
+  note: REST returns 202 and is polled; the tool blocks until detection finishes.
+- tool: delete_form
+  category: forms
+  rest:
+  - delete_form_forms__form_id__delete
+  binding: rest
+  confidence: high
+- tool: fill_form
+  category: fill
+  rest:
+  - create_session_sessions_post
+  - put_fields_sessions__sid__fields_put
+  - fill_sessions__sid__fill_post
+  - session_pdf_sessions__sid__pdf_get
+  binding: rest
+  confidence: medium
+  note: A server-side composite of the four-step "standard fill" session flow (create session, put fields, fill/render,
+    download).
+- tool: fill_form_from_context
+  category: fill
+  rest:
+  - create_with_context_forms_with_context_post
+  - fill_existing_with_context_forms__form_id__with_context_post
+  binding: rest
+  confidence: high
+  note: pdf_url/pdf_base64 routes to the create-and-fill operation; form_id routes to the fill-existing one.
+- tool: prepare_form
+  category: proposal
+  rest:
+  - prepare_new_forms_prepare_post
+  - prepare_existing_forms__form_id__prepare_post
+  binding: rest
+  confidence: high
+- tool: get_proposal
+  category: proposal
+  rest:
+  - get_proposal_proposals__proposal_id__get
+  binding: rest
+  confidence: high
+- tool: commit_proposal
+  category: proposal
+  rest:
+  - commit_proposals__proposal_id__commit_post
+  binding: rest
+  confidence: high
+  note: package:true maps to the commit body flag that builds the submission package; the receipt and PDF are fetched
+    by receipt_proposals__proposal_id__receipt_get and commit_pdf_proposals__proposal_id__pdf_get.
+- tool: verify_form
+  category: verification
+  rest:
+  - verify_filled_pdf_forms__form_id__verify_post
+  binding: rest
+  confidence: high
+- tool: read_form
+  category: read-back
+  rest:
+  - read_form_forms_read_post
+  binding: rest
+  confidence: high
+- tool: send_fax
+  category: fax
+  rest:
+  - send_fax_fax_post
+  binding: rest
+  confidence: high
+- tool: get_fax
+  category: fax
+  rest:
+  - get_fax_fax__job_id__get
+  binding: rest
+  confidence: high
+- tool: add_attachment
+  category: proposal
+  rest:
+  - add_attachment_proposals__proposal_id__attachments_post
+  binding: rest
+  confidence: high
+- tool: get_job
+  category: jobs
+  rest:
+  - get_with_context_forms_with_context__job_id__get
+  - get_proposal_proposals__proposal_id__get
+  binding: rest
+  confidence: medium
+  note: One tool covers three job kinds. A context-fill job is GET /forms/with-context/{job_id}; a prepare job surfaces
+    its proposal_id (GET /proposals/{proposal_id}); the commit job's result (verification result, receipt, PDF links)
+    has no single public REST status operation in the spec — the docs poll get_job and then read the receipt/pdf
+    routes.
+- tool: suggest_mapping
+  category: batch
+  rest:
+  - suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+  binding: rest
+  confidence: high
+- tool: fill_batch
+  category: batch
+  rest:
+  - fill_batch_forms__form_id__fill_batch_post
+  binding: rest
+  confidence: high
+  note: Batches up to 50 rows complete inline in the tool; REST always returns 202 and is polled.
+- tool: get_batch
+  category: batch
+  rest:
+  - batch_status_forms_fill_batch__batch_id__get
+  binding: rest
+  confidence: high
+  note: Row downloads are batch_row_pdf_forms_fill_batch__batch_id__rows__n__pdf_get and batch_zip_forms_fill_batch__batch_id__zip_get.
+a2a_crosswalk:
+- skill: make_fillable
+  rest:
+  - create_form_forms_post
+  - pay_make_fillable
+  binding: rest
+  confidence: high
+  note: Account callers hit POST /forms; anonymous x402 callers the pay door.
+- skill: fill_form
+  rest:
+  - create_session_sessions_post
+  - put_fields_sessions__sid__fields_put
+  - fill_sessions__sid__fill_post
+  - pay_fill
+  binding: rest
+  confidence: medium
+  note: Same composite as the MCP fill_form; the pay door has it as one operation.
+- skill: fill_from_context
+  rest:
+  - create_with_context_forms_with_context_post
+  - fill_existing_with_context_forms__form_id__with_context_post
+  - pay_fill_with_context
+  binding: rest
+  confidence: high
+- skill: prepare
+  rest:
+  - prepare_new_forms_prepare_post
+  - prepare_existing_forms__form_id__prepare_post
+  binding: rest
+  confidence: high
+- skill: fill_batch
+  rest:
+  - fill_batch_forms__form_id__fill_batch_post
+  binding: rest
+  confidence: high
+- skill: suggest_mapping
+  rest:
+  - suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+  binding: rest
+  confidence: high
+- skill: find_forms
+  rest:
+  - list_forms_forms_get
+  binding: rest
+  confidence: high
+- skill: find_form
+  rest:
+  - get_library_library_get
+  binding: rest
+  confidence: high
+- skill: get_form
+  rest:
+  - get_form_forms__form_id__get
+  - get_contract_forms__form_id__contract_get
+  binding: rest
+  confidence: medium
+- skill: commit
+  rest:
+  - commit_proposals__proposal_id__commit_post
+  binding: rest
+  confidence: high
+- skill: verify
+  rest:
+  - verify_filled_pdf_forms__form_id__verify_post
+  binding: rest
+  confidence: high
+- skill: read_form
+  rest:
+  - read_form_forms_read_post
+  - pay_read
+  binding: rest
+  confidence: high
+- skill: attach
+  rest:
+  - add_attachment_proposals__proposal_id__attachments_post
+  binding: rest
+  confidence: high
+- skill: quote_job
+  rest:
+  - account_quote_forms_quote_post
+  - pay_quote
+  binding: rest
+  confidence: high
+  note: Free on every door.
+- skill: execute_quote
+  rest:
+  - pay_pay__op__post
+  binding: rest
+  confidence: low
+  note: Runs a staged quote by quote_id; the pay door's generic POST /pay/{op} claims a quote server-side. No account-API
+    operation takes a quote_id.
+- skill: send_fax
+  rest:
+  - send_fax_fax_post
+  - pay_fax
+  binding: rest
+  confidence: high
+- skill: compose_pdf
+  rest:
+  - run_utility_utilities__skill__post
+  binding: rest
+  confidence: high
+  note: POST /utilities/compose_pdf
+- skill: merge_pdf
+  rest:
+  - run_utility_utilities__skill__post
+  binding: rest
+  confidence: high
+  note: POST /utilities/merge_pdf
+- skill: extract_pages
+  rest:
+  - run_utility_utilities__skill__post
+  binding: rest
+  confidence: high
+  note: POST /utilities/extract_pages
+- skill: delete_pages
+  rest:
+  - run_utility_utilities__skill__post
+  binding: rest
+  confidence: high
+  note: POST /utilities/delete_pages
+- skill: reorder_pages
+  rest:
+  - run_utility_utilities__skill__post
+  binding: rest
+  confidence: high
+  note: POST /utilities/reorder_pages
+- skill: rotate_pages
+  rest:
+  - run_utility_utilities__skill__post
+  binding: rest
+  confidence: high
+  note: POST /utilities/rotate_pages
+- skill: inspect_pdf
+  rest:
+  - run_utility_utilities__skill__post
+  binding: rest
+  confidence: high
+  note: POST /utilities/inspect_pdf
+mcp_only: []
+a2a_only:
+- skill: execute_quote
+  reason: Runs a job from a staged quote_id; only the pay door (POST /pay/{op}) claims quotes, and no account-API
+    operation accepts one.
+- skill: quote_job
+  reason: Present on A2A and both REST doors but absent from the MCP tool list (MCP has no price-check tool; get_usage
+    reports the free allowance instead).
+- skill: compose_pdf / merge_pdf / extract_pages / delete_pages / reorder_pages / rotate_pages / inspect_pdf
+  reason: The seven free utilities are A2A skills and REST POST /utilities/{skill}; the MCP docs table does not
+    list them, although the provider SKILL.md names them as MCP tools.
+rest_only:
+- group: account-and-key-management
+  operations:
+  - create_key_keys_post
+  - list_keys_keys_get
+  - delete_key_keys__key_id__delete
+  - patch_key_keys__key_id__patch
+  - signup_users_post
+  - verify_users_verify_post
+  - login_users_login_post
+  - verify_resend_users_verify_resend_post
+  - login_with_token_users_login_token_post
+  - reset_request_users_reset_request_post
+  - reset_confirm_users_reset_confirm_post
+  - app_login_app_login_post
+  - app_refresh_app_refresh_post
+  - app_logout_app_logout_post
+- group: downloads-and-artifacts
+  operations:
+  - get_fillable_forms__form_id__fillable_get
+  - get_thumbnail_forms__form_id__thumbnail_get
+  - session_pdf_sessions__sid__pdf_get
+  - get_session_sessions__sid__get
+  - receipt_proposals__proposal_id__receipt_get
+  - commit_pdf_proposals__proposal_id__pdf_get
+  - batch_row_pdf_forms_fill_batch__batch_id__rows__n__pdf_get
+  - batch_zip_forms_fill_batch__batch_id__zip_get
+  - get_artifact_artifacts__artifact_id__get
+  - get_artifact_content_artifacts__artifact_id__content_get
+  - redeem_d__token__get
+- group: rehearsal
+  operations:
+  - preview_fill_forms__form_id__preview_fill_post
+  - remove_attachment_proposals__proposal_id__attachments__n__delete
+- group: oauth-and-discovery
+  operations:
+  - as_metadata__well_known_oauth_authorization_server_get
+  - rs_metadata__well_known_oauth_protected_resource_mcp_get
+  - register_oauth_register_post
+  - authorize_oauth_authorize_get
+  - token_oauth_token_post
+  - revoke_oauth_revoke_post
+- group: pay-door
+  operations:
+  - pay_index_pay_get
+  - pay_openapi_manifest_pay_openapi_json_get
+  - pay_openapi_manifest_openapi_json_get
+  - pay_llms_txt_pay_llms_txt_get
+  - pay_pricing_alias_pay_pricing_get
+  - pay_job_status_pay_jobs__job_id__get
+  - public_price_list_pricing_get
+  - pay_quote_pay_quote_post
+- group: inbound-webhooks-and-health
+  operations:
+  - stripe_webhook_stripe_webhook_post
+  - fax_webhook_webhooks_fax_post
+  - health_health_get
+- group: admin-dashboard-internal
+  operations:
+  - admin_get_account_admin_account_get
+  - admin_patch_account_admin_account_patch
+  - admin_usage_admin_usage_get
+  - admin_usage_detail_admin_usage_detail_get
+  - admin_billing_breakdown_admin_billing_breakdown_get
+  - admin_forms_admin_forms_get
+  - admin_create_form_admin_forms_post
+  - admin_batch_runs_admin_forms_batch_runs_get
+  - admin_batch_counts_admin_forms_batch_counts_get
+  - admin_layouts_admin_layouts_get
+  - admin_delete_form_admin_forms__form_id__delete
+  - admin_form_status_admin_forms__form_id__get
+  - admin_form_thumbnail_admin_forms__form_id__thumbnail_get
+  - admin_usage_trend_admin_usage_trend_get
+  - admin_usage_events_admin_usage_events_get
+  - admin_create_with_context_admin_forms_with_context_post
+  - admin_context_status_admin_forms_with_context__job_id__get
+  - admin_context_render_admin_forms_with_context__job_id__render_post
+  - admin_context_pdf_admin_forms_with_context__job_id__pdf_get
+  - admin_fill_existing_admin_forms__form_id__with_context_post
+  - admin_web_token_limits_admin_web_token_limits_get
+  - admin_mint_web_token_admin_web_token_post
+  - admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post
+  - admin_fill_batch_admin_forms__form_id__fill_batch_post
+  - admin_batch_status_admin_forms_fill_batch__batch_id__get
+  - admin_batch_zip_admin_forms_fill_batch__batch_id__zip_get
+  - admin_billing_setup_intent_admin_billing_setup_intent_post
+  - admin_billing_payment_method_admin_billing_payment_method_get
+  - admin_billing_invoices_admin_billing_invoices_get
+  - admin_billing_confirm_admin_billing_confirm_post
+  - admin_run_invoicing_admin_billing_run_invoicing_post
+  - admin_run_nudges_admin_nudges_run_post
+  - admin_retention_sweep_admin_retention_sweep_post
+  - admin_library_store_admin_library__slug__store_post
+  - admin_library_check_admin_library_check_post
+  - admin_library_admin_library_get
+  - admin_library_misses_admin_library_misses_get
+  - admin_library_accept_admin_library__slug__accept_post
+  - pending_admin_oauth_pending__pid__get
+  - consent_admin_oauth_consent_post
+  - grants_admin_oauth_grants_get
+  - clients_since_admin_oauth_clients_get
+  - revoke_grant_admin_oauth_grants__gid__delete
+coverage:
+  mcp_tools_named: 20
+  mcp_tools_bound: 20
+  mcp_only: 0
+  a2a_skills_named: 23
+  a2a_skills_bound: 23
+  rest_ops_total: 121
+  rest_ops_with_a_tool_or_skill: 35
+  rest_ops_admin_internal: 43
+  note: The 115-operation account spec is a FastAPI dump that includes the dashboard's admin/, app/ and users/ routes
+    and inbound Stripe/fax webhooks. Those are real operations on the host but not a public developer surface; the
+    docs reference covers ~40 of the 115.

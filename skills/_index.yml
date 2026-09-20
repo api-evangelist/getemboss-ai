@@ -1,0 +1,54 @@
+generated: '2026-09-19'
+method: generated
+source: openapi/getemboss-ai-account-openapi.yml and openapi/getemboss-ai-pay-per-call-openapi.yml (every operationId
+  verified against the specs by script) plus the Emboss docs; the provider-published files below were searched and
+  saved verbatim from the GetEmboss-ai GitHub org.
+skills:
+- file: getemboss-ai-fill-from-data.md
+  name: getemboss-ai-fill-from-data
+  method: generated
+  api: openapi/getemboss-ai-account-openapi.yml
+  description: Make a flat PDF fillable, fill it from known values with a standard-fill session, verify and download.
+  operations: 9
+- file: getemboss-ai-prepare-commit-fax.md
+  name: getemboss-ai-prepare-commit-fax
+  method: generated
+  api: openapi/getemboss-ai-account-openapi.yml
+  description: Prepare a proposal from documents with evidence, resolve, attach, commit into a submission package,
+    fax it and track delivery.
+  operations: 11
+- file: getemboss-ai-pay-per-call-anonymous.md
+  name: getemboss-ai-pay-per-call-anonymous
+  method: generated
+  api: openapi/getemboss-ai-pay-per-call-openapi.yml
+  description: 'Anonymous x402/MPP pay-per-call flow: free quote, 402 challenge, pay and resend, poll, chain by
+    artifact_id + artifact_token.'
+  operations: 6
+provider_published:
+- file: getemboss-ai-emboss-SKILL.md
+  method: searched
+  source: https://raw.githubusercontent.com/GetEmboss-ai/emboss-claude-plugin/HEAD/skills/emboss/SKILL.md
+  digest: sha256:14bdec81efb7938e090f5f3ef6f2d4a5eb4ae0a1c5beee38906b26da8e5aaee7
+  scope: Agent Skill for the MCP tool surface (which tool for which task, rules, examples); shipped in the Claude
+    Code plugin v1.5.1 and as emboss-skill.zip on each release.
+- file: getemboss-ai-emboss-reference.md
+  method: searched
+  source: https://raw.githubusercontent.com/GetEmboss-ai/emboss-claude-plugin/HEAD/skills/emboss/reference.md
+  digest: sha256:fcdf1511fab1d6b6ff582f3935c37be90ea10ce3e08c4356375c1274e1d595e7
+  scope: Argument reference for every MCP tool, companion to the SKILL.md.
+- file: getemboss-ai-emboss-setup-SKILL.md
+  method: searched
+  source: https://raw.githubusercontent.com/GetEmboss-ai/emboss-claude-plugin/HEAD/skills/emboss-setup/SKILL.md
+  digest: sha256:f2b5f02ad844a80973932004f6ad1ba77e0b58d00fc4a39f27134a1dbccb288a
+  scope: First-run connector setup (OAuth sign-in, insufficient_scope recovery).
+- file: getemboss-ai-emboss-gemini-SKILL.md
+  method: searched
+  source: https://raw.githubusercontent.com/GetEmboss-ai/emboss-gemini-extension/HEAD/skills/emboss/SKILL.md
+  digest: sha256:da93870efbf6332d8f3ad292219bae5ba3c03ed9c51df7131dd9768e55661194
+  scope: Gemini CLI / Antigravity variant of the same skill (differs in the setup paragraph and billing note for
+    suggest_mapping).
+- file: getemboss-ai-GEMINI.md
+  method: searched
+  source: https://raw.githubusercontent.com/GetEmboss-ai/emboss-gemini-extension/HEAD/GEMINI.md
+  digest: sha256:ff7f896a4ada069321b6ec645a4cb2d2ee2f518b9f86327d5fc28307e9f9c625
+  scope: Context file the Gemini extension loads (contextFileName in gemini-extension.json).

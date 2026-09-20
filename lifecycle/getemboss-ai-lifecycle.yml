@@ -1,0 +1,58 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://getemboss.ai/terms, https://getemboss.ai/pricing, https://getemboss.ai/docs/authentication, the two
+  OpenAPIs (info.version, deprecated flags), the sitemap (no changelog/status/roadmap URLs), and live probes of
+  status.getemboss.ai, /status, /changelog, /docs/changelog and api.getemboss.ai/changelog.json (all 404 on 2026-09-19).
+versioning:
+  scheme: none-in-path
+  mechanism: No API version in the URL, no version header; the host serves one unversioned surface.
+  spec_versions:
+    pay_per_call: 1.1.0 (info.version of https://api.getemboss.ai/openapi.json)
+    account: 0.1.0 (FastAPI default in https://api.getemboss.ai/internal/openapi.json)
+  docs: null
+  notes: >-
+    Emboss versions its client packages (plugin v1.5.1, MCP registry record v1.5.0, n8n node v1.0.4), not the
+    API. The only dated change statement on the API surface is the pricing page's "Prices changed on 2026-09-06:
+    a context fill now includes verification" and the price list's effective date (2026-09-07).
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  notes: >-
+    No deprecation policy is published. The Terms say "We may change pricing prospectively with reasonable
+    notice" and "for material changes we will provide reasonable notice" — a notice commitment for terms and
+    prices, not an API deprecation window. One field is documented as reserved: fill_form's flatten "reserved
+    for a future release; passing true returns bad_request".
+sla:
+  url: null
+  public_uptime_target: null
+  notes: No SLA or uptime commitment is published; the Terms disclaim availability warranties.
+status_page: null
+status_page_probes:
+- {url: 'https://status.getemboss.ai/', status: 404}
+- {url: 'https://getemboss.ai/status', status: 404}
+health_endpoint:
+  url: https://api.getemboss.ai/health
+  auth: none
+  response: '{"status":"ok"}'
+  note: A liveness probe, not a status page.
+changelog: changelog/getemboss-ai-changelog.yml
+rate_limits: rate-limits/getemboss-ai-rate-limits.yml
+credential_lifecycle:
+  source: https://getemboss.ai/docs/authentication
+  states: [active, disabled, revoked]
+  rotation: Create a new key, move traffic, revoke the old one. Disabled is reversible (re-enable in the dashboard); revoked is permanent.
+  operations: [create_key_keys_post, list_keys_keys_get, patch_key_keys__key_id__patch, delete_key_keys__key_id__delete]
+  oauth_grants: Connected apps can be disconnected from Dashboard > Account > Connected apps; revocation endpoint https://api.getemboss.ai/oauth/revoke.
+data_lifecycle:
+  source: https://getemboss.ai/docs/ephemeral-processing
+  ephemeral_window: 'source and output documents are deleted 60 to 70 minutes after the last activity on a form'
+  sweep_cadence: every ten minutes
+  pay_door: always ephemeral
+  account_default: ephemeral | account_default, overridable per request with the retention body field
+  kept_after_sweep: blank-form layout, redacted receipt record, file records without bytes, payment/usage records, security logs
+  read_back: stores nothing at all
+deprecated_products: []
+deprecated_operations: []
+deprecated_operations_note: Neither spec carries a deprecated:true flag (checked by script over all 121 operations).

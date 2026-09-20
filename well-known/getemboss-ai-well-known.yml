@@ -1,0 +1,235 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the closed /.well-known/* path list on getemboss.ai, www.getemboss.ai and api.getemboss.ai on
+  2026-09-19, plus the extra paths Emboss's own robots.txt (Agentmap), llms.txt and x-service-info name. Every row
+  below is a request that was actually issued; every status is the one returned. A negative-control path that
+  cannot exist was probed on each host and returned 404 on both origins, so no host is a path-echoing catch-all.
+summary:
+  hosts_probed: 3
+  paths_probed: 25
+  documents_served: 16
+  path_echo_control: passed
+  note: >-
+    Emboss serves a two-host discovery surface. The apex (getemboss.ai) carries the RFC 9116 security.txt, the
+    ARD/AIR catalogue (ard.json, with ai-catalog.json as an alias), the MCP registry server record, a W3C DID
+    document and mirrors of the A2A agent card. The API host (api.getemboss.ai) carries the RFC 8414
+    authorization-server metadata, RFC 9728 protected-resource metadata for the MCP resource (at the
+    path-suffixed location /.well-known/oauth-protected-resource/mcp, which the 401 challenge's resource_metadata
+    parameter names), the A2A JWKS, its own llms.txt, and the same catalogue/DID/MCP/agent-card documents.
+    www.getemboss.ai answers 308 to the apex for every path and serves nothing itself. NOT served anywhere:
+    openid-configuration, api-catalog (RFC 9727), ai-plugin.json, ucp.json, acp.json, aauth-resource.json,
+    apis.json / apis.yml, and the un-suffixed /.well-known/oauth-protected-resource.
+hosts:
+- host: getemboss.ai
+  role: Public website and documentation host
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: getemboss-ai-security.txt
+    standard: RFC 9116
+    note: 'Contact: mailto:contact@getemboss.ai; Expires 2027-09-19; Canonical points at itself. No Policy or Encryption line.'
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    note: The authorization server is api.getemboss.ai; see that host.
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/oauth-protected-resource/mcp
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    file: ../a2a/getemboss-ai-agent-card.json
+    standard: A2A 1.0.0 Agent Card
+    note: Byte-identical to the api.getemboss.ai copy; captured once under a2a/.
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    file: ../a2a/getemboss-ai-agent-card.json
+    standard: A2A pre-0.3 legacy path
+    note: Same bytes as agent-card.json.
+  - path: /.well-known/ard.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-ard.json
+    standard: ARD / AIR capability catalogue specVersion 1.0
+    note: >-
+      Named as "Agentmap:" in robots.txt and as <link rel="ard"> in the site head. Declares host identifier
+      did:web:getemboss.ai and entries for the pay-door OpenAPI, the A2A agent card and the MCP server, each with
+      a signed trustManifest (EdDSA detached JWS over the RFC 8785 canonical form).
+  - path: /.well-known/ai-catalog.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-ai-catalog.json
+    standard: ARD / AIR capability catalogue specVersion 1.0
+    note: Alias of ard.json (identical bytes); the docs say so.
+  - path: /.well-known/mcp.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-mcp.json
+    standard: MCP registry server.json (schemas/2025-12-11/server.schema.json)
+    note: Server record io.github.edwinorange/emboss v1.5.0 with one streamable-http remote at https://api.getemboss.ai/mcp.
+  - path: /.well-known/did.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-did.json
+    standard: W3C DID Core (did:web)
+    note: did:web:getemboss.ai with one Ed25519 JsonWebKey2020 verification method (emboss-a2a-1) and an AICatalog service pointing at ard.json.
+  - path: /.well-known/a2a-jwks.json
+    status: 404
+    note: The JWKS the agent card's jku names is on api.getemboss.ai only.
+  - path: /llms.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: ../llms/getemboss-ai-llms.txt
+  - path: /.well-known/getemboss-ai-negative-control-9c41e2b7.json
+    status: 404
+    control: negative
+    note: Cannot exist; 404 proves the host does not echo well-known paths.
+- host: www.getemboss.ai
+  role: Redirect host
+  documents:
+  - path: /.well-known/security.txt
+    status: 308
+    note: Every probed path on www 308-redirects to the same path on getemboss.ai; the host serves no documents of its own.
+  - path: /.well-known/openid-configuration
+    status: 308
+  - path: /.well-known/oauth-authorization-server
+    status: 308
+  - path: /.well-known/oauth-protected-resource
+    status: 308
+  - path: /.well-known/api-catalog
+    status: 308
+  - path: /.well-known/ai-plugin.json
+    status: 308
+  - path: /.well-known/ucp.json
+    status: 308
+  - path: /.well-known/acp.json
+    status: 308
+  - path: /.well-known/aauth-resource.json
+    status: 308
+  - path: /.well-known/apis.json
+    status: 308
+  - path: /apis.json
+    status: 308
+  - path: /apis.yml
+    status: 308
+  - path: /.well-known/agent-card.json
+    status: 308
+  - path: /.well-known/getemboss-ai-negative-control-9c41e2b7.json
+    status: 308
+    control: negative
+- host: api.getemboss.ai
+  role: API host, MCP resource server, A2A interface host and OAuth authorization server
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-oauth-authorization-server.json
+    standard: RFC 8414
+    note: >-
+      issuer https://api.getemboss.ai; authorization_code + refresh_token; PKCE S256; token_endpoint_auth_methods
+      none and client_secret_post; registration_endpoint https://api.getemboss.ai/oauth/register (RFC 7591 dynamic
+      client registration); revocation_endpoint (RFC 7009); scopes_supported forms:read, forms:write;
+      client_id_metadata_document_supported true; service_documentation https://getemboss.ai/docs/claude.
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: The un-suffixed RFC 9728 path is not served; the resource metadata lives at the path-suffixed location below.
+  - path: /.well-known/oauth-protected-resource/mcp
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-oauth-protected-resource-mcp.json
+    standard: RFC 9728 (path-suffixed for the /mcp resource)
+    note: >-
+      resource https://api.getemboss.ai/mcp; authorization_servers [https://api.getemboss.ai]; scopes_supported
+      forms:read, forms:write; bearer_methods_supported [header]; resource_documentation
+      https://getemboss.ai/docs/claude. This is the exact URL the 401 on POST /mcp names in
+      WWW-Authenticate resource_metadata.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/a2a+json; charset=utf-8
+    file: ../a2a/getemboss-ai-agent-card.json
+    standard: A2A 1.0.0 Agent Card
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/a2a+json; charset=utf-8
+    file: ../a2a/getemboss-ai-agent-card.json
+    standard: A2A pre-0.3 legacy path
+  - path: /.well-known/ard.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-ard.json
+    standard: ARD / AIR capability catalogue specVersion 1.0
+    note: Identical bytes to the apex copy.
+  - path: /.well-known/ai-catalog.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-ai-catalog.json
+    standard: ARD / AIR capability catalogue specVersion 1.0
+  - path: /.well-known/mcp.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-mcp.json
+    standard: MCP registry server.json
+  - path: /.well-known/did.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-did.json
+    standard: W3C DID Core (did:web)
+  - path: /.well-known/a2a-jwks.json
+    status: 200
+    content_type: application/json
+    file: getemboss-ai-a2a-jwks.json
+    standard: RFC 7517 JWK Set
+    note: One OKP/Ed25519 key, kid emboss-a2a-1, alg EdDSA — the key that signs the agent card and every ARD trust manifest.
+  - path: /llms.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: ../llms/getemboss-ai-api-llms.txt
+    note: A distinct document from the apex llms.txt — it indexes the four doors on this host (developer API, MCP, A2A, pay-per-call).
+  - path: /.well-known/getemboss-ai-negative-control-9c41e2b7.json
+    status: 404
+    control: negative

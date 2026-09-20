@@ -1,0 +1,38 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Emboss account API
+  version: 1.0.0
+  x-generated: '2026-09-19'
+  x-method: generated
+  x-note: >-
+    The harvested spec is a FastAPI auto-dump (info.title "FastAPI", no servers[], no tags). This overlay
+    records the identity and base URL the provider's own documentation states, without touching the original.
+    The base URL comes from https://api.getemboss.ai/llms.txt ("OpenAPI schema: https://api.getemboss.ai/internal/openapi.json")
+    and the Swagger UI served at https://api.getemboss.ai/docs, which loads this exact document.
+extends: openapi/getemboss-ai-account-openapi.yml
+actions:
+- target: $.info
+  update:
+    title: Emboss Account API
+    description: >-
+      Emboss's authenticated developer API — create fillable forms, fill them from data or context documents,
+      prepare/commit/verify, batch fill, read filled forms back, send faxes, and chain results by artifact_id.
+      Bearer API key (sk_live_...) or OAuth 2.1. Retrieved from https://api.getemboss.ai/internal/openapi.json.
+    contact: {name: Emboss, url: 'https://getemboss.ai', email: contact@getemboss.ai}
+    x-apievangelist-source: https://api.getemboss.ai/internal/openapi.json
+- target: $
+  update:
+    servers:
+    - url: https://api.getemboss.ai
+      description: Production (the only host; stated in the docs and llms.txt)
+    externalDocs: {url: 'https://getemboss.ai/docs/reference/create-form', description: Emboss API reference}
+- target: $.paths['/forms'].post
+  update: {x-idempotency-key: 'Idempotency-Key header, 24 h, account-scoped (https://getemboss.ai/docs/reference/create-form)'}
+- target: $.paths['/forms/with-context'].post
+  update: {x-idempotency-key: 'Idempotency-Key header, 24 h, account-scoped'}
+- target: $.paths['/forms/{form_id}/with-context'].post
+  update: {x-idempotency-key: 'Idempotency-Key header, 24 h, account-scoped'}
+- target: $.paths['/fax'].post
+  update: {x-idempotency-key: 'Idempotency-Key header; plus a 10-minute artifact+destination dedupe'}
+- target: $.paths['/proposals/{proposal_id}/commit'].post
+  update: {x-idempotency-key: 'idempotency_key body field'}

@@ -1,0 +1,52 @@
+generated: '2026-09-19'
+method: searched
+source: https://getemboss.ai/docs/callbacks
+docs: https://getemboss.ai/docs/callbacks
+asyncapi_published: false
+asyncapi_note: >-
+  Emboss publishes NO AsyncAPI document: /asyncapi.yaml on getemboss.ai and /asyncapi.json, /asyncapi.yaml on
+  api.getemboss.ai returned 404 on 2026-09-19, and the account OpenAPI declares no top-level webhooks object and
+  no operation callbacks. The event surface below is documented in prose only. Nothing was fabricated; this
+  artifact captures the callback catalogue as published. (The spec does declare two INBOUND webhook receivers —
+  stripe_webhook_stripe_webhook_post and fax_webhook_webhooks_fax_post — which are Emboss consuming its
+  vendors' events, not an event surface it offers.)
+surface: Outbound HTTPS callbacks fired when an asynchronous job reaches a terminal state
+subscription:
+  mechanism: Per-request — pass callback_url when starting a job (POST /forms, POST /forms/with-context, POST /forms/{form_id}/with-context); no account-level endpoint registration.
+  url_rules: Must be a public https URL; private, loopback and non-https URLs are rejected with 400.
+  relationship_to_polling: An alternative, not a replacement — the result stays fetchable from the GET endpoints, so a missed callback is never fatal.
+delivery:
+  method: POST
+  content_type: application/json
+  attempts: One POST on terminal state; on a timeout or 5xx Emboss retries "a few times with backoff, then gives up".
+  guarantee: best-effort
+  effect_on_job: none — a callback failure never affects the job.
+signing:
+  header: X-Emboss-Signature
+  scheme: 'sha256=<hex HMAC-SHA256 of the RAW request body, keyed by the account''s callback signing secret>'
+  verification: Compute over the raw bytes received, compare in constant time, before parsing JSON; re-serialised JSON can change bytes and break the signature.
+  secret_management: Configured on the Emboss account; if signing is not enabled callbacks arrive without the header — treat a missing signature as a configuration signal, not a valid unsigned request.
+  timestamp_or_replay_protection: none documented (no timestamp header, no event id beyond job_id/form_id)
+events:
+- name: job.ready
+  trigger: A context-fill job (/forms/with-context, /forms/{form_id}/with-context) finished successfully.
+  payload: {event: job.ready, status: ready, job_id: uuid, session_id: uuid, report: {filled: '[{id, confidence}]', dropped: '[{id, value, reason}]'}}
+  next: GET /sessions/{session_id}/pdf to fetch the filled PDF.
+- name: job.failed
+  trigger: A context-fill job failed.
+  payload: {event: job.failed, status: failed, job_id: uuid, error: {code: context_fill_failed, message: string}}
+- name: form.ready
+  trigger: Form creation / field detection (POST /forms) finished.
+  payload: {event: form.ready, status: ready, form_id: uuid}
+  next: GET /forms/{form_id}/fillable to download the fillable PDF.
+- name: form.failed
+  trigger: Field detection failed.
+  payload: {event: form.failed, status: failed, form_id: uuid, error: {code: form_processing_failed, message: string}}
+event_count: 4
+not_covered: >-
+  Prepare, commit, batch and fax jobs have no documented callback; they are polled (GET /proposals/{id},
+  GET /forms/fill-batch/{batch_id}, GET /fax/{job_id}) or, over MCP/A2A, tracked by the tool/task lifecycle.
+  The pay door returns a status_url and documents no callback.
+related_rest:
+  polling_docs: https://getemboss.ai/docs/tracking-jobs
+  operations: [create_form_forms_post, create_with_context_forms_with_context_post, fill_existing_with_context_forms__form_id__with_context_post, get_form_forms__form_id__get, get_with_context_forms_with_context__job_id__get]

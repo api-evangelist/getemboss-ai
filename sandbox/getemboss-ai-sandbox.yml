@@ -1,0 +1,68 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://getemboss.ai/docs/authentication, /docs/quickstart, /docs/reference/usage, /docs/prepare-commit-verify,
+  /docs/pay-per-call, https://api.getemboss.ai/docs (Swagger UI) and both OpenAPIs. The site llms.txt (every
+  published page) names no sandbox, test-mode, staging or simulator page.
+summary: >-
+  Emboss publishes an interactive Swagger UI console but NO sandbox environment: keys are sk_live_ only, the specs
+  declare a single production server, and there is no test-mode counterpart. What it offers instead is unusually
+  good rehearsal: free stateless price quotes on every door, a prepare step that proposes every answer with
+  evidence before anything is written, a preview-fill, a model-free verify, and a monthly free allowance so the
+  first calls cost nothing.
+console:
+  present: true
+  type: interactive API console (Swagger UI, FastAPI /docs)
+  url: https://api.getemboss.ai/docs
+  spec_loaded: https://api.getemboss.ai/internal/openapi.json
+  also: https://api.getemboss.ai/redoc (ReDoc view of the same spec)
+  auth_required: true
+  targets: Production only.
+  evidence: GET https://api.getemboss.ai/docs returned 200 on 2026-09-19 with SwaggerUIBundle loading /internal/openapi.json and an oauth2RedirectUrl.
+  browser_tools:
+  - {url: 'https://getemboss.ai/fill', note: 'Fill a PDF form without code (upload form + context docs, download the filled PDF).'}
+  - {url: 'https://getemboss.ai/batch-fill', note: 'Batch fill from a spreadsheet, one filled PDF per row as a ZIP.'}
+sandbox:
+  present: false
+  test_mode: false
+  test_credentials: false
+  test_key_prefix: null
+  live_key_prefix: sk_live_
+  test_data: null
+  time_simulation: false
+  fixtures_or_triggers: false
+  note: >-
+    Searched and not found. Every sample in the docs uses an "sk_live_..." placeholder key and describes that one prefix; the account
+    spec's bearerFormat is "Emboss API key (sk_...)"; servers[] on the pay spec is https://api.getemboss.ai alone.
+    No test fax number, test PDF fixture or magic value is published.
+free_tier_as_rehearsal:
+  source: https://getemboss.ai/pricing
+  allowance: 5 forms created, 5 context fills, 5 standard fills, 5 verifications, 5 reads, 5 submission packages per month, each on a document of 5 pages or fewer; no card needed.
+  note: The free allowance runs against production and the same keys — it lowers the cost of a first call, it does not isolate it.
+rehearsal_affordances:
+  operations:
+  - operation: account_quote_forms_quote_post
+    path: POST /forms/quote
+    effect: Prices every route for the document and says whether the free tier covers it. Free, stateless, never metered.
+  - operation: pay_quote
+    path: POST /pay/quote
+    effect: Page count, already-fillable flag and exact price per pay-door operation, anonymously, before any payment.
+  - operation: prepare_new_forms_prepare_post
+    path: POST /forms/prepare
+    effect: Proposes every answer with its source, what is missing and where documents disagree — nothing is written until commit.
+  - operation: preview_fill_forms__form_id__preview_fill_post
+    path: POST /forms/{form_id}/preview-fill
+    effect: Preview a fill before rendering.
+  - operation: verify_filled_pdf_forms__form_id__verify_post
+    path: POST /forms/{form_id}/verify
+    effect: Deterministic check of a filled PDF against the contract; no model call.
+  - operation: get_library_library_get
+    path: GET /library
+    effect: Public list of blank US federal forms to start from without uploading anything.
+  - operation: health_health_get
+    path: GET /health
+    effect: Unauthenticated liveness probe.
+  gap: send_fax_fax_post has no rehearsal path other than quote — the only operation with an external side effect is the one that cannot be dry-run.
+probes:
+- {url: 'https://api.getemboss.ai/docs', status: 200, fetched: '2026-09-19', note: Swagger UI present}
+- {url: 'https://api.getemboss.ai/redoc', status: 200, fetched: '2026-09-19'}

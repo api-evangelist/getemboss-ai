@@ -1,0 +1,214 @@
+generated: '2026-09-19'
+method: probed
+status: published
+source: https://getemboss.ai/docs/mcp-tools
+docs: https://getemboss.ai/docs/mcp-tools
+registry_record: well-known/getemboss-ai-mcp.json
+summary: >-
+  Emboss operates ONE remote MCP server at https://api.getemboss.ai/mcp (Streamable HTTP). It is OAuth 2.1
+  protected: an anonymous POST tools/list and an anonymous initialize both returned 401 with
+  WWW-Authenticate: Bearer error="invalid_token", resource_metadata="https://api.getemboss.ai/.well-known/oauth-protected-resource/mcp".
+  The server is listed in the MCP registry as io.github.edwinorange/emboss (record mirrored at
+  /.well-known/mcp.json on both hosts) and packaged for Claude Code (plugin marketplace GetEmboss-ai/emboss-claude-plugin),
+  Claude.ai/Desktop (custom connector), Gemini CLI/Antigravity (GetEmboss-ai/emboss-gemini-extension), ChatGPT and Grok.
+  Emboss ships NO stdio package: every install path is a client configuration pointing at the hosted endpoint.
+deployment:
+  mode: remote
+  endpoint: https://api.getemboss.ai/mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    A hosted HTTPS endpoint an MCP client POSTs to directly. auth is oauth because the server advertises RFC 9728
+    protected-resource metadata and an RFC 8414 authorization server with dynamic client registration
+    (https://api.getemboss.ai/oauth/register) and PKCE; the docs say "Any MCP client that supports OAuth can
+    connect". A static Emboss API key sent as a Bearer header is documented as an alternative for clients that
+    cannot do OAuth (https://github.com/GetEmboss-ai/emboss-gemini-extension README, for Antigravity). The
+    Claude Code plugin's .mcp.json is {"emboss": {"type": "http", "url": "https://api.getemboss.ai/mcp"}} and the
+    Gemini extension's gemini-extension.json declares httpUrl https://api.getemboss.ai/mcp — configurations, not
+    a local server.
+server:
+  name: emboss
+  registry_name: io.github.edwinorange/emboss
+  registry_version: 1.5.0
+  transport: streamable-http
+  url: https://api.getemboss.ai/mcp
+  protocol_revision: unknown (initialize is auth-gated; not observable anonymously)
+  listings:
+  - MCP registry (server.json at https://api.getemboss.ai/.well-known/mcp.json and in the plugin repo)
+  - Claude Code plugin marketplace "getemboss" (GetEmboss-ai/emboss-claude-plugin, v1.5.1, 2026-09-17)
+  - Gemini CLI / Antigravity extension (GetEmboss-ai/emboss-gemini-extension, v1.5.0)
+  - Glama (glama.json in both repos)
+  setup_guides:
+  - https://getemboss.ai/docs/claude
+  - https://getemboss.ai/docs/chatgpt
+  - https://getemboss.ai/docs/grok
+  - https://getemboss.ai/docs/gemini
+  - https://getemboss.ai/docs/antigravity
+auth:
+  methods: [oauth2, apikey]
+  oauth2:
+    authorization_server: https://api.getemboss.ai
+    discovery: well-known/getemboss-ai-oauth-authorization-server.json
+    protected_resource: well-known/getemboss-ai-oauth-protected-resource-mcp.json
+    grant_types: [authorization_code, refresh_token]
+    pkce: S256
+    dynamic_client_registration: https://api.getemboss.ai/oauth/register
+    scopes_supported: [forms:read, forms:write]
+    insufficient_scope_behaviour: 'A tool call needing a scope the connection lacks returns insufficient_scope; reconnect to grant it.'
+  apikey:
+    header: Authorization
+    scheme: Bearer
+    format: sk_live_...
+probe:
+  - request: POST https://api.getemboss.ai/mcp {"jsonrpc":"2.0","id":1,"method":"tools/list"}
+    http_status: 401
+    www_authenticate: Bearer error="invalid_token", error_description="Authentication required", resource_metadata="https://api.getemboss.ai/.well-known/oauth-protected-resource/mcp"
+    body: '{"error": "invalid_token", "error_description": "Authentication required"}'
+    fetched: '2026-09-19'
+  - request: POST https://api.getemboss.ai/mcp initialize (protocolVersion 2025-06-18)
+    http_status: 401
+    fetched: '2026-09-19'
+  - request: GET https://mcp.getemboss.ai/
+    http_status: 404
+    note: No separate mcp.<domain> host; the server lives on the API host.
+tool_schemas: >-
+  tools/list is auth-gated, so the inputSchema of each tool was NOT observed live. The tool names, arguments and
+  return fields below are transcribed from Emboss's own MCP tools reference (https://getemboss.ai/docs/mcp-tools,
+  markdown twin at /docs/mcp-tools.md) and its plugin reference.md; the real inputSchema requires an
+  authenticated introspection. The backing REST operation for each tool, whose OpenAPI parameters+requestBody
+  ARE the real input contract, is in mcp/getemboss-ai-tool-crosswalk.yml.
+tool_count: 20
+scopes:
+  forms:read: [list_forms, get_form, get_usage, find_form, get_job, get_batch, get_proposal, get_fax]
+  forms:write: [create_form, delete_form, fill_form, fill_form_from_context, prepare_form, commit_proposal, verify_form, read_form, add_attachment, suggest_mapping, fill_batch, send_fax]
+tools:
+- name: list_forms
+  category: forms
+  scope: forms:read
+  billed: free
+  description: Forms already in the user's Emboss library.
+  arguments: {state: 'optional: ready (default), processing, failed, all', limit: 'optional, up to 50', cursor: 'optional, from a previous next_cursor'}
+  returns: [forms, next_cursor]
+- name: get_form
+  category: forms
+  scope: forms:read
+  billed: free
+  description: Status of one form; when ready, its field inventory, download_url and artifact_id.
+  arguments: {form_id: required}
+- name: get_usage
+  category: account
+  scope: forms:read
+  billed: free
+  description: This month's usage, free operations remaining, and the billing page link.
+  arguments: {}
+- name: find_form
+  category: library
+  scope: forms:read
+  billed: free
+  description: Find a blank US federal form in the Emboss library by name, number or alias.
+  arguments: {query: required}
+- name: create_form
+  category: forms
+  scope: forms:write
+  billed: one form creation
+  description: Upload a PDF and detect its fields.
+  arguments: {pdf_url: 'exactly one of pdf_url / pdf_base64', pdf_base64: 'exactly one of', title: optional}
+- name: delete_form
+  category: forms
+  scope: forms:write
+  billed: free
+  description: Permanently removes a form and its PDFs from the user's library. Only call when the user explicitly asks.
+  arguments: {form_id: required}
+- name: fill_form
+  category: fill
+  scope: forms:write
+  billed: one fill
+  description: Fill a ready form with values keyed by field id or label.
+  arguments: {form_id: required, values: required, flatten: 'reserved; passing true returns bad_request'}
+- name: fill_form_from_context
+  category: fill
+  scope: forms:write
+  billed: one context fill (plus one form creation if a new PDF is given)
+  description: Fill a form using answers pulled out of documents or notes; returns a job_id to poll with get_job.
+  arguments: {form_id: 'or pdf_url/pdf_base64', context_text: optional, context_urls: 'optional, up to 5'}
+- name: prepare_form
+  category: proposal
+  scope: forms:write
+  billed: one context fill (plus one form creation if a new PDF is given)
+  description: Propose a fill without writing anything into the PDF; returns job_id and proposal_id.
+  arguments: {form_id: 'or pdf_url/pdf_base64', context_text: optional, context_urls: optional, policy: 'optional: safe (default) | strict'}
+- name: get_proposal
+  category: proposal
+  scope: forms:read
+  billed: free
+  description: Read a proposal — every field's state, candidate values with evidence, and open questions.
+  arguments: {proposal_id: required}
+- name: commit_proposal
+  category: proposal
+  scope: forms:write
+  billed: free within the proposal's already-billed prepare (up to 10 commits); one package if package is true
+  description: Write a proposal into the PDF, render it, check it, and return a receipt (optionally a submission package).
+  arguments: {proposal_id: required, confirm: optional, values: optional, policy: optional, package: 'optional, default false'}
+- name: verify_form
+  category: verification
+  scope: forms:write
+  billed: one verify
+  description: Check a filled PDF against a form's contract. No model call.
+  arguments: {form_id: required, pdf_url: 'exactly one of pdf_url / pdf_base64', pdf_base64: 'exactly one of'}
+- name: read_form
+  category: read-back
+  scope: forms:write
+  billed: one read
+  description: Read a filled PDF's values back out, labelled, without storing the file.
+  arguments: {pdf_url: 'exactly one of pdf_url / pdf_base64', pdf_base64: 'exactly one of', form_id: optional}
+- name: send_fax
+  category: fax
+  scope: forms:write
+  billed: per transmitted page, at delivery; a failed fax is not charged
+  description: Send a PDF to a fax number (E.164; US, Canada, Mexico) and get a job id back at once.
+  arguments: {to: required, artifact_id: 'exactly one of artifact_id / sources / job_id / form_id / pdf_url / pdf_base64'}
+  dedupe: A repeated fax of the same artifact to the same destination within ten minutes returns the same job with deduplicated true.
+- name: get_fax
+  category: fax
+  scope: forms:read
+  billed: free
+  description: Delivery status and receipt of a send_fax job.
+  arguments: {job_id: required}
+- name: add_attachment
+  category: proposal
+  scope: forms:write
+  billed: free
+  description: Attach a supporting document (PDF, PNG, JPEG) to a proposal before commit.
+  arguments: {proposal_id: required, file_url: 'exactly one of file_url / file_base64', file_base64: 'exactly one of', requirement: optional}
+- name: get_job
+  category: jobs
+  scope: forms:read
+  billed: free
+  description: Status of a fill_form_from_context, prepare_form, or commit_proposal job.
+  arguments: {job_id: required}
+- name: suggest_mapping
+  category: batch
+  scope: forms:write
+  billed: one context fill
+  description: Propose which spreadsheet column fills which form field.
+  arguments: {form_id: required, csv_text: 'exactly one of csv_text / csv_url', csv_url: 'exactly one of'}
+- name: fill_batch
+  category: batch
+  scope: forms:write
+  billed: one fill per row, plus one context fill if mapping is omitted
+  description: Fill the form once per spreadsheet row, up to 1000 rows.
+  arguments: {form_id: required, csv_text: 'exactly one of csv_text / csv_url', csv_url: 'exactly one of', mapping: optional}
+- name: get_batch
+  category: batch
+  scope: forms:read
+  billed: free
+  description: Progress of a fill_batch run.
+  arguments: {batch_id: required}
+notes:
+  - >-
+    The MCP tool set (20) and the A2A skill set (23) differ: A2A additionally exposes quote_job, execute_quote
+    and the seven free PDF utilities (compose_pdf, merge_pdf, extract_pages, delete_pages, reorder_pages,
+    rotate_pages, inspect_pdf) as named skills; MCP exposes list_forms/get_usage/get_job/get_batch/get_fax as
+    separate read tools where A2A folds status into the task lifecycle. The provider-published SKILL.md
+    (skills/getemboss-ai-emboss-SKILL.md) references the utility tools by name over MCP too, so the live tools/list
+    may be larger than the 20 the docs table enumerates — unverifiable without an authenticated call.

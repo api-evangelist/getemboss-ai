@@ -1,0 +1,56 @@
+# Emboss API (api.getemboss.ai)
+
+Emboss turns any PDF form into a fillable one, fills it from data or supporting documents, reads a filled form back, and faxes the result to any fax number. Upload a flat PDF, Emboss detects the fields and returns a fillable form, then fills it from data or documents. This host serves the developer API, an MCP server, an A2A agent, and an MPP pay-per-call door. Product site and human documentation: https://getemboss.ai (its own llms.txt: https://getemboss.ai/llms.txt).
+
+## Developer API
+Authenticate every request with a Bearer API key (sk_...).
+Quickstart: https://getemboss.ai/docs/quickstart
+Interactive reference: https://api.getemboss.ai/docs
+OpenAPI schema: https://api.getemboss.ai/internal/openapi.json
+Pricing: https://getemboss.ai/pricing
+Price list: GET https://api.getemboss.ai/pricing (every kind's price, the free tier, the pay door's floor and ceiling; cached an hour, no key needed)
+Capabilities:
+- Turn a flat or scanned PDF form into a fillable PDF with detected fields.
+- Fill a PDF form from structured data such as JSON or key-value answers.
+- Fill a PDF form using facts found in supporting documents.
+- Prepare a form from documents: a proposal of every answer with its source, what is missing, and where documents disagree, before writing, plus attachments for a package.
+- Fill one copy of a PDF form for every row of a spreadsheet.
+- Propose which spreadsheet columns fill which PDF form fields.
+- Write or confirm the answers, render the form with text that fits, check it, and return the PDF with a report and a receipt, or one submission package.
+- Check a filled form: required fields, allowed options, consistent choices, text that fits, empty signature boxes; returns complete, review required, incomplete or failed.
+- Read the values out of a filled PDF form, labelled by field, with a completeness verdict when the form is known.
+- Find a blank government form in the Emboss library by name or number, ready to fill.
+- Send a PDF to a fax number and track delivery, priced per transmitted page.
+- Free. Build one PDF from pages of several artifacts, in the order and rotation you name.
+- Free. Join whole PDFs into one file in the order given.
+- Free. Keep only the pages you name from a PDF, in the order you name them.
+- Free. Remove the pages you name from a PDF and keep the rest in order.
+- Free. Put a PDF's pages in a new order you give, every page exactly once.
+- Free. Rotate the pages you name by 90, 180 or 270 degrees.
+- Free. Report a PDF's structure: page count, page sizes and rotations, encryption, form fields, annotations.
+- Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form. The pay door is always ephemeral; account holders choose per request (retention field) or per account.
+
+## MCP server
+Endpoint: https://api.getemboss.ai/mcp (Streamable HTTP, OAuth 2.1; unauthenticated requests get 401)
+OAuth discovery: https://api.getemboss.ai/.well-known/oauth-authorization-server
+Tools reference: https://getemboss.ai/docs/mcp-tools
+Setup in Claude: https://getemboss.ai/docs/claude
+
+## A2A agent
+Agent card: https://api.getemboss.ai/.well-known/agent-card.json
+JSON-RPC endpoint: https://api.getemboss.ai/a2a (Bearer API key)
+Guide: https://getemboss.ai/docs/a2a
+
+## Pay per call (MPP)
+Agents pay per operation over HTTP with the Machine Payments Protocol; no account. Send the request, get a 402 challenge, pay, resend with the credential.
+- POST https://api.getemboss.ai/pay/make-fillable: Turn a flat or scanned PDF form into a fillable PDF with detected fields. Also: detect form fields in a PDF; add fillable fields to a document; extract a PDF form schema; make a government or business form fillable; XFA forms; Adobe LiveCycle forms; Adobe dynamic forms. Price from 0.05 USD.
+- POST https://api.getemboss.ai/pay/fill-with-context: Fill a PDF form using facts found in supporting documents. Also: fill a PDF form from DOCX, spreadsheets, images, JSON, or other documents; pre-fill a government form from supporting paperwork; complete an application from a resume or company details; extract answers from context documents into a form. Price from 0.08 USD.
+- POST https://api.getemboss.ai/pay/fill: Fill a PDF form from structured data such as JSON or key-value answers. Also: fill a PDF form from JSON; populate form fields from data; complete a PDF application from known values; write answers into a form. Price from 0.07 USD.
+- POST https://api.getemboss.ai/pay/read: Read the values out of a filled PDF form, labelled by field, with a completeness verdict when the form is known. Also: extract form data; get values from a filled PDF; read a completed form back into data; pull the answers out of a filled application; turn a filled PDF into JSON. Price from 0.01 USD.
+- POST https://api.getemboss.ai/pay/fax: Send a PDF to a fax number and track delivery, priced per transmitted page. Also: fax a PDF; send a document by fax; fax this form to an agency; transmit a PDF to a fax line; outbound fax from an agent. Price from 0.03 USD.
+- Free price check: POST https://api.getemboss.ai/pay/quote (page count, already fillable, exact prices).
+- Also payable with x402 (USDC on Base): the same 402 carries a PAYMENT-REQUIRED header.
+Prices scale with page count; the 402 challenge carries the exact amount.
+OpenAPI manifest with x-payment-info: https://api.getemboss.ai/openapi.json
+Pay-door details: https://api.getemboss.ai/pay/llms.txt
+Guide: https://getemboss.ai/docs/pay-per-call/mpp

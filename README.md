@@ -64,5 +64,11 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Emboss is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://getemboss.ai/
+Emboss is a PDF form-filling API for developers and agents: it turns a flat or scanned PDF into a fillable form, fills it from data or supporting documents, verifies and reads it back, batch-fills from a spreadsheet, and faxes the result. One engine behind four doors on api.getemboss.ai — a 115-operation REST API (OpenAPI 3.1), a remote OAuth-protected MCP server, a signed A2A 1.0 agent card with 23 skills, and an anonymous x402/MPP pay-per-call door.
+
+- Website: https://getemboss.ai/
+- Docs: https://getemboss.ai/docs
+- OpenAPI: https://api.getemboss.ai/internal/openapi.json (account) and https://api.getemboss.ai/openapi.json (pay-per-call)
+- MCP: https://api.getemboss.ai/mcp
+- A2A agent card: https://api.getemboss.ai/.well-known/agent-card.json
+- Machine index: https://getemboss.ai/llms.txt

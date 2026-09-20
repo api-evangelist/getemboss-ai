@@ -1,0 +1,62 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: >-
+  (a) artifacts harvested this run — well-known/getemboss-ai-security.txt, security/, lifecycle/, conformance/;
+  (b) conventional paths probed live on getemboss.ai on 2026-09-19 — /accessibility, /accessibility/vpat,
+  /legal/subprocessors, /legal/dpa, /dpa, /privacy/requests, /transparency, /trust, /security/sbom,
+  /docs/data-residency, /ai, /ai/transparency, /legal/report-content — ALL 404; (c) the published pages
+  /subprocessors, /privacy, /security and the docs (ephemeral-processing).
+summary: >-
+  Emboss publishes a subprocessor table, a privacy policy with a working data-subject-request channel and a
+  documented disclosure of what its AI value-check sends to which model providers. It publishes no SBOM,
+  accessibility conformance report, support-lifetime commitment, GPC statement, incident-notification SLA, DPA,
+  transparency report, notice-and-action channel, age-assurance mechanism or exit/portability guide. Absence is
+  the measurement; nothing below is inferred.
+signals:
+  subprocessors:
+    url: https://getemboss.ai/subprocessors
+    evidence: [{source: 'https://getemboss.ai/subprocessors', keywords: [subprocessors, category, region, 'United States']}]
+    note: >-
+      A twelve-row table (category, what it does, region) covering hosting/database, object storage and DNS,
+      model routing, model inference, value-check model, card payments, stablecoin rails, transactional email,
+      product analytics, website hosting, error reporting and fax transmission. The page says it "does not name
+      individual companies"; the ephemeral-processing doc names OpenRouter and TypeSafe for the value check.
+      Undated.
+  data_subject_request:
+    url: https://getemboss.ai/privacy
+    evidence: [{source: 'https://getemboss.ai/privacy', keywords: ['access, correct, or delete', 'CCPA/CPRA', 'email contact@getemboss.ai', 'do not sell']}]
+    note: >-
+      "Depending on where you live, you may have the right to access, correct, or delete your personal
+      information ... To exercise any of these rights, email contact@getemboss.ai." Also "You may request
+      deletion of your account or content by emailing contact@getemboss.ai." Channel is email; no request form
+      or API.
+  data_residency:
+    url: https://getemboss.ai/subprocessors
+    regions: [us]
+    evidence: [{source: 'https://getemboss.ai/subprocessors', keywords: [Region, 'United States', 'Region to be confirmed']}]
+    note: >-
+      Recorded from the Region column of the subprocessor table: every category is "United States" except the
+      value-check model, listed as "Region to be confirmed". This is a published statement of where processing
+      happens, not a residency option a customer can choose — Emboss offers no region selection.
+  ai_transparency:
+    url: https://getemboss.ai/docs/ephemeral-processing
+    evidence: [{source: 'https://getemboss.ai/docs/ephemeral-processing', keywords: ['decision model', 'TypeSafe', 'OpenRouter', 'It sends no whole document', 'The answers are probabilities']}]
+    note: >-
+      The "What the value check sends" section discloses that a decision model (TypeSafe's Jev via OpenRouter)
+      is consulted after a fill, exactly which fields are sent (box name and kind, printed label, written value,
+      same-row values, quoted sentences for competing values), what is never sent (whole documents, the form
+      image, account identity), that outputs are probabilities surfaced as receipt notes, and that the check is
+      an operator setting. Field-detection and context-fill model calls are disclosed by category on the
+      subprocessors page. This is a data-flow disclosure, not an EU AI Act Article 50 user-facing notice.
+absent:
+  sbom: {probed: ['https://getemboss.ai/security/sbom'], status: 404}
+  support_lifetime: {searched: [terms, lifecycle], note: 'No support period; Terms give only "reasonable notice" of changes.'}
+  accessibility_conformance: {probed: ['https://getemboss.ai/accessibility', 'https://getemboss.ai/accessibility/vpat'], status: 404}
+  training_data_summary: {searched: [privacy, security, docs], note: 'No statement on model training; the privacy policy does not mention training on customer content either way.'}
+  global_privacy_control: {searched: [privacy], note: 'No GPC / universal opt-out statement. NOT probed with a Sec-GPC header, by rule. The site does set a Google consent-mode default that denies ad/analytics storage for EEA/UK/CH visitors, which is a cookie-consent default, not a GPC commitment.'}
+  incident_notification: {probed: ['https://getemboss.ai/legal/dpa', 'https://getemboss.ai/dpa'], status: 404, note: 'No DPA and no breach-notification SLA published.'}
+  age_assurance: {searched: [terms], note: 'No age gate or age signal documented.'}
+  notice_and_action: {probed: ['https://getemboss.ai/legal/report-content'], status: 404}
+  transparency_report: {probed: ['https://getemboss.ai/transparency'], status: 404}
+  exit_assistance: {searched: [docs], note: 'No export/portability guide beyond the fact that every result is downloadable and documents are deleted within 60-70 minutes; Terms: "On termination ... Your Content is handled as described in the Privacy Policy."'}

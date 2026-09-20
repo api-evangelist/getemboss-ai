@@ -1,0 +1,75 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  registry.npmjs.org (search "emboss" + direct lookups), pypi.org/pypi/*/json, rubygems.org, crates.io,
+  api.github.com (GetEmboss-ai org, 3 public repos), and the Emboss docs/integrations pages. Version and
+  published date read from the registry metadata endpoint or the GitHub releases API on 2026-09-19.
+summary: >-
+  Emboss ships NO general-purpose SDK. Its GitHub org (GetEmboss-ai, created 2026-06-13) holds three
+  first-party client packages, all of them platform integrations that point at the hosted API/MCP endpoint:
+  an n8n community node (npm), a Claude Code plugin (GitHub marketplace) and a Gemini CLI / Antigravity extension
+  (GitHub). Every code sample in the docs is raw HTTP (curl, fetch, requests). Searched and NOT found: any
+  package named emboss/getemboss/emboss-sdk/@emboss/* on npm (the bare "emboss" npm package is an unrelated
+  2016 placeholder by another author) or PyPI ("emboss" on PyPI is an unrelated on-disk cache library by
+  DJRHails), nothing on RubyGems, nothing first-party on crates.io.
+sdk_count: 0
+sdk_note: >-
+  No SDKs pointer is emitted. An n8n node, a Claude plugin and a Gemini extension are first-party client
+  packages but not SDKs — none exposes the REST surface as a library a developer imports.
+packages:
+- name: n8n-nodes-emboss
+  registry: npm
+  url: https://www.npmjs.com/package/n8n-nodes-emboss
+  repository: https://github.com/GetEmboss-ai/n8n-nodes-emboss
+  language: TypeScript
+  kind: integration-node
+  official: true
+  version: 1.0.4
+  published: '2026-06-15'
+  license: MIT
+  author: Emboss <edwin@getemboss.ai>
+  description: n8n node for Emboss — create fillable PDFs and fill forms from context.
+  evidence: https://registry.npmjs.org/n8n-nodes-emboss (dist-tags.latest 1.0.4, time 2026-06-15T12:09:47Z, author Emboss, repository GetEmboss-ai)
+  note: Wraps the account REST API with an API-key credential (credentials/EmbossApi.credentials.ts). Last release predates the prepare/commit/verify, fax, artifact and utility surfaces added to the API in September 2026.
+- name: emboss-claude-plugin
+  registry: github
+  url: https://github.com/GetEmboss-ai/emboss-claude-plugin
+  kind: mcp-client-plugin
+  official: true
+  version: 1.5.1
+  published: '2026-09-17'
+  license: MIT
+  install: '/plugin marketplace add GetEmboss-ai/emboss-claude-plugin && /plugin install emboss@getemboss'
+  description: Claude Code plugin — .mcp.json pointing at https://api.getemboss.ai/mcp, two SKILL.md files, three slash commands, and the MCP registry server.json.
+  evidence: https://api.github.com/repos/GetEmboss-ai/emboss-claude-plugin/releases (v1.5.1 published 2026-09-17T19:37:50Z); .claude-plugin/plugin.json version 1.5.1
+  releases: [v1.0.0 2026-08-29, v1.1.0 2026-09-12, v1.2.0 2026-09-12, v1.3.0 2026-09-13, v1.4.0 2026-09-13, v1.5.0 2026-09-13, v1.5.1 2026-09-17]
+  note: Also distributes emboss-skill.zip on each release for upload to Claude.ai as a standalone skill.
+- name: emboss-gemini-extension
+  registry: github
+  url: https://github.com/GetEmboss-ai/emboss-gemini-extension
+  kind: mcp-client-extension
+  official: true
+  version: 1.5.0
+  published: '2026-09-13'
+  license: MIT
+  install: gemini extensions install https://github.com/GetEmboss-ai/emboss-gemini-extension
+  description: Gemini CLI and Antigravity extension — gemini-extension.json with httpUrl https://api.getemboss.ai/mcp, GEMINI.md context file and a SKILL.md.
+  evidence: gemini-extension.json version 1.5.0; repository pushed_at 2026-09-13T21:59:41Z (no GitHub releases published; version read from the manifest, date from the last push)
+- name: '@pipedream/emboss'
+  registry: npm
+  url: https://www.npmjs.com/package/@pipedream/emboss
+  kind: integration-components
+  official: false
+  version: 0.1.1
+  published: '2026-09-03'
+  author: Pipedream <support@pipedream.com>
+  description: Pipedream Emboss Components.
+  evidence: https://registry.npmjs.org/@pipedream/emboss (author Pipedream, homepage https://pipedream.com/apps/emboss)
+  note: Authored and published by Pipedream, not Emboss; listed because Emboss's own integrations page links the Pipedream integration.
+integrations_without_packages:
+- name: Zapier
+  url: https://getemboss.ai/integrations/zapier
+  note: Hosted Zapier app; no package to version.
+- name: Make
+  url: https://getemboss.ai/integrations/make
+  note: Hosted Make app; no package to version.
