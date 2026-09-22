@@ -32,7 +32,7 @@ tags:
 - MCP
 - A2A
 - x402
-- Pay-per-call
+- pay-per-call
 - Government Forms
 - Company
 tags_raw:
@@ -48,6 +48,7 @@ tags_raw:
 - x402
 - Pay-per-call
 - Government forms
+- Company
 apis:
 - aid: getemboss-ai:emboss-account-api
   name: Emboss Account API
@@ -123,6 +124,12 @@ apis:
   humanURL: https://getemboss.ai/docs/pay-per-call
   baseURL: https://api.getemboss.ai/pay
   tags:
+  - x402
+  - pay-per-call
+  - PDF
+  - Forms
+  - Fax
+  tags_raw:
   - x402
   - Pay-per-call
   - PDF
