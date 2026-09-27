@@ -1,0 +1,341 @@
+openapi: 3.2.0
+info:
+  title: Getemboss Ai Pay API
+  version: 0.1.0
+  description: 'Operations tagged Pay across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Pay
+paths:
+  /pay:
+    get:
+      summary: Pay Index
+      description: 'A small JSON index of the paid ops and their docs -- a discovery
+
+        anchor for mppx validate and curious agents, per the design doc''s
+
+        Discovery section.'
+      operationId: pay_index_pay_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Pay
+  /pay/openapi.json:
+    get:
+      summary: Pay Openapi Manifest
+      description: 'The MPP pay manifest (MPPscan shape) at the origin ROOT, which is the
+
+        only location discovery tools read; /pay/openapi.json is an alias kept for
+
+        links already published. FastAPI''s own schema is at /internal/openapi.json.
+
+        Imported lazily: pay_manifest reads _OPS_INDEX from here.'
+      operationId: pay_openapi_manifest_pay_openapi_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Pay
+  /pay/llms.txt:
+    get:
+      summary: Pay Llms Txt
+      description: Floor-plus-pointer llms.txt for the pay door (from-prices + links).
+      operationId: pay_llms_txt_pay_llms_txt_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Pay
+  /pay/pricing:
+    get:
+      summary: Pay Pricing Alias
+      description: The public price list beside /pay/quote; same body as GET /pricing.
+      operationId: pay_pricing_alias_pay_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Pay
+  /pay/quote:
+    post:
+      summary: Pay Quote
+      description: 'Free, stateless inspect-before-pay: page count, whether the PDF is
+
+        already fillable, and the exact price of every op for THIS PDF, computed
+
+        with the same engine function the 402 uses. No quote row, no staging.
+
+        Shares the per-IP quote throttle with the 402 path.'
+      operationId: pay_quote_pay_quote_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_pay_quote_pay_quote_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Pay
+  /pay/{op}:
+    post:
+      summary: Pay
+      description: 'Thin wrapper: catches ANY HTTPException raised anywhere in this
+
+        door''s call graph (quotes.claim_quote''s 404/409/410, quotes.execute_quote''s
+
+        post-settle failure re-raise, auth.enforce_throttle''s 429, this module''s
+
+        own op-name 404) and normalizes it to the SAME Problem Details shape
+
+        every other rejection on this door already returns, rather than letting
+
+        it escape as FastAPI''s default {"detail": ...} JSON body -- see
+
+        _http_exception_to_problem''s own docstring (Fix round 1). A JSON content
+
+        type takes the pay_body branch; multipart is unchanged.'
+      operationId: pay_pay__op__post
+      parameters:
+      - name: op
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Op
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_pay_pay__op__post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Pay
+  /pay/jobs/{job_id}:
+    get:
+      summary: Pay Job Status
+      description: 'Free poll: token = HMAC(job_id, server secret) minted in the 202. No
+
+        payment, no auth account -- per the design doc''s retry step 6. Every
+
+        rejection here also normalizes through _http_exception_to_problem (Fix
+
+        round 1), for the same consistency reason as pay()''s own wrapper --
+
+        Problem Details across the whole /pay* surface, not just POST /pay/{op}.'
+      operationId: pay_job_status_pay_jobs__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Job Id
+      - name: token
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Pay
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_pay_pay__op__post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        context_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Text
+        context_urls:
+          items:
+            type: string
+          type: array
+          title: Context Urls
+          default: []
+        values:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Values
+        policy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Policy
+        mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mode
+        package:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package
+        to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: To
+      type: object
+      title: Body_pay_pay__op__post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_pay_quote_pay_quote_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        context_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Text
+        context_urls:
+          items:
+            type: string
+          type: array
+          title: Context Urls
+          default: []
+        values:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Values
+      type: object
+      title: Body_pay_quote_pay_quote_post
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms
+x-refined-from:
+- getemboss-ai-account-openapi.json
+- getemboss-ai-account-openapi.yml

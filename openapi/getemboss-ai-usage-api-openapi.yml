@@ -1,0 +1,174 @@
+openapi: 3.2.0
+info:
+  title: Getemboss Ai Usage API
+  version: 0.1.0
+  description: 'Operations tagged Usage across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Usage
+paths:
+  /usage:
+    get:
+      summary: Get Usage
+      operationId: get_usage_usage_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageResponse'
+      tags:
+      - Usage
+components:
+  schemas:
+    UsageCounts:
+      properties:
+        create:
+          type: integer
+          title: Create
+          default: 0
+        with_context:
+          type: integer
+          title: With Context
+          default: 0
+        standard_fill:
+          type: integer
+          title: Standard Fill
+          default: 0
+        verify:
+          type: integer
+          title: Verify
+          default: 0
+        read:
+          type: integer
+          title: Read
+          default: 0
+        package:
+          type: integer
+          title: Package
+          default: 0
+        send_fax:
+          type: integer
+          title: Send Fax
+          default: 0
+        utility:
+          type: integer
+          title: Utility
+          default: 0
+      type: object
+      title: UsageCounts
+      description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
+    UsageResponse:
+      properties:
+        owner:
+          type: string
+          title: Owner
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        period:
+          type: string
+          title: Period
+        total:
+          $ref: '#/components/schemas/UsageCounts'
+        period_counts:
+          $ref: '#/components/schemas/UsageCounts'
+        total_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        total_ctx_tokens:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_ctx_tokens:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        total_context_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_context_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+      type: object
+      required:
+      - owner
+      - period
+      - total
+      - period_counts
+      title: UsageResponse
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms
+x-refined-from:
+- getemboss-ai-account-openapi.json
+- getemboss-ai-account-openapi.yml

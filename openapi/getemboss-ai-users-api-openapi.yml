@@ -1,0 +1,350 @@
+openapi: 3.2.0
+info:
+  title: Getemboss Ai Users API
+  version: 0.1.0
+  description: 'Operations tagged Users across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Users
+paths:
+  /users:
+    post:
+      summary: Signup
+      operationId: signup_users_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Users
+  /users/verify:
+    post:
+      summary: Verify
+      operationId: verify_users_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Users
+  /users/login:
+    post:
+      summary: Login
+      operationId: login_users_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Users
+  /users/verify/resend:
+    post:
+      summary: Verify Resend
+      description: 'Reissue the verification code and link for an unverified account. The
+
+        answer is {"ok": true} for every email; the token fields are present only
+
+        when there is something to send, so the endpoint cannot be used to probe
+
+        which addresses are registered (spec 4.3).'
+      operationId: verify_resend_users_verify_resend_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Users
+  /users/login/token:
+    post:
+      summary: Login With Token
+      description: 'Redeem the one-time login token /users/verify handed out (spec 5.3):
+
+        the site''s credentials provider calls this from the /verify page so the
+
+        person who clicked the emailed link is signed in without a password.'
+      operationId: login_with_token_users_login_token_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginTokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Users
+  /users/reset/request:
+    post:
+      summary: Reset Request
+      operationId: reset_request_users_reset_request_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Users
+  /users/reset/confirm:
+    post:
+      summary: Reset Confirm
+      operationId: reset_confirm_users_reset_confirm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetConfirmBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Users
+components:
+  schemas:
+    ResendRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - turnstile_token
+      title: ResendRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ResetConfirmBody:
+      properties:
+        token:
+          type: string
+          title: Token
+        new_password:
+          type: string
+          title: New Password
+      type: object
+      required:
+      - token
+      - new_password
+      title: ResetConfirmBody
+    ResetRequestBody:
+      properties:
+        email:
+          type: string
+          title: Email
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - turnstile_token
+      title: ResetRequestBody
+    LoginTokenRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        login_token:
+          type: string
+          title: Login Token
+      type: object
+      required:
+      - email
+      - login_token
+      title: LoginTokenRequest
+    SignupRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - password
+      - turnstile_token
+      title: SignupRequest
+    LoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VerifyRequest:
+      properties:
+        token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+      type: object
+      title: VerifyRequest
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms
+x-refined-from:
+- getemboss-ai-account-openapi.json
+- getemboss-ai-account-openapi.yml

@@ -1,0 +1,412 @@
+openapi: 3.2.0
+info:
+  title: Getemboss Ai Proposals API
+  version: 0.1.0
+  description: 'Operations tagged Proposals across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Proposals
+paths:
+  /proposals/{proposal_id}/commit:
+    post:
+      summary: Commit
+      operationId: commit_proposals__proposal_id__commit_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $defs:
+                CommitValue:
+                  description: 'One caller decision. A null value SKIPS the field (a deliberate blank),
+
+                    which is not the same as omitting it (leave whatever the proposal holds).'
+                  properties:
+                    field_id:
+                      title: Field Id
+                      type: integer
+                    value:
+                      title: Value
+                    note:
+                      anyOf:
+                      - type: string
+                      - type: 'null'
+                      title: Note
+                  required:
+                  - field_id
+                  title: CommitValue
+                  type: object
+              properties:
+                values:
+                  default: []
+                  items:
+                    $ref: '#/$defs/CommitValue'
+                  title: Values
+                  type: array
+                confirm:
+                  default: []
+                  items:
+                    type: integer
+                  title: Confirm
+                  type: array
+                policy:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Policy
+                idempotency_key:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Idempotency Key
+                package:
+                  default: false
+                  title: Package
+                  type: boolean
+              title: CommitRequest
+              type: object
+      tags:
+      - Proposals
+  /proposals/{proposal_id}:
+    get:
+      summary: Get Proposal
+      description: 'The proposal as its holder reads it. Lives here rather than in
+
+        proposals.py because it shares this module''s auth rule exactly: the owner, or
+
+        an anonymous pay-door payer holding a token minted for THIS proposal. That
+
+        second case is why it cannot sit on the proposals router, which app.py mounts
+
+        behind a blanket require_owner.
+
+
+        A token-bearing read gets the token echoed back as commit_token, so the same
+
+        response an owner reads carries, for a payer, the credential they commit with.
+
+        An owner never sees the field: their API key already is their proof.'
+      operationId: get_proposal_proposals__proposal_id__get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Proposals
+  /proposals/{proposal_id}/receipt:
+    get:
+      summary: Receipt
+      operationId: receipt_proposals__proposal_id__receipt_get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Proposals
+  /proposals/{proposal_id}/pdf:
+    get:
+      summary: Commit Pdf
+      operationId: commit_pdf_proposals__proposal_id__pdf_get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Proposals
+  /proposals/{proposal_id}/attachments:
+    post:
+      summary: Add Attachment
+      operationId: add_attachment_proposals__proposal_id__attachments_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_add_attachment_proposals__proposal_id__attachments_post'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Proposals
+  /proposals/{proposal_id}/attachments/{n}:
+    delete:
+      summary: Remove Attachment
+      operationId: remove_attachment_proposals__proposal_id__attachments__n__delete
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      - name: n
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: N
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Proposals
+components:
+  schemas:
+    Body_add_attachment_proposals__proposal_id__attachments_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        for:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: For
+      type: object
+      required:
+      - file
+      title: Body_add_attachment_proposals__proposal_id__attachments_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProposalResponse:
+      properties:
+        proposal_id:
+          type: string
+          title: Proposal Id
+        form_id:
+          type: string
+          title: Form Id
+        status:
+          type: string
+          title: Status
+        policy:
+          type: string
+          title: Policy
+        mode:
+          type: string
+          title: Mode
+        expires_at:
+          type: string
+          title: Expires At
+        fields:
+          items: {}
+          type: array
+          title: Fields
+        questions:
+          items: {}
+          type: array
+          title: Questions
+        confirmations:
+          items: {}
+          type: array
+          title: Confirmations
+          default: []
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        attachments:
+          items: {}
+          type: array
+          title: Attachments
+          default: []
+        summary:
+          additionalProperties: true
+          type: object
+          title: Summary
+        error:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Error
+        commit_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Commit Token
+        package_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package Url
+      type: object
+      required:
+      - proposal_id
+      - form_id
+      - status
+      - policy
+      - mode
+      - expires_at
+      - fields
+      - questions
+      - requirements
+      - summary
+      title: ProposalResponse
+      description: 'The agent-facing view of a proposal: per-field states with evidence, the
+
+        questions still worth asking, what the form needs beyond values, and counts.'
+    ContextJobCreated:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+          default: processing
+      type: object
+      required:
+      - job_id
+      title: ContextJobCreated
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms
+x-refined-from:
+- getemboss-ai-account-openapi.json
+- getemboss-ai-account-openapi.yml

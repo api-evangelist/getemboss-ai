@@ -1,0 +1,53 @@
+openapi: 3.2.0
+info:
+  title: Getemboss Ai Openapi.json API
+  version: 0.1.0
+  description: 'Operations tagged Openapi.json across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Openapi.json
+paths:
+  /openapi.json:
+    get:
+      summary: Pay Openapi Manifest
+      description: 'The MPP pay manifest (MPPscan shape) at the origin ROOT, which is the
+
+        only location discovery tools read; /pay/openapi.json is an alias kept for
+
+        links already published. FastAPI''s own schema is at /internal/openapi.json.
+
+        Imported lazily: pay_manifest reads _OPS_INDEX from here.'
+      operationId: pay_openapi_manifest_openapi_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Openapi.json
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms
+x-refined-from:
+- getemboss-ai-account-openapi.json
+- getemboss-ai-account-openapi.yml

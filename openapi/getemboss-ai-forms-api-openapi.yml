@@ -1,0 +1,2519 @@
+openapi: 3.2.0
+info:
+  title: Getemboss Ai Forms API
+  x-refined-note:
+  - x-guidance differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Forms across 4 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-pay-per-call-openapi.json, getemboss-ai-account-openapi.yml, getemboss-ai-pay-per-call-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.getemboss.ai
+tags:
+- name: Forms
+paths:
+  /forms/quote:
+    post:
+      summary: Account Quote
+      operationId: account_quote_forms_quote_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_account_quote_forms_quote_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms:
+    post:
+      summary: Create Form
+      operationId: create_form_forms_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_form_forms_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+    get:
+      summary: List Forms
+      operationId: list_forms_forms_get
+      parameters:
+      - name: states
+        in: query
+        required: false
+        schema:
+          enum:
+          - ready
+          - all
+          type: string
+          default: ready
+          title: States
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormsListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}:
+    get:
+      summary: Get Form
+      operationId: get_form_forms__form_id__get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+    delete:
+      summary: Delete Form
+      description: 'Spec 2.3: the documents go first, under every policy, then the row is soft
+
+        deleted. A form with work still running answers 409 rather than deleting
+
+        blobs out from under it.'
+      operationId: delete_form_forms__form_id__delete
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/contract:
+    get:
+      summary: Get Contract
+      operationId: get_contract_forms__form_id__contract_get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/fillable:
+    get:
+      summary: Get Fillable
+      operationId: get_fillable_forms__form_id__fillable_get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/thumbnail:
+    get:
+      summary: Get Thumbnail
+      operationId: get_thumbnail_forms__form_id__thumbnail_get
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/with-context:
+    post:
+      summary: Create With Context
+      operationId: create_with_context_forms_with_context_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_with_context_forms_with_context_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/with-context:
+    post:
+      summary: Fill Existing With Context
+      description: 'Standalone fill-from-context: fill an already-extracted form the caller
+
+        owns from context. Bills ONE with_context event (no re-extraction). The
+
+        form already exists, so `retention` is accepted for symmetry with the
+
+        other routes and validated, but otherwise ignored: the form''s own policy
+
+        (set at creation) is what governs it.'
+      operationId: fill_existing_with_context_forms__form_id__with_context_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_fill_existing_with_context_forms__form_id__with_context_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/with-context/{job_id}:
+    get:
+      summary: Get With Context
+      operationId: get_with_context_forms_with_context__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Job Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/prepare:
+    post:
+      summary: Prepare Existing
+      description: 'Prepare an already-extracted form the caller owns: one with_context event,
+
+        a proposal instead of a rendered PDF. The form already exists, so `retention`
+
+        is accepted for symmetry and validated, but otherwise ignored: the form''s own
+
+        policy (set at creation) is what governs it.'
+      operationId: prepare_existing_forms__form_id__prepare_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_prepare_existing_forms__form_id__prepare_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/prepare:
+    post:
+      summary: Prepare New
+      description: 'Extract a fresh PDF and prepare it in one call: create + with_context.'
+      operationId: prepare_new_forms_prepare_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_prepare_new_forms_prepare_post'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/verify:
+    post:
+      summary: Verify Filled Pdf
+      description: 'Verify a filled PDF the caller already holds against this form''s contract.
+
+
+        Standalone because the caller may have rendered elsewhere, or filled by hand,
+
+        and still wants the machine-readable answer to "is this document done". No
+
+        model call: the same extraction.verify.check a commit runs, on a state read
+
+        back out of the uploaded document.
+
+
+        This router carries no require_owner dependency (commit authorises itself, so
+
+        it must accept proposal tokens), so this route calls require_owner directly.
+
+        Verify is owner-only: there is no proposal here to bear a token.
+
+
+        request.state.owner already set is treated as pre-authorised, same as
+
+        _authorise above: MCP''s owner_request and A2A''s _fake_request splice a
+
+        resolved owner onto a request-shaped object before calling this route
+
+        function directly and carry no real bearer credentials of their own for
+
+        require_owner to read.'
+      operationId: verify_filled_pdf_forms__form_id__verify_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_verify_filled_pdf_forms__form_id__verify_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/preview-fill:
+    post:
+      summary: Preview Fill
+      operationId: preview_fill_forms__form_id__preview_fill_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          title: Form Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_preview_fill_forms__form_id__preview_fill_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewFillResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/suggest-mapping:
+    post:
+      summary: Suggest Mapping Endpoint
+      operationId: suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MappingSuggestion'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/{form_id}/fill-batch:
+    post:
+      summary: Fill Batch
+      description: 'on_row: optional async (batch_id, row_number, total, result_dict) callback,
+
+        threaded straight into _run_batch (see its own docstring). None for every
+
+        FastAPI-routed call (REST''s own request body has no such field -- this is a
+
+        plain extra kwarg, not a Form()/Body() field, so it is never bound from the
+
+        wire); the A2A executor is the only caller that passes one, by calling this
+
+        function directly as a Python coroutine rather than through routing.
+
+
+        `retention`: the form already exists, so this is accepted for symmetry
+
+        with the other routes and validated, but otherwise ignored: the form''s
+
+        own policy (set at creation) is what governs it. Checked with
+
+        isinstance(str), not `is not None`: fill_batch is also called directly as
+
+        a plain coroutine (quotes.py''s execute_quote resume, accounts.py''s
+
+        admin_fill_batch), bypassing FastAPI''s own request parsing -- there, an
+
+        omitted `retention` kwarg leaves the parameter at its literal default,
+
+        the Form(None) marker object itself, not None (mirrors why `on_row`
+
+        above uses a plain None default rather than a Form marker).'
+      operationId: fill_batch_forms__form_id__fill_batch_post
+      parameters:
+      - name: form_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Form Id
+      - name: on_row
+        in: query
+        required: false
+        schema:
+          title: On Row
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_fill_batch_forms__form_id__fill_batch_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchCreated'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/fill-batch/{batch_id}:
+    get:
+      summary: Batch Status
+      operationId: batch_status_forms_fill_batch__batch_id__get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/fill-batch/{batch_id}/rows/{n}/pdf:
+    get:
+      summary: Batch Row Pdf
+      operationId: batch_row_pdf_forms_fill_batch__batch_id__rows__n__pdf_get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      - name: n
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: N
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/fill-batch/{batch_id}/zip:
+    get:
+      summary: Batch Zip
+      operationId: batch_zip_forms_fill_batch__batch_id__zip_get
+      parameters:
+      - name: batch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Batch Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /forms/read:
+    post:
+      summary: Read Form
+      operationId: read_form_forms_read_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_read_form_forms_read_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Forms
+      security:
+      - bearer: []
+      - oauth2:
+        - forms:read
+        - forms:write
+  /pay/make-fillable:
+    post:
+      operationId: pay_make_fillable
+      summary: Turn a flat or scanned PDF form into a fillable PDF with detected fields
+      description: 'Turn a flat or scanned PDF form into a fillable PDF with detected fields. Also: detect form fields in a PDF; add fillable fields to a document; extract a PDF form schema; make a government or business form fillable; XFA forms; Adobe LiveCycle forms; Adobe dynamic forms. Input: a PDF file. Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Forms
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pdf_url:
+                  type: string
+                  format: uri
+                  description: Public https URL of the PDF form; Emboss downloads it (10 MB limit).
+                pdf_base64:
+                  type: string
+                  contentEncoding: base64
+                  description: The PDF form as standard base64 (10 MB decoded limit).
+              oneOf:
+              - required:
+                - pdf_url
+              - required:
+                - pdf_base64
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The PDF form.
+              required:
+              - file
+      responses:
+        '402':
+          description: Payment Required
+        '202':
+          description: Paid and accepted. The Payment-Receipt header carries the MPP receipt. Poll status_url for the result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                  status_url:
+                    type: string
+                    format: uri
+                  quote_id:
+                    type: string
+                  artifact_id:
+                    type: string
+                    description: The result artifact's id, when the op produced one.
+                  artifact_token:
+                    type: string
+                    description: Bearer token for artifact_id (anonymous callers only).
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                    description: 'Every artifact the op produced: [{artifact_id, role, mime_type}].'
+                required:
+                - job_id
+                - status_url
+                - quote_id
+        '400':
+          description: Not a readable PDF, or a required input is missing.
+        '413':
+          description: Too many pages or too much context.
+      x-payment-info:
+        price:
+          mode: dynamic
+          currency: USD
+          amount: '0.05'
+          min: '0.05'
+          max: '1.00'
+        protocols:
+        - mpp:
+            method: tempo
+            intent: charge
+            currency: '0x20c000000000000000000000b9537d11c60e8b50'
+        - mpp:
+            method: stripe
+            intent: charge
+            currency: usd
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913'
+        - x402:
+            scheme: exact
+            network: eip155:1
+            asset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:43114
+            asset: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:42161
+            asset: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:10
+            asset: '0x0b2c639c533813f4aa9d7837caf62653d097ff85'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:137
+            asset: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:130
+            asset: '0x078d782b760474a361dda0af3839290b0ef57ad6'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:146
+            asset: '0x29219dd400f2bf60e5a23d13be72b486d4038894'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:480
+            asset: '0x79a02482a880bce3f13e09da970dc34db4cd24d1'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:1329
+            asset: '0xe15fc38f6d8c56af07bbcbe3baf5708a2bf42392'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:999
+            asset: '0xb88339cb7199b77e23db6e890353e22632ba630f'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:5042
+            asset: '0x3600000000000000000000000000000000000000'
+            facilitator: circle-gateway
+        amount: '50000'
+        unitType: request
+        description: 'Turn a flat or scanned PDF form into a fillable PDF with detected fields. Input: a PDF file.'
+        priceNote: Price scales with page count between min and max; the exact amount for your request is in the 402 challenge.
+    servers:
+    - url: https://api.getemboss.ai
+  /pay/fill-with-context:
+    post:
+      operationId: pay_fill_with_context
+      summary: Fill a PDF form using facts found in supporting documents
+      description: 'Fill a PDF form using facts found in supporting documents. Also: fill a PDF form from DOCX, spreadsheets, images, JSON, or other documents; pre-fill a government form from supporting paperwork; complete an application from a resume or company details; extract answers from context documents into a form. Input: a PDF file plus one or more context files and/or context_text/context_urls. Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Forms
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pdf_url:
+                  type: string
+                  format: uri
+                  description: Public https URL of the PDF form; Emboss downloads it (10 MB limit).
+                pdf_base64:
+                  type: string
+                  contentEncoding: base64
+                  description: The PDF form as standard base64 (10 MB decoded limit).
+                context_base64:
+                  type: array
+                  maxItems: 5
+                  items:
+                    type: object
+                    required:
+                    - name
+                    - base64
+                    properties:
+                      name:
+                        type: string
+                        description: Filename, used to tell documents apart.
+                      base64:
+                        type: string
+                        contentEncoding: base64
+                        description: The document as standard base64.
+                  description: Up to 5 supporting documents (PDF, text, images) as base64.
+                context_text:
+                  type: string
+                  maxLength: 200000
+                  description: Supporting text, up to 200,000 characters.
+                context_urls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  maxItems: 5
+                  description: Up to 5 public https URLs of supporting documents.
+                policy:
+                  type: string
+                  enum:
+                  - safe
+                  - strict
+                  description: 'How sure Emboss must be before writing a value: safe (default) writes high and medium confidence, strict writes high only.'
+                mode:
+                  type: string
+                  enum:
+                  - one_call
+                  - two_call
+                  description: one_call (default) returns the finished PDF; two_call returns a proposal and a commit token so the caller can resolve open items before anything is written.
+                package:
+                  type: boolean
+                  description: 'mode=two_call only: also produce one submission package at commit, holding the filled form, the attachments uploaded against the proposal, and the receipt. Priced into this quote.'
+              oneOf:
+              - required:
+                - pdf_url
+              - required:
+                - pdf_base64
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The PDF form.
+                context:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Supporting documents (PDF, text, images).
+                context_text:
+                  type: string
+                  maxLength: 200000
+                  description: Supporting text, up to 200,000 characters.
+                context_urls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  maxItems: 5
+                  description: Up to 5 public https URLs of supporting documents.
+                policy:
+                  type: string
+                  enum:
+                  - safe
+                  - strict
+                  description: 'How sure Emboss must be before writing a value: safe (default) writes high and medium confidence, strict writes high only.'
+                mode:
+                  type: string
+                  enum:
+                  - one_call
+                  - two_call
+                  description: one_call (default) returns the finished PDF; two_call returns a proposal and a commit token so the caller can resolve open items before anything is written.
+                package:
+                  type: boolean
+                  description: 'mode=two_call only: also produce one submission package at commit, holding the filled form, the attachments uploaded against the proposal, and the receipt. Priced into this quote.'
+              required:
+              - file
+      responses:
+        '402':
+          description: Payment Required
+        '202':
+          description: Paid and accepted. The Payment-Receipt header carries the MPP receipt. Poll status_url for the result. With mode=two_call the body also carries proposal_id, commit_token and proposal_url.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                  status_url:
+                    type: string
+                    format: uri
+                  quote_id:
+                    type: string
+                  artifact_id:
+                    type: string
+                    description: The result artifact's id, when the op produced one.
+                  artifact_token:
+                    type: string
+                    description: Bearer token for artifact_id (anonymous callers only).
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                    description: 'Every artifact the op produced: [{artifact_id, role, mime_type}].'
+                  proposal_id:
+                    type: string
+                    description: 'two_call only: the proposal to read and commit.'
+                  commit_token:
+                    type: string
+                    description: 'two_call only: send as X-Proposal-Token on the proposal routes; lives 45 minutes.'
+                  proposal_url:
+                    type: string
+                    format: uri
+                    description: 'two_call only: GET the proposal, token included.'
+                required:
+                - job_id
+                - status_url
+                - quote_id
+        '400':
+          description: Not a readable PDF, or a required input is missing.
+        '413':
+          description: Too many pages or too much context.
+      x-payment-info:
+        price:
+          mode: dynamic
+          currency: USD
+          amount: '0.08'
+          min: '0.08'
+          max: '12.93'
+        protocols:
+        - mpp:
+            method: tempo
+            intent: charge
+            currency: '0x20c000000000000000000000b9537d11c60e8b50'
+        - mpp:
+            method: stripe
+            intent: charge
+            currency: usd
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913'
+        - x402:
+            scheme: exact
+            network: eip155:1
+            asset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:43114
+            asset: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:42161
+            asset: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:10
+            asset: '0x0b2c639c533813f4aa9d7837caf62653d097ff85'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:137
+            asset: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:130
+            asset: '0x078d782b760474a361dda0af3839290b0ef57ad6'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:146
+            asset: '0x29219dd400f2bf60e5a23d13be72b486d4038894'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:480
+            asset: '0x79a02482a880bce3f13e09da970dc34db4cd24d1'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:1329
+            asset: '0xe15fc38f6d8c56af07bbcbe3baf5708a2bf42392'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:999
+            asset: '0xb88339cb7199b77e23db6e890353e22632ba630f'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:5042
+            asset: '0x3600000000000000000000000000000000000000'
+            facilitator: circle-gateway
+        amount: '80000'
+        unitType: request
+        description: 'Fill a PDF form using facts found in supporting documents. Input: a PDF file plus one or more context files and/or context_text/context_urls.'
+        priceNote: Price scales with page count between min and max; the exact amount for your request is in the 402 challenge.
+    servers:
+    - url: https://api.getemboss.ai
+  /pay/fill:
+    post:
+      operationId: pay_fill
+      summary: Fill a PDF form from structured data such as JSON or key-value answers
+      description: 'Fill a PDF form from structured data such as JSON or key-value answers. Also: fill a PDF form from JSON; populate form fields from data; complete a PDF application from known values; write answers into a form. Input: a PDF file plus a values JSON object mapping field names to answers. Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Forms
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pdf_url:
+                  type: string
+                  format: uri
+                  description: Public https URL of the PDF form; Emboss downloads it (10 MB limit).
+                pdf_base64:
+                  type: string
+                  contentEncoding: base64
+                  description: The PDF form as standard base64 (10 MB decoded limit).
+                values:
+                  type: object
+                  additionalProperties: true
+                  description: A JSON object mapping field names to answers.
+              oneOf:
+              - required:
+                - pdf_url
+              - required:
+                - pdf_base64
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The PDF form.
+                values:
+                  type: string
+                  description: A JSON object (as a string) mapping field names to answers.
+              required:
+              - file
+      responses:
+        '402':
+          description: Payment Required
+        '202':
+          description: Paid and accepted. The Payment-Receipt header carries the MPP receipt. Poll status_url for the result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                  status_url:
+                    type: string
+                    format: uri
+                  quote_id:
+                    type: string
+                  artifact_id:
+                    type: string
+                    description: The result artifact's id, when the op produced one.
+                  artifact_token:
+                    type: string
+                    description: Bearer token for artifact_id (anonymous callers only).
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                    description: 'Every artifact the op produced: [{artifact_id, role, mime_type}].'
+                required:
+                - job_id
+                - status_url
+                - quote_id
+        '400':
+          description: Not a readable PDF, or a required input is missing.
+        '413':
+          description: Too many pages or too much context.
+      x-payment-info:
+        price:
+          mode: dynamic
+          currency: USD
+          amount: '0.07'
+          min: '0.07'
+          max: '1.02'
+        protocols:
+        - mpp:
+            method: tempo
+            intent: charge
+            currency: '0x20c000000000000000000000b9537d11c60e8b50'
+        - mpp:
+            method: stripe
+            intent: charge
+            currency: usd
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913'
+        - x402:
+            scheme: exact
+            network: eip155:1
+            asset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:43114
+            asset: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:42161
+            asset: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:10
+            asset: '0x0b2c639c533813f4aa9d7837caf62653d097ff85'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:137
+            asset: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:130
+            asset: '0x078d782b760474a361dda0af3839290b0ef57ad6'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:146
+            asset: '0x29219dd400f2bf60e5a23d13be72b486d4038894'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:480
+            asset: '0x79a02482a880bce3f13e09da970dc34db4cd24d1'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:1329
+            asset: '0xe15fc38f6d8c56af07bbcbe3baf5708a2bf42392'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:999
+            asset: '0xb88339cb7199b77e23db6e890353e22632ba630f'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:5042
+            asset: '0x3600000000000000000000000000000000000000'
+            facilitator: circle-gateway
+        amount: '70000'
+        unitType: request
+        description: 'Fill a PDF form from structured data such as JSON or key-value answers. Input: a PDF file plus a values JSON object mapping field names to answers.'
+        priceNote: Price scales with page count between min and max; the exact amount for your request is in the 402 challenge.
+    servers:
+    - url: https://api.getemboss.ai
+  /pay/read:
+    post:
+      operationId: pay_read
+      summary: Read the values out of a filled PDF form, labelled by field, with a…
+      description: 'Read the values out of a filled PDF form, labelled by field, with a completeness verdict when the form is known. Also: extract form data; get values from a filled PDF; read a completed form back into data; pull the answers out of a filled application; turn a filled PDF into JSON. Input: a filled PDF file. Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Forms
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pdf_url:
+                  type: string
+                  format: uri
+                  description: Public https URL of the PDF form; Emboss downloads it (10 MB limit).
+                pdf_base64:
+                  type: string
+                  contentEncoding: base64
+                  description: The PDF form as standard base64 (10 MB decoded limit).
+              oneOf:
+              - required:
+                - pdf_url
+              - required:
+                - pdf_base64
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The PDF form.
+              required:
+              - file
+      responses:
+        '402':
+          description: Payment Required
+        '202':
+          description: Paid and accepted. The Payment-Receipt header carries the MPP receipt. Poll status_url for the result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                  status_url:
+                    type: string
+                    format: uri
+                  quote_id:
+                    type: string
+                  artifact_id:
+                    type: string
+                    description: The result artifact's id, when the op produced one.
+                  artifact_token:
+                    type: string
+                    description: Bearer token for artifact_id (anonymous callers only).
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                    description: 'Every artifact the op produced: [{artifact_id, role, mime_type}].'
+                required:
+                - job_id
+                - status_url
+                - quote_id
+        '400':
+          description: Not a readable PDF, or a required input is missing.
+        '413':
+          description: Too many pages or too much context.
+      x-payment-info:
+        price:
+          mode: dynamic
+          currency: USD
+          amount: '0.01'
+          min: '0.01'
+          max: '0.01'
+        protocols:
+        - mpp:
+            method: tempo
+            intent: charge
+            currency: '0x20c000000000000000000000b9537d11c60e8b50'
+        - mpp:
+            method: stripe
+            intent: charge
+            currency: usd
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913'
+        - x402:
+            scheme: exact
+            network: eip155:1
+            asset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:43114
+            asset: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:42161
+            asset: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:10
+            asset: '0x0b2c639c533813f4aa9d7837caf62653d097ff85'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:137
+            asset: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:130
+            asset: '0x078d782b760474a361dda0af3839290b0ef57ad6'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:146
+            asset: '0x29219dd400f2bf60e5a23d13be72b486d4038894'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:480
+            asset: '0x79a02482a880bce3f13e09da970dc34db4cd24d1'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:1329
+            asset: '0xe15fc38f6d8c56af07bbcbe3baf5708a2bf42392'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:999
+            asset: '0xb88339cb7199b77e23db6e890353e22632ba630f'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:5042
+            asset: '0x3600000000000000000000000000000000000000'
+            facilitator: circle-gateway
+        amount: '10000'
+        unitType: request
+        description: 'Read the values out of a filled PDF form, labelled by field, with a completeness verdict when the form is known. Input: a filled PDF file.'
+        priceNote: Price scales with page count between min and max; the exact amount for your request is in the 402 challenge.
+    servers:
+    - url: https://api.getemboss.ai
+  /pay/fax:
+    post:
+      operationId: pay_fax
+      summary: Send a PDF to a fax number and track delivery, priced per transmitted page
+      description: 'Send a PDF to a fax number and track delivery, priced per transmitted page. Also: fax a PDF; send a document by fax; fax this form to an agency; transmit a PDF to a fax line; outbound fax from an agent. Input: a PDF file and a destination fax number in E.164 form. Card payments have a 0.50 minimum, stablecoins pay the exact price. Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Forms
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pdf_url:
+                  type: string
+                  format: uri
+                  description: Public https URL of the PDF form; Emboss downloads it (10 MB limit).
+                pdf_base64:
+                  type: string
+                  contentEncoding: base64
+                  description: The PDF form as standard base64 (10 MB decoded limit).
+                to:
+                  type: string
+                  description: Destination fax number in E.164 form, e.g. +15025551212.
+                artifact_id:
+                  type: string
+                  description: 'JSON body only: the id of a previously registered artifact to fax, in place of a fresh PDF. Exactly one of the multipart file, pdf_url, pdf_base64, or artifact_id is required.'
+                artifact_token:
+                  type: string
+                  description: 'JSON body only: the bearer token for artifact_id, required when the artifact has no owner account.'
+                sources:
+                  type: array
+                  maxItems: 20
+                  description: 'JSON body only: a list of prior artifacts, faxed together as one packet, in place of a fresh PDF. Exactly one of the multipart file, pdf_url, pdf_base64, artifact_id, or sources is required.'
+                  items:
+                    type: object
+                    properties:
+                      artifact_id:
+                        type: string
+                        description: A prior artifact's id.
+                      artifact_token:
+                        type: string
+                        description: The bearer token for an anonymous artifact_id.
+                      pages:
+                        type: string
+                        description: An optional page range, such as 1-3,7.
+                    required:
+                    - artifact_id
+              oneOf:
+              - required:
+                - pdf_url
+              - required:
+                - pdf_base64
+              - required:
+                - artifact_id
+              - required:
+                - sources
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The PDF form.
+                to:
+                  type: string
+                  description: Destination fax number in E.164 form, e.g. +15025551212.
+              required:
+              - file
+      responses:
+        '402':
+          description: Payment Required
+        '202':
+          description: Paid and accepted. The Payment-Receipt header carries the MPP receipt. Poll status_url for the result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                  status_url:
+                    type: string
+                    format: uri
+                  quote_id:
+                    type: string
+                  artifact_id:
+                    type: string
+                    description: The result artifact's id, when the op produced one.
+                  artifact_token:
+                    type: string
+                    description: Bearer token for artifact_id (anonymous callers only).
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                    description: 'Every artifact the op produced: [{artifact_id, role, mime_type}].'
+                required:
+                - job_id
+                - status_url
+                - quote_id
+        '400':
+          description: Not a readable PDF, or a required input is missing.
+        '413':
+          description: Too many pages or too much context.
+      x-payment-info:
+        price:
+          mode: dynamic
+          currency: USD
+          amount: '0.03'
+          min: '0.03'
+          max: '3.00'
+        protocols:
+        - mpp:
+            method: tempo
+            intent: charge
+            currency: '0x20c000000000000000000000b9537d11c60e8b50'
+        - mpp:
+            method: stripe
+            intent: charge
+            currency: usd
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bda02913'
+        - x402:
+            scheme: exact
+            network: eip155:1
+            asset: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:8453
+            asset: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:43114
+            asset: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:42161
+            asset: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:10
+            asset: '0x0b2c639c533813f4aa9d7837caf62653d097ff85'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:137
+            asset: '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:130
+            asset: '0x078d782b760474a361dda0af3839290b0ef57ad6'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:146
+            asset: '0x29219dd400f2bf60e5a23d13be72b486d4038894'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:480
+            asset: '0x79a02482a880bce3f13e09da970dc34db4cd24d1'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:1329
+            asset: '0xe15fc38f6d8c56af07bbcbe3baf5708a2bf42392'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:999
+            asset: '0xb88339cb7199b77e23db6e890353e22632ba630f'
+            facilitator: circle-gateway
+        - x402:
+            scheme: exact
+            network: eip155:5042
+            asset: '0x3600000000000000000000000000000000000000'
+            facilitator: circle-gateway
+        amount: '30000'
+        unitType: request
+        description: 'Send a PDF to a fax number and track delivery, priced per transmitted page. Input: a PDF file and a destination fax number in E.164 form. Card payments have a 0.50 minimum, stablecoins pay the exact price.'
+        priceNote: Price scales with page count between min and max; the exact amount for your request is in the 402 challenge.
+    servers:
+    - url: https://api.getemboss.ai
+  /pay/quote:
+    post:
+      operationId: pay_quote
+      summary: Free price check for a PDF
+      description: 'Free and stateless: returns the page count, whether the PDF already has form fields, and the exact price of every operation for this PDF. Call it before paying.'
+      tags:
+      - Forms
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pdf_url:
+                  type: string
+                  format: uri
+                  description: Public https URL of the PDF form; Emboss downloads it (10 MB limit).
+                pdf_base64:
+                  type: string
+                  contentEncoding: base64
+                  description: The PDF form as standard base64 (10 MB decoded limit).
+                context_base64:
+                  type: array
+                  maxItems: 5
+                  items:
+                    type: object
+                    required:
+                    - name
+                    - base64
+                    properties:
+                      name:
+                        type: string
+                        description: Filename, used to tell documents apart.
+                      base64:
+                        type: string
+                        contentEncoding: base64
+                        description: The document as standard base64.
+                  description: Up to 5 supporting documents (PDF, text, images) as base64.
+                context_text:
+                  type: string
+                  maxLength: 200000
+                  description: Supporting text, up to 200,000 characters.
+                context_urls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  maxItems: 5
+                  description: Up to 5 public https URLs of supporting documents.
+                policy:
+                  type: string
+                  enum:
+                  - safe
+                  - strict
+                  description: 'How sure Emboss must be before writing a value: safe (default) writes high and medium confidence, strict writes high only.'
+                mode:
+                  type: string
+                  enum:
+                  - one_call
+                  - two_call
+                  description: one_call (default) returns the finished PDF; two_call returns a proposal and a commit token so the caller can resolve open items before anything is written.
+              oneOf:
+              - required:
+                - pdf_url
+              - required:
+                - pdf_base64
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The PDF form.
+                context:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Supporting documents (PDF, text, images).
+                context_text:
+                  type: string
+                  maxLength: 200000
+                  description: Supporting text, up to 200,000 characters.
+                context_urls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  maxItems: 5
+                  description: Up to 5 public https URLs of supporting documents.
+                policy:
+                  type: string
+                  enum:
+                  - safe
+                  - strict
+                  description: 'How sure Emboss must be before writing a value: safe (default) writes high and medium confidence, strict writes high only.'
+                mode:
+                  type: string
+                  enum:
+                  - one_call
+                  - two_call
+                  description: one_call (default) returns the finished PDF; two_call returns a proposal and a commit token so the caller can resolve open items before anything is written.
+              required:
+              - file
+      responses:
+        '200':
+          description: Free price check for this PDF.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pages:
+                    type: integer
+                  already_fillable:
+                    type: boolean
+                  context_pages:
+                    type: integer
+                  prices:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        cents:
+                          type: integer
+                        usd:
+                          type: string
+                        atomic:
+                          type: string
+                  methods:
+                    type: array
+                    items:
+                      type: string
+                  card_minimum_usd:
+                    type: string
+                  next:
+                    type: string
+                required:
+                - pages
+                - already_fillable
+                - context_pages
+                - prices
+                - methods
+                - card_minimum_usd
+                - next
+        '400':
+          description: Not a readable PDF, or a required input is missing.
+        '413':
+          description: Too many pages or too much context.
+        '429':
+          description: Too many quote requests from this client.
+    servers:
+    - url: https://api.getemboss.ai
+components:
+  schemas:
+    Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+    FormStatus:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        schema_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Schema Version
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+          default: []
+        reused_layout:
+          type: boolean
+          title: Reused Layout
+          default: false
+        library:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Library
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+        artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact Id
+        source_artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Artifact Id
+      type: object
+      required:
+      - id
+      - status
+      title: FormStatus
+    PreviewFillResponse:
+      properties:
+        filled:
+          items: {}
+          type: array
+          title: Filled
+          default: []
+        changed:
+          items: {}
+          type: array
+          title: Changed
+          default: []
+        photo_notes:
+          items: {}
+          type: array
+          title: Photo Notes
+          default: []
+        gap_topics:
+          items: {}
+          type: array
+          title: Gap Topics
+          default: []
+        directive:
+          type: string
+          title: Directive
+          default: ask_gap
+      type: object
+      title: PreviewFillResponse
+    Retention:
+      properties:
+        policy:
+          type: string
+          title: Policy
+        documents_deleted_after:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Documents Deleted After
+        documents_deleted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Documents Deleted At
+      type: object
+      required:
+      - policy
+      title: Retention
+    Body_fill_existing_with_context_forms__form_id__with_context_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      title: Body_fill_existing_with_context_forms__form_id__with_context_post
+    ContextJobCreated:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+          default: processing
+      type: object
+      required:
+      - job_id
+      title: ContextJobCreated
+    Body_account_quote_forms_quote_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+      type: object
+      required:
+      - file
+      title: Body_account_quote_forms_quote_post
+    ContractResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        contract:
+          additionalProperties: true
+          type: object
+          title: Contract
+      type: object
+      required:
+      - id
+      - contract
+      title: ContractResponse
+    Body_prepare_existing_forms__form_id__prepare_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      title: Body_prepare_existing_forms__form_id__prepare_post
+    BatchCreated:
+      properties:
+        batch_id:
+          type: string
+          title: Batch Id
+      type: object
+      required:
+      - batch_id
+      title: BatchCreated
+    ContextJobStatus:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+        session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Id
+        proposal_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proposal Id
+        result:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Result
+        receipt_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Url
+        pdf_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pdf Url
+        package_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package Url
+        report:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Report
+        error:
+          anyOf:
+          - $ref: '#/components/schemas/ErrorDetail'
+          - type: 'null'
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+        artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact Id
+        artifacts:
+          items: {}
+          type: array
+          title: Artifacts
+          default: []
+      type: object
+      required:
+      - job_id
+      - status
+      title: ContextJobStatus
+    Body_preview_fill_forms__form_id__preview_fill_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        locked:
+          type: string
+          title: Locked
+          default: '{}'
+        asked_field_ids:
+          type: string
+          title: Asked Field Ids
+          default: 'null'
+      type: object
+      title: Body_preview_fill_forms__form_id__preview_fill_post
+    Body_fill_batch_forms__form_id__fill_batch_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        mapping:
+          type: string
+          title: Mapping
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      required:
+      - file
+      - mapping
+      title: Body_fill_batch_forms__form_id__fill_batch_post
+    Body_create_form_forms_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+        library:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Library
+      type: object
+      title: Body_create_form_forms_post
+    FormSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          title: Created At
+        has_thumbnail:
+          type: boolean
+          title: Has Thumbnail
+          default: false
+        no_fields:
+          type: boolean
+          title: No Fields
+          default: false
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      title: FormSummary
+    Body_prepare_new_forms_prepare_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      required:
+      - file
+      title: Body_prepare_new_forms_prepare_post
+    BatchStatus:
+      properties:
+        status:
+          type: string
+          title: Status
+        total:
+          type: integer
+          title: Total
+        filled:
+          type: integer
+          title: Filled
+        failed:
+          type: integer
+          title: Failed
+        results:
+          items: {}
+          type: array
+          title: Results
+          default: []
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+      type: object
+      required:
+      - status
+      - total
+      - filled
+      - failed
+      title: BatchStatus
+    Body_read_form_forms_read_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        form_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Id
+      type: object
+      required:
+      - file
+      title: Body_read_form_forms_read_post
+    FormCreated:
+      properties:
+        form_id:
+          type: string
+          title: Form Id
+        status:
+          type: string
+          title: Status
+        library:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Library
+        source_artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Artifact Id
+      type: object
+      required:
+      - form_id
+      - status
+      title: FormCreated
+    FormsListResponse:
+      properties:
+        forms:
+          items:
+            $ref: '#/components/schemas/FormSummary'
+          type: array
+          title: Forms
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - forms
+      - total
+      - limit
+      - offset
+      title: FormsListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_verify_filled_pdf_forms__form_id__verify_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_verify_filled_pdf_forms__form_id__verify_post
+    Body_create_with_context_forms_with_context_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+        library:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Library
+      type: object
+      title: Body_create_with_context_forms_with_context_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MappingSuggestion:
+      properties:
+        mapping:
+          additionalProperties: true
+          type: object
+          title: Mapping
+        unmapped_columns:
+          items:
+            type: string
+          type: array
+          title: Unmapped Columns
+          default: []
+      type: object
+      required:
+      - mapping
+      title: MappingSuggestion
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms
+externalDocs:
+  url: https://getemboss.ai/docs/pay-per-call/mpp
+  description: 'Pay-per-call guide: the 402 handshake, both rails, and worked examples.'
+x-refined-from:
+- getemboss-ai-account-openapi.json
+- getemboss-ai-pay-per-call-openapi.json
+- getemboss-ai-account-openapi.yml
+- getemboss-ai-pay-per-call-openapi.yml
