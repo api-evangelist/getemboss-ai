@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Getemboss Ai Proposals API
+  title: Fast Proposals API
   version: 0.1.0
-  description: 'Operations tagged Proposals across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
 security:
 - bearer: []
 - oauth2:
@@ -250,30 +249,6 @@ paths:
       - Proposals
 components:
   schemas:
-    Body_add_attachment_proposals__proposal_id__attachments_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-        for:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: For
-      type: object
-      required:
-      - file
-      title: Body_add_attachment_proposals__proposal_id__attachments_post
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ProposalResponse:
       properties:
         proposal_id:
@@ -352,19 +327,30 @@ components:
       description: 'The agent-facing view of a proposal: per-field states with evidence, the
 
         questions still worth asking, what the form needs beyond values, and counts.'
-    ContextJobCreated:
+    HTTPValidationError:
       properties:
-        job_id:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_add_attachment_proposals__proposal_id__attachments_post:
+      properties:
+        file:
           type: string
-          title: Job Id
-        status:
-          type: string
-          title: Status
-          default: processing
+          contentMediaType: application/octet-stream
+          title: File
+        for:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: For
       type: object
       required:
-      - job_id
-      title: ContextJobCreated
+      - file
+      title: Body_add_attachment_proposals__proposal_id__attachments_post
     ValidationError:
       properties:
         loc:
@@ -391,6 +377,19 @@ components:
       - msg
       - type
       title: ValidationError
+    ContextJobCreated:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+          default: processing
+      type: object
+      required:
+      - job_id
+      title: ContextJobCreated
   securitySchemes:
     bearer:
       type: http
@@ -407,6 +406,3 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
-x-refined-from:
-- getemboss-ai-account-openapi.json
-- getemboss-ai-account-openapi.yml

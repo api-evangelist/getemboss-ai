@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Getemboss Ai Usage API
+  title: Fast Usage API
   version: 0.1.0
-  description: 'Operations tagged Usage across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
 security:
 - bearer: []
 - oauth2:
@@ -26,43 +25,6 @@ paths:
       - Usage
 components:
   schemas:
-    UsageCounts:
-      properties:
-        create:
-          type: integer
-          title: Create
-          default: 0
-        with_context:
-          type: integer
-          title: With Context
-          default: 0
-        standard_fill:
-          type: integer
-          title: Standard Fill
-          default: 0
-        verify:
-          type: integer
-          title: Verify
-          default: 0
-        read:
-          type: integer
-          title: Read
-          default: 0
-        package:
-          type: integer
-          title: Package
-          default: 0
-        send_fax:
-          type: integer
-          title: Send Fax
-          default: 0
-        utility:
-          type: integer
-          title: Utility
-          default: 0
-      type: object
-      title: UsageCounts
-      description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
     UsageResponse:
       properties:
         owner:
@@ -153,6 +115,43 @@ components:
       - total
       - period_counts
       title: UsageResponse
+    UsageCounts:
+      properties:
+        create:
+          type: integer
+          title: Create
+          default: 0
+        with_context:
+          type: integer
+          title: With Context
+          default: 0
+        standard_fill:
+          type: integer
+          title: Standard Fill
+          default: 0
+        verify:
+          type: integer
+          title: Verify
+          default: 0
+        read:
+          type: integer
+          title: Read
+          default: 0
+        package:
+          type: integer
+          title: Package
+          default: 0
+        send_fax:
+          type: integer
+          title: Send Fax
+          default: 0
+        utility:
+          type: integer
+          title: Utility
+          default: 0
+      type: object
+      title: UsageCounts
+      description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
   securitySchemes:
     bearer:
       type: http
@@ -169,6 +168,3 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
-x-refined-from:
-- getemboss-ai-account-openapi.json
-- getemboss-ai-account-openapi.yml

@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Getemboss Ai Library API
+  title: Fast Library API
   version: 0.1.0
-  description: 'Operations tagged Library across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
 security:
 - bearer: []
 - oauth2:
@@ -52,15 +51,6 @@ paths:
       - Library
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -87,6 +77,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     bearer:
       type: http
@@ -103,6 +102,3 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
-x-refined-from:
-- getemboss-ai-account-openapi.json
-- getemboss-ai-account-openapi.yml

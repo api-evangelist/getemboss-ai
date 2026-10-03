@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Getemboss Ai App API
+  title: Fast App API
   version: 0.1.0
-  description: 'Operations tagged App across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
 security:
 - bearer: []
 - oauth2:
@@ -97,6 +96,24 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    AppLoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        device_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Label
+      type: object
+      required:
+      - email
+      - password
+      title: AppLoginRequest
     AppRefreshRequest:
       properties:
         refresh_token:
@@ -141,24 +158,6 @@ components:
       - msg
       - type
       title: ValidationError
-    AppLoginRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        password:
-          type: string
-          title: Password
-        device_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Device Label
-      type: object
-      required:
-      - email
-      - password
-      title: AppLoginRequest
   securitySchemes:
     bearer:
       type: http
@@ -175,6 +174,3 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
-x-refined-from:
-- getemboss-ai-account-openapi.json
-- getemboss-ai-account-openapi.yml

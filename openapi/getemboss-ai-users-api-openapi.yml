@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Getemboss Ai Users API
+  title: Fast Users API
   version: 0.1.0
-  description: 'Operations tagged Users across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
 security:
 - bearer: []
 - oauth2:
@@ -206,54 +205,6 @@ components:
       - email
       - turnstile_token
       title: ResendRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ResetConfirmBody:
-      properties:
-        token:
-          type: string
-          title: Token
-        new_password:
-          type: string
-          title: New Password
-      type: object
-      required:
-      - token
-      - new_password
-      title: ResetConfirmBody
-    ResetRequestBody:
-      properties:
-        email:
-          type: string
-          title: Email
-        turnstile_token:
-          type: string
-          title: Turnstile Token
-      type: object
-      required:
-      - email
-      - turnstile_token
-      title: ResetRequestBody
-    LoginTokenRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        login_token:
-          type: string
-          title: Login Token
-      type: object
-      required:
-      - email
-      - login_token
-      title: LoginTokenRequest
     SignupRequest:
       properties:
         email:
@@ -271,6 +222,15 @@ components:
       - password
       - turnstile_token
       title: SignupRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     LoginRequest:
       properties:
         email:
@@ -284,6 +244,32 @@ components:
       - email
       - password
       title: LoginRequest
+    LoginTokenRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        login_token:
+          type: string
+          title: Login Token
+      type: object
+      required:
+      - email
+      - login_token
+      title: LoginTokenRequest
+    ResetConfirmBody:
+      properties:
+        token:
+          type: string
+          title: Token
+        new_password:
+          type: string
+          title: New Password
+      type: object
+      required:
+      - token
+      - new_password
+      title: ResetConfirmBody
     ValidationError:
       properties:
         loc:
@@ -310,6 +296,19 @@ components:
       - msg
       - type
       title: ValidationError
+    ResetRequestBody:
+      properties:
+        email:
+          type: string
+          title: Email
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - turnstile_token
+      title: ResetRequestBody
     VerifyRequest:
       properties:
         token:
@@ -345,6 +344,3 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
-x-refined-from:
-- getemboss-ai-account-openapi.json
-- getemboss-ai-account-openapi.yml

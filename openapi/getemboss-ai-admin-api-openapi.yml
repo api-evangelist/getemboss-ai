@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Getemboss Ai Admin API
+  title: Fast Admin API
   version: 0.1.0
-  description: 'Operations tagged Admin across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
 security:
 - bearer: []
 - oauth2:
@@ -1467,168 +1466,6 @@ paths:
       - Admin
 components:
   schemas:
-    Body_admin_fill_existing_admin_forms__form_id__with_context_post:
-      properties:
-        context:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Context
-          default: []
-      type: object
-      title: Body_admin_fill_existing_admin_forms__form_id__with_context_post
-    UploadLimits:
-      properties:
-        max_upload_bytes:
-          type: integer
-          title: Max Upload Bytes
-        max_request_bytes:
-          type: integer
-          title: Max Request Bytes
-        max_context_files:
-          type: integer
-          title: Max Context Files
-      type: object
-      required:
-      - max_upload_bytes
-      - max_request_bytes
-      - max_context_files
-      title: UploadLimits
-    BatchRun:
-      properties:
-        id:
-          type: string
-          title: Id
-        form_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Form Id
-        form_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Form Name
-        status:
-          type: string
-          title: Status
-        total:
-          type: integer
-          title: Total
-        filled:
-          type: integer
-          title: Filled
-        failed:
-          type: integer
-          title: Failed
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        created_at:
-          type: string
-          title: Created At
-      type: object
-      required:
-      - id
-      - status
-      - total
-      - filled
-      - failed
-      - created_at
-      title: BatchRun
-    Retention:
-      properties:
-        policy:
-          type: string
-          title: Policy
-        documents_deleted_after:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Documents Deleted After
-        documents_deleted_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Documents Deleted At
-      type: object
-      required:
-      - policy
-      title: Retention
-    FormStatus:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        schema_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Schema Version
-        warnings:
-          items:
-            type: string
-          type: array
-          title: Warnings
-          default: []
-        reused_layout:
-          type: boolean
-          title: Reused Layout
-          default: false
-        library:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Library
-        retention:
-          anyOf:
-          - $ref: '#/components/schemas/Retention'
-          - type: 'null'
-        artifact_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Artifact Id
-        source_artifact_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Artifact Id
-      type: object
-      required:
-      - id
-      - status
-      title: FormStatus
-    ContextJobCreated:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-        status:
-          type: string
-          title: Status
-          default: processing
-      type: object
-      required:
-      - job_id
-      title: ContextJobCreated
     BillingBreakdownResponse:
       properties:
         month:
@@ -1648,88 +1485,6 @@ components:
       - rows
       - total_cents
       title: BillingBreakdownResponse
-    UsageKeyRow:
-      properties:
-        key_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Key Id
-        label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Label
-        last4:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last4
-        counts:
-          $ref: '#/components/schemas/UsageCounts'
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - key_id
-      - label
-      - last4
-      - counts
-      - total
-      title: UsageKeyRow
-    BatchCreated:
-      properties:
-        batch_id:
-          type: string
-          title: Batch Id
-      type: object
-      required:
-      - batch_id
-      title: BatchCreated
-    BatchFormCount:
-      properties:
-        runs:
-          type: integer
-          title: Runs
-        last_status:
-          type: string
-          title: Last Status
-        last_at:
-          type: string
-          title: Last At
-      type: object
-      required:
-      - runs
-      - last_status
-      - last_at
-      title: BatchFormCount
-    Body_admin_library_store_admin_library__slug__store_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-        sha256:
-          type: string
-          title: Sha256
-        revision:
-          type: string
-          title: Revision
-          default: ''
-        page_count:
-          type: integer
-          title: Page Count
-          default: 0
-        make_fillable:
-          type: string
-          title: Make Fillable
-          default: 'true'
-      type: object
-      required:
-      - file
-      - sha256
-      title: Body_admin_library_store_admin_library__slug__store_post
     ContextJobStatus:
       properties:
         job_id:
@@ -1797,79 +1552,64 @@ components:
       - job_id
       - status
       title: ContextJobStatus
-    ConsentBody:
+    FormStatus:
       properties:
-        req:
+        id:
           type: string
-          title: Req
-        user_id:
+          title: Id
+        status:
           type: string
-          title: User Id
-        decision:
-          type: string
-          title: Decision
-      type: object
-      required:
-      - req
-      - user_id
-      - decision
-      title: ConsentBody
-    Body_admin_fill_batch_admin_forms__form_id__fill_batch_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-        mapping:
-          type: string
-          title: Mapping
-      type: object
-      required:
-      - file
-      - mapping
-      title: Body_admin_fill_batch_admin_forms__form_id__fill_batch_post
-    SetupIntentResponse:
-      properties:
-        client_secret:
-          type: string
-          title: Client Secret
-      type: object
-      required:
-      - client_secret
-      title: SetupIntentResponse
-    Body_admin_create_form_admin_forms_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_admin_create_form_admin_forms_post
-    ActivityResponse:
-      properties:
-        events:
+          title: Status
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        schema_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Schema Version
+        warnings:
           items:
-            $ref: '#/components/schemas/ActivityEvent'
+            type: string
           type: array
-          title: Events
-        total_count:
-          type: integer
-          title: Total Count
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
+          title: Warnings
+          default: []
+        reused_layout:
+          type: boolean
+          title: Reused Layout
+          default: false
+        library:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Library
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+        artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact Id
+        source_artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Artifact Id
       type: object
       required:
-      - events
-      - total_count
-      - page
-      - page_size
-      title: ActivityResponse
+      - id
+      - status
+      title: FormStatus
     UsageCounts:
       properties:
         create:
@@ -1907,136 +1647,42 @@ components:
       type: object
       title: UsageCounts
       description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
-    UsageDayRow:
-      properties:
-        date:
-          type: string
-          title: Date
-        create:
-          type: integer
-          title: Create
-          default: 0
-        with_context:
-          type: integer
-          title: With Context
-          default: 0
-        standard_fill:
-          type: integer
-          title: Standard Fill
-          default: 0
-        verify:
-          type: integer
-          title: Verify
-          default: 0
-      type: object
-      required:
-      - date
-      title: UsageDayRow
-    BatchRunsResponse:
+    BatchFormCount:
       properties:
         runs:
-          items:
-            $ref: '#/components/schemas/BatchRun'
-          type: array
+          type: integer
           title: Runs
-        total_count:
-          type: integer
-          title: Total Count
-        page_size:
-          type: integer
-          title: Page Size
+        last_status:
+          type: string
+          title: Last Status
+        last_at:
+          type: string
+          title: Last At
       type: object
       required:
       - runs
-      - total_count
-      - page_size
-      title: BatchRunsResponse
-    FormSummary:
+      - last_status
+      - last_at
+      title: BatchFormCount
+    Retention:
       properties:
-        id:
+        policy:
           type: string
-          title: Id
-        title:
+          title: Policy
+        documents_deleted_after:
           anyOf:
           - type: string
           - type: 'null'
-          title: Title
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          title: Created At
-        has_thumbnail:
-          type: boolean
-          title: Has Thumbnail
-          default: false
-        no_fields:
-          type: boolean
-          title: No Fields
-          default: false
-        retention:
+          title: Documents Deleted After
+        documents_deleted_at:
           anyOf:
-          - $ref: '#/components/schemas/Retention'
+          - type: string
           - type: 'null'
+          title: Documents Deleted At
       type: object
       required:
-      - id
-      - status
-      - created_at
-      title: FormSummary
-    Body_admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post
-    UsageTrendResponse:
-      properties:
-        by_day:
-          items:
-            $ref: '#/components/schemas/UsageDayRow'
-          type: array
-          title: By Day
-      type: object
-      required:
-      - by_day
-      title: UsageTrendResponse
-    BatchCountsResponse:
-      properties:
-        counts:
-          additionalProperties:
-            $ref: '#/components/schemas/BatchFormCount'
-          type: object
-          title: Counts
-      type: object
-      required:
-      - counts
-      title: BatchCountsResponse
-    WebTokenResponse:
-      properties:
-        api_base:
-          type: string
-          title: Api Base
-        limits:
-          $ref: '#/components/schemas/UploadLimits'
-        access_token:
-          type: string
-          title: Access Token
-        expires_in:
-          type: integer
-          title: Expires In
-      type: object
-      required:
-      - api_base
-      - limits
-      - access_token
-      - expires_in
-      title: WebTokenResponse
+      - policy
+      title: Retention
     ActivityEvent:
       properties:
         id:
@@ -2084,6 +1730,38 @@ components:
       - context_pages
       - form_id
       title: ActivityEvent
+    PaymentMethodResponse:
+      properties:
+        has_payment_method:
+          type: boolean
+          title: Has Payment Method
+        brand:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Brand
+        last4:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last4
+      type: object
+      required:
+      - has_payment_method
+      title: PaymentMethodResponse
+    ContextJobCreated:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+          default: processing
+      type: object
+      required:
+      - job_id
+      title: ContextJobCreated
     InvoicesResponse:
       properties:
         invoices:
@@ -2095,33 +1773,375 @@ components:
       required:
       - invoices
       title: InvoicesResponse
-    InvoiceRow:
+    UsageDetailResponse:
       properties:
-        period:
+        month:
           type: string
-          title: Period
-        amount_cents:
+          title: Month
+        by_day:
+          items:
+            $ref: '#/components/schemas/UsageDayRow'
+          type: array
+          title: By Day
+        by_kind:
+          $ref: '#/components/schemas/UsageCounts'
+        by_key:
+          items:
+            $ref: '#/components/schemas/UsageKeyRow'
+          type: array
+          title: By Key
+        month_total:
           type: integer
-          title: Amount Cents
+          title: Month Total
+      type: object
+      required:
+      - month
+      - by_day
+      - by_kind
+      - by_key
+      - month_total
+      title: UsageDetailResponse
+    BreakdownRow:
+      properties:
+        kind:
+          type: string
+          title: Kind
+        label:
+          type: string
+          title: Label
+        ops:
+          type: integer
+          title: Ops
+        free_applied:
+          type: integer
+          title: Free Applied
+        included_pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Included Pages
+        additional_pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Additional Pages
+        base_cents:
+          type: integer
+          title: Base Cents
+        additional_cents:
+          type: integer
+          title: Additional Cents
+        total_cents:
+          type: integer
+          title: Total Cents
+      type: object
+      required:
+      - kind
+      - label
+      - ops
+      - free_applied
+      - included_pages
+      - additional_pages
+      - base_cents
+      - additional_cents
+      - total_cents
+      title: BreakdownRow
+    BatchRun:
+      properties:
+        id:
+          type: string
+          title: Id
+        form_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Id
+        form_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Name
         status:
           type: string
           title: Status
-        hosted_invoice_url:
+        total:
+          type: integer
+          title: Total
+        filled:
+          type: integer
+          title: Filled
+        failed:
+          type: integer
+          title: Failed
+        error:
           anyOf:
           - type: string
           - type: 'null'
-          title: Hosted Invoice Url
-        invoice_pdf:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Pdf
+          title: Error
+        created_at:
+          type: string
+          title: Created At
       type: object
       required:
-      - period
-      - amount_cents
+      - id
       - status
-      title: InvoiceRow
+      - total
+      - filled
+      - failed
+      - created_at
+      title: BatchRun
+    Body_admin_create_with_context_admin_forms_with_context_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+      type: object
+      required:
+      - file
+      title: Body_admin_create_with_context_admin_forms_with_context_post
+    Body_admin_create_form_admin_forms_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_admin_create_form_admin_forms_post
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    Body_admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_admin_suggest_mapping_admin_forms__form_id__suggest_mapping_post
+    ActivityResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/ActivityEvent'
+          type: array
+          title: Events
+        total_count:
+          type: integer
+          title: Total Count
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - events
+      - total_count
+      - page
+      - page_size
+      title: ActivityResponse
+    Body_admin_fill_batch_admin_forms__form_id__fill_batch_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        mapping:
+          type: string
+          title: Mapping
+      type: object
+      required:
+      - file
+      - mapping
+      title: Body_admin_fill_batch_admin_forms__form_id__fill_batch_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WebTokenLimitsResponse:
+      properties:
+        api_base:
+          type: string
+          title: Api Base
+        limits:
+          $ref: '#/components/schemas/UploadLimits'
+      type: object
+      required:
+      - api_base
+      - limits
+      title: WebTokenLimitsResponse
+    UsageDayRow:
+      properties:
+        date:
+          type: string
+          title: Date
+        create:
+          type: integer
+          title: Create
+          default: 0
+        with_context:
+          type: integer
+          title: With Context
+          default: 0
+        standard_fill:
+          type: integer
+          title: Standard Fill
+          default: 0
+        verify:
+          type: integer
+          title: Verify
+          default: 0
+      type: object
+      required:
+      - date
+      title: UsageDayRow
+    BatchCreated:
+      properties:
+        batch_id:
+          type: string
+          title: Batch Id
+      type: object
+      required:
+      - batch_id
+      title: BatchCreated
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BatchRunsResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/BatchRun'
+          type: array
+          title: Runs
+        total_count:
+          type: integer
+          title: Total Count
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - runs
+      - total_count
+      - page_size
+      title: BatchRunsResponse
+    BatchCountsResponse:
+      properties:
+        counts:
+          additionalProperties:
+            $ref: '#/components/schemas/BatchFormCount'
+          type: object
+          title: Counts
+      type: object
+      required:
+      - counts
+      title: BatchCountsResponse
+    FormSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          title: Created At
+        has_thumbnail:
+          type: boolean
+          title: Has Thumbnail
+          default: false
+        no_fields:
+          type: boolean
+          title: No Fields
+          default: false
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      title: FormSummary
+    UsageTrendResponse:
+      properties:
+        by_day:
+          items:
+            $ref: '#/components/schemas/UsageDayRow'
+          type: array
+          title: By Day
+      type: object
+      required:
+      - by_day
+      title: UsageTrendResponse
+    SetupIntentResponse:
+      properties:
+        client_secret:
+          type: string
+          title: Client Secret
+      type: object
+      required:
+      - client_secret
+      title: SetupIntentResponse
     BatchStatus:
       properties:
         status:
@@ -2157,70 +2177,162 @@ components:
       - filled
       - failed
       title: BatchStatus
-    Body_admin_create_with_context_admin_forms_with_context_post:
+    Body_admin_library_store_admin_library__slug__store_post:
       properties:
         file:
           type: string
           contentMediaType: application/octet-stream
           title: File
-        context:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Context
-          default: []
+        sha256:
+          type: string
+          title: Sha256
+        revision:
+          type: string
+          title: Revision
+          default: ''
+        page_count:
+          type: integer
+          title: Page Count
+          default: 0
+        make_fillable:
+          type: string
+          title: Make Fillable
+          default: 'true'
       type: object
       required:
       - file
-      title: Body_admin_create_with_context_admin_forms_with_context_post
-    UsageDetailResponse:
+      - sha256
+      title: Body_admin_library_store_admin_library__slug__store_post
+    MappingSuggestion:
       properties:
-        month:
-          type: string
-          title: Month
-        by_day:
+        mapping:
+          additionalProperties: true
+          type: object
+          title: Mapping
+        unmapped_columns:
           items:
-            $ref: '#/components/schemas/UsageDayRow'
+            type: string
           type: array
-          title: By Day
-        by_kind:
-          $ref: '#/components/schemas/UsageCounts'
-        by_key:
-          items:
-            $ref: '#/components/schemas/UsageKeyRow'
-          type: array
-          title: By Key
-        month_total:
-          type: integer
-          title: Month Total
+          title: Unmapped Columns
+          default: []
       type: object
       required:
-      - month
-      - by_day
-      - by_kind
-      - by_key
-      - month_total
-      title: UsageDetailResponse
-    PaymentMethodResponse:
+      - mapping
+      title: MappingSuggestion
+    FormCreated:
       properties:
-        has_payment_method:
-          type: boolean
-          title: Has Payment Method
-        brand:
+        form_id:
+          type: string
+          title: Form Id
+        status:
+          type: string
+          title: Status
+        library:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Library
+        source_artifact_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Brand
+          title: Source Artifact Id
+      type: object
+      required:
+      - form_id
+      - status
+      title: FormCreated
+    FormsListResponse:
+      properties:
+        forms:
+          items:
+            $ref: '#/components/schemas/FormSummary'
+          type: array
+          title: Forms
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - forms
+      - total
+      - limit
+      - offset
+      title: FormsListResponse
+    UsageKeyRow:
+      properties:
+        key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Id
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
         last4:
           anyOf:
           - type: string
           - type: 'null'
           title: Last4
+        counts:
+          $ref: '#/components/schemas/UsageCounts'
+        total:
+          type: integer
+          title: Total
       type: object
       required:
-      - has_payment_method
-      title: PaymentMethodResponse
+      - key_id
+      - label
+      - last4
+      - counts
+      - total
+      title: UsageKeyRow
+    ConsentBody:
+      properties:
+        req:
+          type: string
+          title: Req
+        user_id:
+          type: string
+          title: User Id
+        decision:
+          type: string
+          title: Decision
+      type: object
+      required:
+      - req
+      - user_id
+      - decision
+      title: ConsentBody
+    WebTokenResponse:
+      properties:
+        api_base:
+          type: string
+          title: Api Base
+        limits:
+          $ref: '#/components/schemas/UploadLimits'
+        access_token:
+          type: string
+          title: Access Token
+        expires_in:
+          type: integer
+          title: Expires In
+      type: object
+      required:
+      - api_base
+      - limits
+      - access_token
+      - expires_in
+      title: WebTokenResponse
     UsageResponse:
       properties:
         owner:
@@ -2311,174 +2423,61 @@ components:
       - total
       - period_counts
       title: UsageResponse
-    FormCreated:
+    UploadLimits:
       properties:
-        form_id:
+        max_upload_bytes:
+          type: integer
+          title: Max Upload Bytes
+        max_request_bytes:
+          type: integer
+          title: Max Request Bytes
+        max_context_files:
+          type: integer
+          title: Max Context Files
+      type: object
+      required:
+      - max_upload_bytes
+      - max_request_bytes
+      - max_context_files
+      title: UploadLimits
+    InvoiceRow:
+      properties:
+        period:
           type: string
-          title: Form Id
+          title: Period
+        amount_cents:
+          type: integer
+          title: Amount Cents
         status:
           type: string
           title: Status
-        library:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Library
-        source_artifact_id:
+        hosted_invoice_url:
           anyOf:
           - type: string
           - type: 'null'
-          title: Source Artifact Id
+          title: Hosted Invoice Url
+        invoice_pdf:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Pdf
       type: object
       required:
-      - form_id
+      - period
+      - amount_cents
       - status
-      title: FormCreated
-    FormsListResponse:
+      title: InvoiceRow
+    Body_admin_fill_existing_admin_forms__form_id__with_context_post:
       properties:
-        forms:
-          items:
-            $ref: '#/components/schemas/FormSummary'
-          type: array
-          title: Forms
-        total:
-          type: integer
-          title: Total
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-      type: object
-      required:
-      - forms
-      - total
-      - limit
-      - offset
-      title: FormsListResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BreakdownRow:
-      properties:
-        kind:
-          type: string
-          title: Kind
-        label:
-          type: string
-          title: Label
-        ops:
-          type: integer
-          title: Ops
-        free_applied:
-          type: integer
-          title: Free Applied
-        included_pages:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Included Pages
-        additional_pages:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Additional Pages
-        base_cents:
-          type: integer
-          title: Base Cents
-        additional_cents:
-          type: integer
-          title: Additional Cents
-        total_cents:
-          type: integer
-          title: Total Cents
-      type: object
-      required:
-      - kind
-      - label
-      - ops
-      - free_applied
-      - included_pages
-      - additional_pages
-      - base_cents
-      - additional_cents
-      - total_cents
-      title: BreakdownRow
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    WebTokenLimitsResponse:
-      properties:
-        api_base:
-          type: string
-          title: Api Base
-        limits:
-          $ref: '#/components/schemas/UploadLimits'
-      type: object
-      required:
-      - api_base
-      - limits
-      title: WebTokenLimitsResponse
-    MappingSuggestion:
-      properties:
-        mapping:
-          additionalProperties: true
-          type: object
-          title: Mapping
-        unmapped_columns:
+        context:
           items:
             type: string
+            contentMediaType: application/octet-stream
           type: array
-          title: Unmapped Columns
+          title: Context
           default: []
       type: object
-      required:
-      - mapping
-      title: MappingSuggestion
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
+      title: Body_admin_fill_existing_admin_forms__form_id__with_context_post
   securitySchemes:
     bearer:
       type: http
@@ -2495,6 +2494,3 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
-x-refined-from:
-- getemboss-ai-account-openapi.json
-- getemboss-ai-account-openapi.yml

@@ -4,7 +4,7 @@ info:
   x-refined-note:
   - x-guidance differs across the merged source definitions and was not carried
   version: '1.0'
-  description: 'Operations tagged Forms across 4 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-pay-per-call-openapi.json, getemboss-ai-account-openapi.yml, getemboss-ai-pay-per-call-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Forms across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-pay-per-call-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.getemboss.ai
 tags:
@@ -1883,192 +1883,12 @@ paths:
     - url: https://api.getemboss.ai
 components:
   schemas:
-    Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post:
+    Body_prepare_new_forms_prepare_post:
       properties:
         file:
           type: string
           contentMediaType: application/octet-stream
           title: File
-      type: object
-      required:
-      - file
-      title: Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
-    FormStatus:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        schema_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Schema Version
-        warnings:
-          items:
-            type: string
-          type: array
-          title: Warnings
-          default: []
-        reused_layout:
-          type: boolean
-          title: Reused Layout
-          default: false
-        library:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Library
-        retention:
-          anyOf:
-          - $ref: '#/components/schemas/Retention'
-          - type: 'null'
-        artifact_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Artifact Id
-        source_artifact_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Artifact Id
-      type: object
-      required:
-      - id
-      - status
-      title: FormStatus
-    PreviewFillResponse:
-      properties:
-        filled:
-          items: {}
-          type: array
-          title: Filled
-          default: []
-        changed:
-          items: {}
-          type: array
-          title: Changed
-          default: []
-        photo_notes:
-          items: {}
-          type: array
-          title: Photo Notes
-          default: []
-        gap_topics:
-          items: {}
-          type: array
-          title: Gap Topics
-          default: []
-        directive:
-          type: string
-          title: Directive
-          default: ask_gap
-      type: object
-      title: PreviewFillResponse
-    Retention:
-      properties:
-        policy:
-          type: string
-          title: Policy
-        documents_deleted_after:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Documents Deleted After
-        documents_deleted_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Documents Deleted At
-      type: object
-      required:
-      - policy
-      title: Retention
-    Body_fill_existing_with_context_forms__form_id__with_context_post:
-      properties:
-        context:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Context
-          default: []
-        callback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Callback Url
-        policy:
-          type: string
-          title: Policy
-          default: safe
-        retention:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Retention
-      type: object
-      title: Body_fill_existing_with_context_forms__form_id__with_context_post
-    ContextJobCreated:
-      properties:
-        job_id:
-          type: string
-          title: Job Id
-        status:
-          type: string
-          title: Status
-          default: processing
-      type: object
-      required:
-      - job_id
-      title: ContextJobCreated
-    Body_account_quote_forms_quote_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-        context:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Context
-          default: []
-      type: object
-      required:
-      - file
-      title: Body_account_quote_forms_quote_post
-    ContractResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        contract:
-          additionalProperties: true
-          type: object
-          title: Contract
-      type: object
-      required:
-      - id
-      - contract
-      title: ContractResponse
-    Body_prepare_existing_forms__form_id__prepare_post:
-      properties:
         context:
           items:
             type: string
@@ -2086,16 +1906,9 @@ components:
           - type: 'null'
           title: Retention
       type: object
-      title: Body_prepare_existing_forms__form_id__prepare_post
-    BatchCreated:
-      properties:
-        batch_id:
-          type: string
-          title: Batch Id
-      type: object
       required:
-      - batch_id
-      title: BatchCreated
+      - file
+      title: Body_prepare_new_forms_prepare_post
     ContextJobStatus:
       properties:
         job_id:
@@ -2163,44 +1976,6 @@ components:
       - job_id
       - status
       title: ContextJobStatus
-    Body_preview_fill_forms__form_id__preview_fill_post:
-      properties:
-        context:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Context
-          default: []
-        locked:
-          type: string
-          title: Locked
-          default: '{}'
-        asked_field_ids:
-          type: string
-          title: Asked Field Ids
-          default: 'null'
-      type: object
-      title: Body_preview_fill_forms__form_id__preview_fill_post
-    Body_fill_batch_forms__form_id__fill_batch_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-        mapping:
-          type: string
-          title: Mapping
-        retention:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Retention
-      type: object
-      required:
-      - file
-      - mapping
-      title: Body_fill_batch_forms__form_id__fill_batch_post
     Body_create_form_forms_post:
       properties:
         file:
@@ -2226,6 +2001,282 @@ components:
           title: Library
       type: object
       title: Body_create_form_forms_post
+    FormStatus:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        schema_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Schema Version
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+          default: []
+        reused_layout:
+          type: boolean
+          title: Reused Layout
+          default: false
+        library:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Library
+        retention:
+          anyOf:
+          - $ref: '#/components/schemas/Retention'
+          - type: 'null'
+        artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact Id
+        source_artifact_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Artifact Id
+      type: object
+      required:
+      - id
+      - status
+      title: FormStatus
+    Body_read_form_forms_read_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        form_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Form Id
+      type: object
+      required:
+      - file
+      title: Body_read_form_forms_read_post
+    Body_preview_fill_forms__form_id__preview_fill_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        locked:
+          type: string
+          title: Locked
+          default: '{}'
+        asked_field_ids:
+          type: string
+          title: Asked Field Ids
+          default: 'null'
+      type: object
+      title: Body_preview_fill_forms__form_id__preview_fill_post
+    Retention:
+      properties:
+        policy:
+          type: string
+          title: Policy
+        documents_deleted_after:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Documents Deleted After
+        documents_deleted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Documents Deleted At
+      type: object
+      required:
+      - policy
+      title: Retention
+    ContextJobCreated:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+          default: processing
+      type: object
+      required:
+      - job_id
+      title: ContextJobCreated
+    Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+    Body_create_with_context_forms_with_context_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+        library:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Library
+      type: object
+      title: Body_create_with_context_forms_with_context_post
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    Body_prepare_existing_forms__form_id__prepare_post:
+      properties:
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        policy:
+          type: string
+          title: Policy
+          default: safe
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      title: Body_prepare_existing_forms__form_id__prepare_post
+    Body_fill_batch_forms__form_id__fill_batch_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        mapping:
+          type: string
+          title: Mapping
+        retention:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Retention
+      type: object
+      required:
+      - file
+      - mapping
+      title: Body_fill_batch_forms__form_id__fill_batch_post
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BatchCreated:
+      properties:
+        batch_id:
+          type: string
+          title: Batch Id
+      type: object
+      required:
+      - batch_id
+      title: BatchCreated
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_verify_filled_pdf_forms__form_id__verify_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_verify_filled_pdf_forms__form_id__verify_post
     FormSummary:
       properties:
         id:
@@ -2260,32 +2311,6 @@ components:
       - status
       - created_at
       title: FormSummary
-    Body_prepare_new_forms_prepare_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-        context:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Context
-          default: []
-        policy:
-          type: string
-          title: Policy
-          default: safe
-        retention:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Retention
-      type: object
-      required:
-      - file
-      title: Body_prepare_new_forms_prepare_post
     BatchStatus:
       properties:
         status:
@@ -2321,21 +2346,50 @@ components:
       - filled
       - failed
       title: BatchStatus
-    Body_read_form_forms_read_post:
+    PreviewFillResponse:
       properties:
-        file:
+        filled:
+          items: {}
+          type: array
+          title: Filled
+          default: []
+        changed:
+          items: {}
+          type: array
+          title: Changed
+          default: []
+        photo_notes:
+          items: {}
+          type: array
+          title: Photo Notes
+          default: []
+        gap_topics:
+          items: {}
+          type: array
+          title: Gap Topics
+          default: []
+        directive:
           type: string
-          contentMediaType: application/octet-stream
-          title: File
-        form_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Form Id
+          title: Directive
+          default: ask_gap
+      type: object
+      title: PreviewFillResponse
+    MappingSuggestion:
+      properties:
+        mapping:
+          additionalProperties: true
+          type: object
+          title: Mapping
+        unmapped_columns:
+          items:
+            type: string
+          type: array
+          title: Unmapped Columns
+          default: []
       type: object
       required:
-      - file
-      title: Body_read_form_forms_read_post
+      - mapping
+      title: MappingSuggestion
     FormCreated:
       properties:
         form_id:
@@ -2383,33 +2437,8 @@ components:
       - limit
       - offset
       title: FormsListResponse
-    HTTPValidationError:
+    Body_fill_existing_with_context_forms__form_id__with_context_post:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    Body_verify_filled_pdf_forms__form_id__verify_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_verify_filled_pdf_forms__form_id__verify_post
-    Body_create_with_context_forms_with_context_post:
-      properties:
-        file:
-          anyOf:
-          - type: string
-            contentMediaType: application/octet-stream
-          - type: 'null'
-          title: File
         context:
           items:
             type: string
@@ -2431,68 +2460,39 @@ components:
           - type: string
           - type: 'null'
           title: Retention
-        library:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Library
       type: object
-      title: Body_create_with_context_forms_with_context_post
-    ValidationError:
+      title: Body_fill_existing_with_context_forms__form_id__with_context_post
+    Body_account_quote_forms_quote_post:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        file:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MappingSuggestion:
-      properties:
-        mapping:
-          additionalProperties: true
-          type: object
-          title: Mapping
-        unmapped_columns:
+          contentMediaType: application/octet-stream
+          title: File
+        context:
           items:
             type: string
+            contentMediaType: application/octet-stream
           type: array
-          title: Unmapped Columns
+          title: Context
           default: []
       type: object
       required:
-      - mapping
-      title: MappingSuggestion
-    ErrorDetail:
+      - file
+      title: Body_account_quote_forms_quote_post
+    ContractResponse:
       properties:
-        code:
+        id:
           type: string
-          title: Code
-        message:
-          type: string
-          title: Message
+          title: Id
+        contract:
+          additionalProperties: true
+          type: object
+          title: Contract
       type: object
       required:
-      - code
-      - message
-      title: ErrorDetail
+      - id
+      - contract
+      title: ContractResponse
   securitySchemes:
     bearer:
       type: http
@@ -2515,5 +2515,3 @@ externalDocs:
 x-refined-from:
 - getemboss-ai-account-openapi.json
 - getemboss-ai-pay-per-call-openapi.json
-- getemboss-ai-account-openapi.yml
-- getemboss-ai-pay-per-call-openapi.yml

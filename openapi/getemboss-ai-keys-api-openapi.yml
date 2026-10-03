@@ -1,8 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Getemboss Ai Keys API
+  title: Fast Keys API
   version: 0.1.0
-  description: 'Operations tagged Keys across 2 of this provider''s published API definitions: getemboss-ai-account-openapi.json, getemboss-ai-account-openapi.yml. Each path carries the servers of the definition it was published in.'
 security:
 - bearer: []
 - oauth2:
@@ -130,29 +129,23 @@ paths:
       - Keys
 components:
   schemas:
-    HTTPValidationError:
+    KeyPatchBody:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CreateKeyBody:
-      properties:
-        owner:
-          type: string
-          title: Owner
+        action:
+          anyOf:
+          - type: string
+            enum:
+            - enable
+            - disable
+          - type: 'null'
+          title: Action
         label:
           anyOf:
           - type: string
           - type: 'null'
           title: Label
       type: object
-      required:
-      - owner
-      title: CreateKeyBody
+      title: KeyPatchBody
     ValidationError:
       properties:
         loc:
@@ -179,23 +172,29 @@ components:
       - msg
       - type
       title: ValidationError
-    KeyPatchBody:
+    CreateKeyBody:
       properties:
-        action:
-          anyOf:
-          - type: string
-            enum:
-            - enable
-            - disable
-          - type: 'null'
-          title: Action
+        owner:
+          type: string
+          title: Owner
         label:
           anyOf:
           - type: string
           - type: 'null'
           title: Label
       type: object
-      title: KeyPatchBody
+      required:
+      - owner
+      title: CreateKeyBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     bearer:
       type: http
@@ -212,6 +211,3 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
-x-refined-from:
-- getemboss-ai-account-openapi.json
-- getemboss-ai-account-openapi.yml
