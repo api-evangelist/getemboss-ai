@@ -601,6 +601,8 @@ apis:
   humanURL: https://getemboss.ai/docs/reference/create-form
   baseURL: https://api.getemboss.ai
   tags:
+  - Authentication
+  tags_raw:
   - Oauth
   properties:
   - type: OpenAPI
@@ -1033,6 +1035,8 @@ apis:
   humanURL: https://getemboss.ai/docs/reference/create-form
   baseURL: https://api.getemboss.ai
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -1141,6 +1145,8 @@ apis:
   humanURL: https://getemboss.ai/docs/reference/create-form
   baseURL: https://api.getemboss.ai
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -1249,6 +1255,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/getemboss-ai-capability-edges.yml
+  name: Emboss Business Capability Map
 - type: AgentSkill
   url: skills/getemboss-ai-fill-from-data.md
 - type: AgentSkill
