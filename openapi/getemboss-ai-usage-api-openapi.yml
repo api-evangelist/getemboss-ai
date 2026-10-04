@@ -25,6 +25,43 @@ paths:
       - Usage
 components:
   schemas:
+    UsageCounts:
+      properties:
+        create:
+          type: integer
+          title: Create
+          default: 0
+        with_context:
+          type: integer
+          title: With Context
+          default: 0
+        standard_fill:
+          type: integer
+          title: Standard Fill
+          default: 0
+        verify:
+          type: integer
+          title: Verify
+          default: 0
+        read:
+          type: integer
+          title: Read
+          default: 0
+        package:
+          type: integer
+          title: Package
+          default: 0
+        send_fax:
+          type: integer
+          title: Send Fax
+          default: 0
+        utility:
+          type: integer
+          title: Utility
+          default: 0
+      type: object
+      title: UsageCounts
+      description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
     UsageResponse:
       properties:
         owner:
@@ -115,43 +152,6 @@ components:
       - total
       - period_counts
       title: UsageResponse
-    UsageCounts:
-      properties:
-        create:
-          type: integer
-          title: Create
-          default: 0
-        with_context:
-          type: integer
-          title: With Context
-          default: 0
-        standard_fill:
-          type: integer
-          title: Standard Fill
-          default: 0
-        verify:
-          type: integer
-          title: Verify
-          default: 0
-        read:
-          type: integer
-          title: Read
-          default: 0
-        package:
-          type: integer
-          title: Package
-          default: 0
-        send_fax:
-          type: integer
-          title: Send Fax
-          default: 0
-        utility:
-          type: integer
-          title: Utility
-          default: 0
-      type: object
-      title: UsageCounts
-      description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
   securitySchemes:
     bearer:
       type: http

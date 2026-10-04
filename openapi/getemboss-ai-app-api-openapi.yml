@@ -96,33 +96,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    AppLoginRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        password:
-          type: string
-          title: Password
-        device_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Device Label
-      type: object
-      required:
-      - email
-      - password
-      title: AppLoginRequest
-    AppRefreshRequest:
-      properties:
-        refresh_token:
-          type: string
-          title: Refresh Token
-      type: object
-      required:
-      - refresh_token
-      title: AppRefreshRequest
     AppLogoutRequest:
       properties:
         refresh_token:
@@ -158,6 +131,33 @@ components:
       - msg
       - type
       title: ValidationError
+    AppLoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        device_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Label
+      type: object
+      required:
+      - email
+      - password
+      title: AppLoginRequest
+    AppRefreshRequest:
+      properties:
+        refresh_token:
+          type: string
+          title: Refresh Token
+      type: object
+      required:
+      - refresh_token
+      title: AppRefreshRequest
   securitySchemes:
     bearer:
       type: http

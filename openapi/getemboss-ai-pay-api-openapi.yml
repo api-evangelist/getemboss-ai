@@ -198,59 +198,15 @@ paths:
       - Pay
 components:
   schemas:
-    Body_pay_pay__op__post:
+    HTTPValidationError:
       properties:
-        file:
-          anyOf:
-          - type: string
-            contentMediaType: application/octet-stream
-          - type: 'null'
-          title: File
-        context:
+        detail:
           items:
-            type: string
-            contentMediaType: application/octet-stream
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Context
-          default: []
-        context_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Context Text
-        context_urls:
-          items:
-            type: string
-          type: array
-          title: Context Urls
-          default: []
-        values:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Values
-        policy:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Policy
-        mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Mode
-        package:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Package
-        to:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: To
+          title: Detail
       type: object
-      title: Body_pay_pay__op__post
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -310,15 +266,59 @@ components:
           title: Values
       type: object
       title: Body_pay_quote_pay_quote_post
-    HTTPValidationError:
+    Body_pay_pay__op__post:
       properties:
-        detail:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            type: string
+            contentMediaType: application/octet-stream
           type: array
-          title: Detail
+          title: Context
+          default: []
+        context_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Text
+        context_urls:
+          items:
+            type: string
+          type: array
+          title: Context Urls
+          default: []
+        values:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Values
+        policy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Policy
+        mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mode
+        package:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package
+        to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: To
       type: object
-      title: HTTPValidationError
+      title: Body_pay_pay__op__post
   securitySchemes:
     bearer:
       type: http

@@ -192,6 +192,15 @@ paths:
       - Users
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ResendRequest:
       properties:
         email:
@@ -205,58 +214,6 @@ components:
       - email
       - turnstile_token
       title: ResendRequest
-    SignupRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        password:
-          type: string
-          title: Password
-        turnstile_token:
-          type: string
-          title: Turnstile Token
-      type: object
-      required:
-      - email
-      - password
-      - turnstile_token
-      title: SignupRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    LoginRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-      - email
-      - password
-      title: LoginRequest
-    LoginTokenRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        login_token:
-          type: string
-          title: Login Token
-      type: object
-      required:
-      - email
-      - login_token
-      title: LoginTokenRequest
     ResetConfirmBody:
       properties:
         token:
@@ -309,6 +266,49 @@ components:
       - email
       - turnstile_token
       title: ResetRequestBody
+    SignupRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - password
+      - turnstile_token
+      title: SignupRequest
+    LoginTokenRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        login_token:
+          type: string
+          title: Login Token
+      type: object
+      required:
+      - email
+      - login_token
+      title: LoginTokenRequest
+    LoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginRequest
     VerifyRequest:
       properties:
         token:
