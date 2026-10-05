@@ -1,0 +1,12 @@
+{
+ "url": "https://api.getemboss.ai/internal/openapi.json",
+ "requested_url": "https://api.getemboss.ai/internal/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 148213,
+ "sha256": "b0b0dd002c728c310555a15bb00613b14238db6707b6f5b2052a358b0601d790",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
