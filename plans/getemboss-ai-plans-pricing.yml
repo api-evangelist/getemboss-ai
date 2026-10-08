@@ -74,3 +74,31 @@ enterprise_contact: null
 notes:
 - 'The pricing JSON is also embedded verbatim in the website HTML (PricingProvider), so the page and the endpoint cannot drift.'
 - 'Fees are non-refundable except free-tier credits or where required by law (https://getemboss.ai/terms); a failed paid fax is refunded.'
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  units: []
+  plans:
+  - name: Free every month
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Pay per call (account)
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - other
+  - name: Pay per job (anonymous, no account)
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - other
