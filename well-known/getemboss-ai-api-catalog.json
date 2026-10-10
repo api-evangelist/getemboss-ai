@@ -1,0 +1,148 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://getemboss.ai/",
+      "api-catalog": [
+        {
+          "href": "https://getemboss.ai/.well-known/api-catalog",
+          "type": "application/linkset+json",
+          "title": "This API catalog"
+        }
+      ]
+    },
+    {
+      "anchor": "https://api.getemboss.ai/",
+      "service-desc": [
+        {
+          "href": "https://api.getemboss.ai/internal/openapi.json",
+          "type": "application/vnd.oai.openapi+json",
+          "title": "Emboss REST API"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://getemboss.ai/docs/quickstart",
+          "type": "text/html",
+          "title": "Emboss quickstart"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://getemboss.ai/.well-known/ard.json",
+          "type": "application/json",
+          "title": "Agentic Resource Discovery manifest"
+        },
+        {
+          "href": "https://api.getemboss.ai/agentic-access.json",
+          "type": "application/json",
+          "title": "Emboss agentic access contract"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.getemboss.ai/health",
+          "type": "application/json",
+          "title": "Emboss API status"
+        }
+      ]
+    },
+    {
+      "anchor": "https://api.getemboss.ai/mcp",
+      "service-desc": [
+        {
+          "href": "https://getemboss.ai/.well-known/mcp.json",
+          "type": "application/json",
+          "title": "Emboss MCP server"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://getemboss.ai/docs/mcp-tools",
+          "type": "text/html",
+          "title": "Emboss MCP tools"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://api.getemboss.ai/agentic-access.json",
+          "type": "application/json",
+          "title": "Emboss agentic access contract"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.getemboss.ai/health",
+          "type": "application/json",
+          "title": "Emboss API status"
+        }
+      ]
+    },
+    {
+      "anchor": "https://api.getemboss.ai/a2a",
+      "service-desc": [
+        {
+          "href": "https://getemboss.ai/.well-known/agent-card.json",
+          "type": "application/a2a-agent-card+json",
+          "title": "Emboss A2A agent card"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://getemboss.ai/docs/a2a",
+          "type": "text/html",
+          "title": "Emboss A2A agent"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://api.getemboss.ai/agentic-access.json",
+          "type": "application/json",
+          "title": "Emboss agentic access contract"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.getemboss.ai/health",
+          "type": "application/json",
+          "title": "Emboss API status"
+        }
+      ]
+    },
+    {
+      "anchor": "https://api.getemboss.ai/pay",
+      "service-desc": [
+        {
+          "href": "https://api.getemboss.ai/openapi.json",
+          "type": "application/vnd.oai.openapi+json",
+          "title": "Emboss pay per call (x402/MPP) API manifest"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://getemboss.ai/docs/pay-per-call",
+          "type": "text/html",
+          "title": "Emboss pay-per-call documentation"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://api.getemboss.ai/agentic-access.json",
+          "type": "application/json",
+          "title": "Emboss agentic access contract"
+        },
+        {
+          "href": "https://getemboss.ai/.well-known/ucp",
+          "type": "application/json",
+          "title": "Emboss UCP business profile"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.getemboss.ai/health",
+          "type": "application/json",
+          "title": "Emboss API status"
+        }
+      ]
+    }
+  ]
+}
