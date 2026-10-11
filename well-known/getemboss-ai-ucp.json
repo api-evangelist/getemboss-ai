@@ -1,0 +1,85 @@
+{
+  "ucp": {
+    "version": "2026-08-25",
+    "services": {
+      "ai.getemboss.formfill.pay": [
+        {
+          "version": "2026-08-25",
+          "spec": "https://getemboss.ai/docs/pay-per-call",
+          "transport": "rest",
+          "endpoint": "https://api.getemboss.ai/pay",
+          "schema": "https://getemboss.ai/openapi.json"
+        }
+      ]
+    },
+    "payment_handlers": {
+      "ai.getemboss.pay.stripe_spt": [
+        {
+          "id": "stripe_spt",
+          "version": "2026-08-25",
+          "spec": "https://getemboss.ai/docs/pay-per-call",
+          "schema": "https://getemboss.ai/openapi.json",
+          "available_instruments": [
+            {
+              "type": "card"
+            }
+          ]
+        }
+      ],
+      "ai.getemboss.pay.tempo": [
+        {
+          "id": "mpp_tempo",
+          "version": "2026-08-25",
+          "spec": "https://getemboss.ai/docs/pay-per-call",
+          "schema": "https://getemboss.ai/openapi.json",
+          "available_instruments": [
+            {
+              "type": "ai.getemboss.pay.stablecoin",
+              "constraints": {
+                "properties": {
+                  "network": {
+                    "enum": [
+                      "tempo"
+                    ]
+                  },
+                  "currency": {
+                    "enum": [
+                      "USDC"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "ai.getemboss.pay.x402_usdc": [
+        {
+          "id": "x402_base_usdc",
+          "version": "2026-08-25",
+          "spec": "https://getemboss.ai/docs/pay-per-call",
+          "schema": "https://getemboss.ai/openapi.json",
+          "available_instruments": [
+            {
+              "type": "ai.getemboss.pay.stablecoin",
+              "constraints": {
+                "properties": {
+                  "network": {
+                    "enum": [
+                      "base"
+                    ]
+                  },
+                  "currency": {
+                    "enum": [
+                      "USDC"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

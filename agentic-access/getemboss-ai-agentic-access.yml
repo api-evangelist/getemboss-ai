@@ -1,0 +1,1594 @@
+generated: '2026-10-09'
+method: declared
+publisher: Emboss
+source: https://api.getemboss.ai/agentic-access.yml
+description: 'Provider-declared x-agentic-access contract for every call an agent can make on Emboss: the account API, the
+  pay-per-call API, the MCP connector''s tools and the A2A agent''s skills. Plain-language guide: https://getemboss.ai/docs/agentic-access'
+summary:
+  operations: 66
+  by_action_class:
+    connected: 33
+    acting: 33
+  by_consequence:
+    read: 33
+    write: 33
+  human_in_the_loop_required: 1
+  human_in_the_loop_conditional: 3
+operations:
+- path: /forms/quote
+  method: post
+  operationId: account_quote_forms_quote_post
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms
+  method: post
+  operationId: create_form_forms_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - create
+- path: /forms
+  method: get
+  operationId: list_forms_forms_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/{form_id}
+  method: get
+  operationId: get_form_forms__form_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/{form_id}
+  method: delete
+  operationId: delete_form_forms__form_id__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    escalation:
+      human-in-the-loop: required
+    x-curation-reason: Permanently removes the form and its files from the account; it cannot be undone.
+    audit: required
+- path: /forms/{form_id}/contract
+  method: get
+  operationId: get_contract_forms__form_id__contract_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /usage
+  method: get
+  operationId: get_usage_usage_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/{form_id}/fillable
+  method: get
+  operationId: get_fillable_forms__form_id__fillable_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/{form_id}/thumbnail
+  method: get
+  operationId: get_thumbnail_forms__form_id__thumbnail_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /sessions
+  method: post
+  operationId: create_session_sessions_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+- path: /sessions/{sid}
+  method: get
+  operationId: get_session_sessions__sid__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /sessions/{sid}/fields
+  method: put
+  operationId: put_fields_sessions__sid__fields_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+- path: /sessions/{sid}/fill
+  method: post
+  operationId: fill_sessions__sid__fill_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - standard_fill
+- path: /sessions/{sid}/pdf
+  method: get
+  operationId: session_pdf_sessions__sid__pdf_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/with-context
+  method: post
+  operationId: create_with_context_forms_with_context_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - create
+    - with_context
+- path: /forms/{form_id}/with-context
+  method: post
+  operationId: fill_existing_with_context_forms__form_id__with_context_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+- path: /forms/with-context/{job_id}
+  method: get
+  operationId: get_with_context_forms_with_context__job_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/{form_id}/prepare
+  method: post
+  operationId: prepare_existing_forms__form_id__prepare_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+- path: /forms/prepare
+  method: post
+  operationId: prepare_new_forms_prepare_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - create
+    - with_context
+- path: /proposals/{proposal_id}/commit
+  method: post
+  operationId: commit_proposals__proposal_id__commit_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - package
+- path: /proposals/{proposal_id}
+  method: get
+  operationId: get_proposal_proposals__proposal_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /proposals/{proposal_id}/receipt
+  method: get
+  operationId: receipt_proposals__proposal_id__receipt_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /proposals/{proposal_id}/pdf
+  method: get
+  operationId: commit_pdf_proposals__proposal_id__pdf_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/{form_id}/verify
+  method: post
+  operationId: verify_filled_pdf_forms__form_id__verify_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - verify
+- path: /proposals/{proposal_id}/attachments
+  method: post
+  operationId: add_attachment_proposals__proposal_id__attachments_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+- path: /proposals/{proposal_id}/attachments/{n}
+  method: delete
+  operationId: remove_attachment_proposals__proposal_id__attachments__n__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+- path: /forms/{form_id}/preview-fill
+  method: post
+  operationId: preview_fill_forms__form_id__preview_fill_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+- path: /forms/{form_id}/suggest-mapping
+  method: post
+  operationId: suggest_mapping_endpoint_forms__form_id__suggest_mapping_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+- path: /forms/{form_id}/fill-batch
+  method: post
+  operationId: fill_batch_forms__form_id__fill_batch_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - standard_fill
+- path: /forms/fill-batch/{batch_id}
+  method: get
+  operationId: batch_status_forms_fill_batch__batch_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/fill-batch/{batch_id}/rows/{n}/pdf
+  method: get
+  operationId: batch_row_pdf_forms_fill_batch__batch_id__rows__n__pdf_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /forms/fill-batch/{batch_id}/zip
+  method: get
+  operationId: batch_zip_forms_fill_batch__batch_id__zip_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /fax
+  method: post
+  operationId: send_fax_fax_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+    x-abnormal: more than 10 faxes from one account within an hour
+    x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst
+      does.
+    audit: required
+    x-billed:
+    - send_fax
+- path: /fax/{job_id}
+  method: get
+  operationId: get_fax_fax__job_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /artifacts/{artifact_id}
+  method: get
+  operationId: get_artifact_artifacts__artifact_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /artifacts/{artifact_id}/content
+  method: get
+  operationId: get_artifact_content_artifacts__artifact_id__content_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /utilities/{skill}
+  method: post
+  operationId: run_utility_utilities__skill__post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /forms/read
+  method: post
+  operationId: read_form_forms_read_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - read
+- path: /app/login
+  method: post
+  operationId: app_login_app_login_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /app/refresh
+  method: post
+  operationId: app_refresh_app_refresh_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /app/logout
+  method: post
+  operationId: app_logout_app_logout_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /library
+  method: get
+  operationId: get_library_library_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- path: /pricing
+  method: get
+  operationId: public_price_list_pricing_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /pay
+  method: get
+  operationId: pay_index_pay_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /pay/openapi.json
+  method: get
+  operationId: pay_openapi_manifest_pay_openapi_json_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /openapi.json
+  method: get
+  operationId: pay_openapi_manifest_openapi_json_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /pay/llms.txt
+  method: get
+  operationId: pay_llms_txt_pay_llms_txt_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /pay/pricing
+  method: get
+  operationId: pay_pricing_alias_pay_pricing_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /pay/quote
+  method: post
+  operationId: pay_quote_pay_quote_post
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /pay/{op}
+  method: post
+  operationId: pay_pay__op__post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    x-authorization: per-call-payment
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+    x-abnormal: more than 10 faxes from one account within an hour
+    x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst
+      does.
+    audit: required
+- path: /pay/jobs/{job_id}
+  method: get
+  operationId: pay_job_status_pay_jobs__job_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /.well-known/oauth-authorization-server
+  method: get
+  operationId: as_metadata__well_known_oauth_authorization_server_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /.well-known/oauth-protected-resource/mcp
+  method: get
+  operationId: rs_metadata__well_known_oauth_protected_resource_mcp_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /oauth/register
+  method: post
+  operationId: register_oauth_register_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /oauth/authorize
+  method: get
+  operationId: authorize_oauth_authorize_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /oauth/token
+  method: post
+  operationId: token_oauth_token_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /oauth/revoke
+  method: post
+  operationId: revoke_oauth_revoke_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /d/{token}
+  method: get
+  operationId: redeem_d__token__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /stripe/webhook
+  method: post
+  operationId: stripe_webhook_stripe_webhook_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /webhooks/fax
+  method: post
+  operationId: fax_webhook_webhooks_fax_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- path: /health
+  method: get
+  operationId: health_health_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- path: /pay/make-fillable
+  method: post
+  operationId: pay_make_fillable
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    x-authorization: per-call-payment
+    audit: required
+- path: /pay/fill-with-context
+  method: post
+  operationId: pay_fill_with_context
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    x-authorization: per-call-payment
+    audit: required
+- path: /pay/fill
+  method: post
+  operationId: pay_fill
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    x-authorization: per-call-payment
+    audit: required
+- path: /pay/read
+  method: post
+  operationId: pay_read
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    x-authorization: per-call-payment
+    audit: required
+- path: /pay/fax
+  method: post
+  operationId: pay_fax
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    x-authorization: per-call-payment
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+    x-abnormal: more than 10 faxes from one account within an hour
+    x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst
+      does.
+    audit: required
+x-mcp-tools:
+- name: list_forms
+  operations:
+  - GET /forms
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: get_form
+  operations:
+  - GET /forms/{form_id}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: find_form
+  operations:
+  - GET /library
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: get_usage
+  operations:
+  - GET /usage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: create_form
+  operations:
+  - POST /forms
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - create
+- name: delete_form
+  operations:
+  - DELETE /forms/{form_id}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    escalation:
+      human-in-the-loop: required
+    x-curation-reason: Permanently removes the form and its files from the account; it cannot be undone.
+    audit: required
+- name: fill_form
+  operations:
+  - POST /sessions
+  - PUT /sessions/{sid}/fields
+  - POST /sessions/{sid}/fill
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - standard_fill
+- name: fill_form_from_context
+  operations:
+  - POST /forms/{form_id}/with-context
+  - POST /forms/with-context
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+    - create
+- name: prepare_form
+  operations:
+  - POST /forms/{form_id}/prepare
+  - POST /forms/prepare
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+    - create
+- name: get_job
+  operations:
+  - GET /forms/with-context/{job_id}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: suggest_mapping
+  operations:
+  - POST /forms/{form_id}/suggest-mapping
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+- name: fill_batch
+  operations:
+  - POST /forms/{form_id}/fill-batch
+  - POST /forms/{form_id}/suggest-mapping
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - standard_fill
+    - with_context
+- name: get_batch
+  operations:
+  - GET /forms/fill-batch/{batch_id}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: commit_proposal
+  operations:
+  - POST /proposals/{proposal_id}/commit
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - package
+- name: get_proposal
+  operations:
+  - GET /proposals/{proposal_id}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: verify_form
+  operations:
+  - POST /forms/{form_id}/verify
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - verify
+- name: read_form
+  operations:
+  - POST /forms/read
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - read
+- name: add_attachment
+  operations:
+  - POST /proposals/{proposal_id}/attachments
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+- name: send_fax
+  operations:
+  - POST /fax
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+    x-abnormal: more than 10 faxes from one account within an hour
+    x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst
+      does.
+    audit: required
+    x-billed:
+    - send_fax
+- name: get_fax
+  operations:
+  - GET /fax/{job_id}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- name: compose_pdf
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    audit: required
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+- name: merge_pdf
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    audit: required
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+- name: extract_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    audit: required
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+- name: delete_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    audit: required
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+- name: reorder_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    audit: required
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+- name: rotate_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    audit: required
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+- name: inspect_pdf
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    audit: none
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+x-a2a-skills:
+- id: make_fillable
+  operations:
+  - POST /forms
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - create
+    x-authorization: account-or-per-call-payment
+- id: fill_form
+  operations:
+  - POST /sessions
+  - PUT /sessions/{sid}/fields
+  - POST /sessions/{sid}/fill
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - standard_fill
+    x-authorization: account-or-per-call-payment
+- id: fill_from_context
+  operations:
+  - POST /forms/{form_id}/with-context
+  - POST /forms/with-context
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+    - create
+    x-authorization: account-or-per-call-payment
+- id: prepare
+  operations:
+  - POST /forms/{form_id}/prepare
+  - POST /forms/prepare
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+    - create
+- id: fill_batch
+  operations:
+  - POST /forms/{form_id}/fill-batch
+  - POST /forms/{form_id}/suggest-mapping
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - standard_fill
+    - with_context
+    x-authorization: account-or-per-call-payment
+- id: suggest_mapping
+  operations:
+  - POST /forms/{form_id}/suggest-mapping
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - with_context
+    x-authorization: account-or-per-call-payment
+- id: find_forms
+  operations:
+  - GET /forms
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- id: find_form
+  operations:
+  - GET /library
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- id: get_form
+  operations:
+  - GET /forms/{form_id}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:read
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: none
+- id: commit
+  operations:
+  - POST /proposals/{proposal_id}/commit
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - package
+- id: verify
+  operations:
+  - POST /forms/{form_id}/verify
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - verify
+- id: read_form
+  operations:
+  - POST /forms/read
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+    x-billed:
+    - read
+- id: attach
+  operations:
+  - POST /proposals/{proposal_id}/attachments
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    audit: required
+- id: quote_job
+  operations:
+  - POST /pay/quote
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none
+- id: execute_quote
+  operations:
+  - POST /pay/{op}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    x-authorization: per-call-payment
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+    x-abnormal: more than 10 faxes from one account within an hour
+    x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst
+      does.
+    audit: required
+- id: send_fax
+  operations:
+  - POST /fax
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    scope:
+    - forms:write
+    token:
+      max-ttl: 3600
+      x-api-key-lifetime: until-revoked
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+    x-abnormal: more than 10 faxes from one account within an hour
+    x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst
+      does.
+    audit: required
+    x-billed:
+    - send_fax
+    x-authorization: account-or-per-call-payment
+- id: compose_pdf
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- id: merge_pdf
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- id: extract_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- id: delete_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- id: reorder_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- id: rotate_pages
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: required
+- id: inspect_pdf
+  operations:
+  - POST /utilities/{skill}
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    audience: https://api.getemboss.ai
+    audit: none

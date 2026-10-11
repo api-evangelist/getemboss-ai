@@ -20,7 +20,7 @@ x-tier: profiled
 x-tier-reason: 'enrichment pass local-v3 2026-09-19 (was stub / harvest)'
 specificationVersion: '0.20'
 created: '2026-09-19'
-modified: '2026-09-19'
+modified: '2026-10-10'
 tags:
 - PDF
 - Forms
@@ -1259,6 +1259,12 @@ common:
   url: capabilities/getemboss-ai-capability-edges.yml
   name: Emboss Business Capability Map
 - type: AgentSkill
+  url: skills/getemboss-ai-emboss-SKILL.md
+- type: AgentSkill
+  url: skills/getemboss-ai-emboss-setup-SKILL.md
+- type: AgentSkill
+  url: skills/getemboss-ai-emboss-gemini-SKILL.md
+- type: AgentSkill
   url: skills/getemboss-ai-fill-from-data.md
 - type: AgentSkill
   url: skills/getemboss-ai-prepare-commit-fax.md
@@ -1366,6 +1372,18 @@ common:
   url: https://getemboss.ai/subprocessors
 - type: AITransparency
   url: https://getemboss.ai/docs/ephemeral-processing
+- type: AgenticAccess
+  url: agentic-access/getemboss-ai-agentic-access.yml
+- type: Examples
+  url: https://getemboss.ai/docs/examples
+- type: APICatalog
+  url: https://getemboss.ai/.well-known/api-catalog
+- type: UCP
+  url: well-known/getemboss-ai-ucp.json
+- type: ContentSignal
+  url: https://getemboss.ai/robots.txt
+- type: AIPREF
+  url: https://getemboss.ai/robots.txt
 x-enrichment:
   date: '2026-09-19'
   status: enriched

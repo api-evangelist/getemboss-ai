@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /api
+Disallow: /login
+Disallow: /signup
+Disallow: /verify
+Disallow: /reset
+Disallow: /oauth
+Disallow: /d/
+Content-Usage: train-ai=y, ai-use=y, search=y
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+
+Sitemap: https://getemboss.ai/sitemap.xml
+Agentmap: https://getemboss.ai/.well-known/ard.json

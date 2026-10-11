@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /.well-known/
+Allow: /llms.txt
+Allow: /agentic-access.json
+Allow: /agentic-access.yml
+Allow: /openapi.json
+Allow: /internal/openapi.json
+Allow: /pricing
+Allow: /library
+Allow: /pay/llms.txt
+Allow: /pay/openapi.json
+Disallow: /pay/
+Allow: /pay
+Disallow: /docs/
+Allow: /docs
+Disallow: /
+Content-Usage: train-ai=y, ai-use=y, search=y
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+Agentmap: https://api.getemboss.ai/.well-known/ard.json
