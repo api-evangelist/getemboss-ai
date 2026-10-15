@@ -92,7 +92,7 @@
     app_slug: emboss
     beta: false
     builder: unknown (not in the directory record)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: getemboss-ai-n8n
   label: n8n
@@ -119,7 +119,7 @@
     published: '2026-06-15T12:09:47.024Z'
     matched_on: publisher-email
     builder: provider (package published from the provider's own domain)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
 - slug: getemboss-ai-pipedream
   label: Pipedream
@@ -145,5 +145,5 @@
     actions: true
     sources: false
     builder: Pipedream repo (component)
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
