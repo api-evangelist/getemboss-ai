@@ -129,32 +129,6 @@ paths:
       - Keys
 components:
   schemas:
-    KeyPatchBody:
-      properties:
-        action:
-          anyOf:
-          - type: string
-            enum:
-            - enable
-            - disable
-          - type: 'null'
-          title: Action
-        label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Label
-      type: object
-      title: KeyPatchBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -181,6 +155,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     CreateKeyBody:
       properties:
         owner:
@@ -195,6 +178,23 @@ components:
       required:
       - owner
       title: CreateKeyBody
+    KeyPatchBody:
+      properties:
+        action:
+          anyOf:
+          - type: string
+            enum:
+            - enable
+            - disable
+          - type: 'null'
+          title: Action
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+      type: object
+      title: KeyPatchBody
   securitySchemes:
     bearer:
       type: http

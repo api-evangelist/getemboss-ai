@@ -192,15 +192,32 @@ paths:
       - Users
 components:
   schemas:
-    HTTPValidationError:
+    LoginTokenRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        email:
+          type: string
+          title: Email
+        login_token:
+          type: string
+          title: Login Token
       type: object
-      title: HTTPValidationError
+      required:
+      - email
+      - login_token
+      title: LoginTokenRequest
+    ResetRequestBody:
+      properties:
+        email:
+          type: string
+          title: Email
+        turnstile_token:
+          type: string
+          title: Turnstile Token
+      type: object
+      required:
+      - email
+      - turnstile_token
+      title: ResetRequestBody
     ResendRequest:
       properties:
         email:
@@ -214,6 +231,15 @@ components:
       - email
       - turnstile_token
       title: ResendRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ResetConfirmBody:
       properties:
         token:
@@ -253,19 +279,19 @@ components:
       - msg
       - type
       title: ValidationError
-    ResetRequestBody:
+    LoginRequest:
       properties:
         email:
           type: string
           title: Email
-        turnstile_token:
+        password:
           type: string
-          title: Turnstile Token
+          title: Password
       type: object
       required:
       - email
-      - turnstile_token
-      title: ResetRequestBody
+      - password
+      title: LoginRequest
     SignupRequest:
       properties:
         email:
@@ -283,32 +309,6 @@ components:
       - password
       - turnstile_token
       title: SignupRequest
-    LoginTokenRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        login_token:
-          type: string
-          title: Login Token
-      type: object
-      required:
-      - email
-      - login_token
-      title: LoginTokenRequest
-    LoginRequest:
-      properties:
-        email:
-          type: string
-          title: Email
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-      - email
-      - password
-      title: LoginRequest
     VerifyRequest:
       properties:
         token:

@@ -155,6 +155,26 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    SessionCreate:
+      properties:
+        form_id:
+          type: string
+          title: Form Id
+      type: object
+      required:
+      - form_id
+      title: SessionCreate
+    FieldsRequest:
+      properties:
+        updates:
+          items:
+            $ref: '#/components/schemas/FieldUpdate'
+          type: array
+          title: Updates
+      type: object
+      required:
+      - updates
+      title: FieldsRequest
     ValidationError:
       properties:
         loc:
@@ -196,26 +216,6 @@ components:
       - field_id
       - value
       title: FieldUpdate
-    FieldsRequest:
-      properties:
-        updates:
-          items:
-            $ref: '#/components/schemas/FieldUpdate'
-          type: array
-          title: Updates
-      type: object
-      required:
-      - updates
-      title: FieldsRequest
-    SessionCreate:
-      properties:
-        form_id:
-          type: string
-          title: Form Id
-      type: object
-      required:
-      - form_id
-      title: SessionCreate
   securitySchemes:
     bearer:
       type: http
