@@ -109,114 +109,6 @@ apis:
     url: mcp/getemboss-ai-tool-crosswalk.yml
   - type: Documentation
     url: https://getemboss.ai/docs/a2a
-- aid: getemboss-ai:getemboss-ai-admin-api
-  name: Emboss Admin API
-  description: The Admin API from Emboss — 40 operation(s) for admin.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Admin
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-admin-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-app-api
-  name: Emboss App API
-  description: The App API from Emboss — 3 operation(s) for app.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - App
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-app-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
 - aid: getemboss-ai:getemboss-ai-artifacts-api
   name: Emboss Artifacts API
   description: The Artifacts API from Emboss — 2 operation(s) for artifacts.
@@ -227,60 +119,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/getemboss-ai-artifacts-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-d-api
-  name: Emboss D API
-  description: The D API from Emboss — 1 operation(s) for d.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - D
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-d-api-openapi.yml
   - type: Documentation
     url: https://getemboss.ai/docs
   - type: APIReference
@@ -433,658 +271,6 @@ apis:
     url: https://api.getemboss.ai/pay/llms.txt
   - type: Plans
     url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-health-api
-  name: Emboss Health API
-  description: The Health API from Emboss — 1 operation(s) for health.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Health
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-health-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-keys-api
-  name: Emboss Keys API
-  description: The Keys API from Emboss — 2 operation(s) for keys.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Keys
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-keys-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-library-api
-  name: Emboss Library API
-  description: The Library API from Emboss — 1 operation(s) for library.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Library
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-library-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-oauth-api
-  name: Emboss OAuth API
-  description: The Oauth API from Emboss — 5 operation(s) for oauth.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Authentication
-  tags_raw:
-  - Oauth
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-oauth-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-openapi-json-api
-  name: Emboss Openapi.json API
-  description: The Openapi.json API from Emboss — 1 operation(s) for openapi.json.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Openapi.json
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-openapi-json-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-pay-api
-  name: Emboss Pay API
-  description: The Pay API from Emboss — 7 operation(s) for pay.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Pay
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-pay-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-pricing-api
-  name: Emboss Pricing API
-  description: The Pricing API from Emboss — 1 operation(s) for pricing.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Pricing
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-pricing-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-proposals-api
-  name: Emboss Proposals API
-  description: The Proposals API from Emboss — 6 operation(s) for proposals.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Proposals
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-proposals-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-sessions-api
-  name: Emboss Sessions API
-  description: The Sessions API from Emboss — 5 operation(s) for sessions.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Sessions
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-sessions-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-stripe-api
-  name: Emboss Stripe API
-  description: The Stripe API from Emboss — 1 operation(s) for stripe.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Stripe
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-stripe-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-usage-api
-  name: Emboss Usage API
-  description: The Usage API from Emboss — 1 operation(s) for usage.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - Usage
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-usage-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-users-api
-  name: Emboss Users API
-  description: The Users API from Emboss — 7 operation(s) for users.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
-  tags:
-  - User
-  tags_raw:
-  - Users
-  properties:
-  - type: OpenAPI
-    url: openapi/getemboss-ai-users-api-openapi.yml
-  - type: Documentation
-    url: https://getemboss.ai/docs
-  - type: APIReference
-    url: https://getemboss.ai/docs/reference/create-form
-  - type: Console
-    url: https://api.getemboss.ai/docs
-  - type: GettingStarted
-    url: https://getemboss.ai/docs/quickstart
-  - type: Authentication
-    url: authentication/getemboss-ai-authentication.yml
-  - type: Authentication
-    url: https://getemboss.ai/docs/authentication
-  - type: OAuthScopes
-    url: scopes/getemboss-ai-scopes.yml
-  - type: Conventions
-    url: conventions/getemboss-ai-conventions.yml
-  - type: Idempotency
-    url: conventions/getemboss-ai-conventions.yml
-  - type: ErrorCatalog
-    url: errors/getemboss-ai-problem-types.yml
-  - type: ErrorCatalog
-    url: https://getemboss.ai/docs/reference/errors
-  - type: DataModel
-    url: data-model/getemboss-ai-data-model.yml
-  - type: RateLimits
-    url: rate-limits/getemboss-ai-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/getemboss-ai-sandbox.yml
-  - type: Webhooks
-    url: asyncapi/getemboss-ai-callbacks.yml
-  - type: Webhooks
-    url: https://getemboss.ai/docs/callbacks
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/mpp
-  - type: Documentation
-    url: https://getemboss.ai/docs/pay-per-call/x402
-  - type: LLMsTxt
-    url: llms/getemboss-ai-pay-llms.txt
-  - type: LLMsTxt
-    url: https://api.getemboss.ai/pay/llms.txt
-  - type: Plans
-    url: plans/getemboss-ai-plans-pricing.yml
 - aid: getemboss-ai:getemboss-ai-utilities-api
   name: Emboss Utilities API
   description: The Utilities API from Emboss — 1 operation(s) for utilities.
@@ -1139,18 +325,16 @@ apis:
     url: https://api.getemboss.ai/pay/llms.txt
   - type: Plans
     url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-webhooks-api
-  name: Emboss Webhooks API
-  description: The Webhooks API from Emboss — 1 operation(s) for webhooks.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
+- aid: getemboss-ai:getemboss-ai-account-api
+  name: Emboss Account API
+  description: Keys, usage and account settings.
+  humanURL: https://getemboss.ai/docs/mcp-tools
+  baseURL: https://api.getemboss.ai/mcp
   tags:
-  - Webhook
-  tags_raw:
-  - Webhooks
+  - Account
   properties:
   - type: OpenAPI
-    url: openapi/getemboss-ai-webhooks-api-openapi.yml
+    url: openapi/getemboss-ai-account-api-openapi.yml
   - type: Documentation
     url: https://getemboss.ai/docs
   - type: APIReference
@@ -1195,16 +379,178 @@ apis:
     url: https://api.getemboss.ai/pay/llms.txt
   - type: Plans
     url: plans/getemboss-ai-plans-pricing.yml
-- aid: getemboss-ai:getemboss-ai-well-known-api
-  name: Emboss .well Known API
-  description: The .well Known API from Emboss — 3 operation(s) for .well known.
-  humanURL: https://getemboss.ai/docs/reference/create-form
-  baseURL: https://api.getemboss.ai
+- aid: getemboss-ai:getemboss-ai-administration-api
+  name: Emboss Administration API
+  description: Server-to-server maintenance endpoints, not part of the caller-facing API.
+  humanURL: https://getemboss.ai/docs/mcp-tools
+  baseURL: https://api.getemboss.ai/mcp
   tags:
-  - .well Known
+  - Administration
   properties:
   - type: OpenAPI
-    url: openapi/getemboss-ai-well-known-api-openapi.yml
+    url: openapi/getemboss-ai-administration-api-openapi.yml
+  - type: Documentation
+    url: https://getemboss.ai/docs
+  - type: APIReference
+    url: https://getemboss.ai/docs/reference/create-form
+  - type: Console
+    url: https://api.getemboss.ai/docs
+  - type: GettingStarted
+    url: https://getemboss.ai/docs/quickstart
+  - type: Authentication
+    url: authentication/getemboss-ai-authentication.yml
+  - type: Authentication
+    url: https://getemboss.ai/docs/authentication
+  - type: OAuthScopes
+    url: scopes/getemboss-ai-scopes.yml
+  - type: Conventions
+    url: conventions/getemboss-ai-conventions.yml
+  - type: Idempotency
+    url: conventions/getemboss-ai-conventions.yml
+  - type: ErrorCatalog
+    url: errors/getemboss-ai-problem-types.yml
+  - type: ErrorCatalog
+    url: https://getemboss.ai/docs/reference/errors
+  - type: DataModel
+    url: data-model/getemboss-ai-data-model.yml
+  - type: RateLimits
+    url: rate-limits/getemboss-ai-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/getemboss-ai-sandbox.yml
+  - type: Webhooks
+    url: asyncapi/getemboss-ai-callbacks.yml
+  - type: Webhooks
+    url: https://getemboss.ai/docs/callbacks
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call/mpp
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call/x402
+  - type: LLMsTxt
+    url: llms/getemboss-ai-pay-llms.txt
+  - type: LLMsTxt
+    url: https://api.getemboss.ai/pay/llms.txt
+  - type: Plans
+    url: plans/getemboss-ai-plans-pricing.yml
+- aid: getemboss-ai:getemboss-ai-discovery-api
+  name: Emboss Discovery API
+  description: Health, published prices and the machine-readable documents that describe this API.
+  humanURL: https://getemboss.ai/docs/mcp-tools
+  baseURL: https://api.getemboss.ai/mcp
+  tags:
+  - Discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/getemboss-ai-discovery-api-openapi.yml
+  - type: Documentation
+    url: https://getemboss.ai/docs
+  - type: APIReference
+    url: https://getemboss.ai/docs/reference/create-form
+  - type: Console
+    url: https://api.getemboss.ai/docs
+  - type: GettingStarted
+    url: https://getemboss.ai/docs/quickstart
+  - type: Authentication
+    url: authentication/getemboss-ai-authentication.yml
+  - type: Authentication
+    url: https://getemboss.ai/docs/authentication
+  - type: OAuthScopes
+    url: scopes/getemboss-ai-scopes.yml
+  - type: Conventions
+    url: conventions/getemboss-ai-conventions.yml
+  - type: Idempotency
+    url: conventions/getemboss-ai-conventions.yml
+  - type: ErrorCatalog
+    url: errors/getemboss-ai-problem-types.yml
+  - type: ErrorCatalog
+    url: https://getemboss.ai/docs/reference/errors
+  - type: DataModel
+    url: data-model/getemboss-ai-data-model.yml
+  - type: RateLimits
+    url: rate-limits/getemboss-ai-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/getemboss-ai-sandbox.yml
+  - type: Webhooks
+    url: asyncapi/getemboss-ai-callbacks.yml
+  - type: Webhooks
+    url: https://getemboss.ai/docs/callbacks
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call/mpp
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call/x402
+  - type: LLMsTxt
+    url: llms/getemboss-ai-pay-llms.txt
+  - type: LLMsTxt
+    url: https://api.getemboss.ai/pay/llms.txt
+  - type: Plans
+    url: plans/getemboss-ai-plans-pricing.yml
+- aid: getemboss-ai:getemboss-ai-filling-api
+  name: Emboss Filling API
+  description: Fill a form from values or from documents, in one call or as a proposal you commit.
+  humanURL: https://getemboss.ai/docs/mcp-tools
+  baseURL: https://api.getemboss.ai/mcp
+  tags:
+  - Filling
+  properties:
+  - type: OpenAPI
+    url: openapi/getemboss-ai-filling-api-openapi.yml
+  - type: Documentation
+    url: https://getemboss.ai/docs
+  - type: APIReference
+    url: https://getemboss.ai/docs/reference/create-form
+  - type: Console
+    url: https://api.getemboss.ai/docs
+  - type: GettingStarted
+    url: https://getemboss.ai/docs/quickstart
+  - type: Authentication
+    url: authentication/getemboss-ai-authentication.yml
+  - type: Authentication
+    url: https://getemboss.ai/docs/authentication
+  - type: OAuthScopes
+    url: scopes/getemboss-ai-scopes.yml
+  - type: Conventions
+    url: conventions/getemboss-ai-conventions.yml
+  - type: Idempotency
+    url: conventions/getemboss-ai-conventions.yml
+  - type: ErrorCatalog
+    url: errors/getemboss-ai-problem-types.yml
+  - type: ErrorCatalog
+    url: https://getemboss.ai/docs/reference/errors
+  - type: DataModel
+    url: data-model/getemboss-ai-data-model.yml
+  - type: RateLimits
+    url: rate-limits/getemboss-ai-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/getemboss-ai-sandbox.yml
+  - type: Webhooks
+    url: asyncapi/getemboss-ai-callbacks.yml
+  - type: Webhooks
+    url: https://getemboss.ai/docs/callbacks
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call/mpp
+  - type: Documentation
+    url: https://getemboss.ai/docs/pay-per-call/x402
+  - type: LLMsTxt
+    url: llms/getemboss-ai-pay-llms.txt
+  - type: LLMsTxt
+    url: https://api.getemboss.ai/pay/llms.txt
+  - type: Plans
+    url: plans/getemboss-ai-plans-pricing.yml
+- aid: getemboss-ai:getemboss-ai-pay-per-call-api
+  name: Emboss Pay per call API
+  description: 'The anonymous pay-per-call API: quote a job and pay for it without an account.'
+  humanURL: https://getemboss.ai/docs/mcp-tools
+  baseURL: https://api.getemboss.ai/mcp
+  tags:
+  - Pay per call
+  properties:
+  - type: OpenAPI
+    url: openapi/getemboss-ai-pay-per-call-api-openapi.yml
   - type: Documentation
     url: https://getemboss.ai/docs
   - type: APIReference

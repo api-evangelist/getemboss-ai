@@ -1,0 +1,539 @@
+openapi: 3.2.0
+info:
+  title: Emboss Discovery API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Discovery
+  description: Health, published prices and the machine-readable documents that describe this API.
+paths:
+  /pricing:
+    get:
+      summary: Get the price list
+      description: 'Get Emboss''s current published prices, no account needed.
+
+
+        For each kind of operation, returns its flat fee, the page count
+
+        above which a per-page overage rate applies, that overage rate, and
+
+        how many calls of that kind are free each month. Also returns a
+
+        separate free-page ceiling that applies across kinds, and the price
+
+        range for the anonymous pay-per-call API, its card minimum, and how many failed card-paid faxes are refunded automatically a day. Read the numbers from the
+
+        response itself; they change without notice.'
+      operationId: public_price_list_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                currency: usd
+                door:
+                  fax:
+                    ceiling_cents: 300
+                    floor_cents: 3
+                  fill:
+                    ceiling_cents: 102
+                    floor_cents: 7
+                  fill-with-context:
+                    ceiling_cents: 1293
+                    floor_cents: 8
+                  make-fillable:
+                    ceiling_cents: 100
+                    floor_cents: 5
+                  read:
+                    ceiling_cents: 1
+                    floor_cents: 1
+                effective: '2026-09-07'
+                free_page_cap: 5
+                kinds:
+                  create:
+                    cap_pages: 5
+                    flat_cents: 5
+                    free_per_month: 5
+                    overage_per_page_cents: 1
+                  package:
+                    cap_pages: null
+                    flat_cents: 2
+                    free_per_month: 5
+                    overage_per_page_cents: 0
+                  read:
+                    cap_pages: null
+                    flat_cents: 1
+                    free_per_month: 5
+                    overage_per_page_cents: 0
+                  send_fax:
+                    cap_pages: 0
+                    flat_cents: 0
+                    free_per_month: 0
+                    overage_per_page_cents: 3
+                  standard_fill:
+                    cap_pages: null
+                    flat_cents: 2
+                    free_per_month: 5
+                    overage_per_page_cents: 0
+                  verify:
+                    cap_pages: 5
+                    flat_cents: 1
+                    free_per_month: 5
+                    overage_per_page_cents: 1
+                  with_context:
+                    cap_pages: 5
+                    flat_cents: 3
+                    free_per_month: 5
+                    overage_per_page_cents: 2
+                pay_per_call:
+                  card_minimum_cents: 50
+                  fax_card_refunds_per_day: 3
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /openapi.json:
+    get:
+      summary: Get the pay-per-call API description
+      description: 'The pay-per-call API''s own description: every operation, its price and how to pay.'
+      operationId: pay_openapi_manifest_openapi_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                info:
+                  title: Emboss
+                  version: 1.1.0
+                openapi: 3.1.0
+                paths:
+                  /pay/fill:
+                    post:
+                      operationId: pay_fill
+                servers:
+                - url: https://api.getemboss.ai
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /.well-known/oauth-authorization-server:
+    get:
+      summary: Get the OAuth server metadata
+      description: 'Publish this API''s OAuth 2.1 configuration, for a client app that
+
+        supports automatic discovery.
+
+
+        Returns the authorization, token, registration, and revocation endpoint
+
+        URLs, along with the scopes and grant types Emboss supports. No
+
+        authentication needed; this is standard OAuth server metadata (RFC
+
+        8414).'
+      operationId: as_metadata__well_known_oauth_authorization_server_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                authorization_endpoint: https://api.getemboss.ai/oauth/authorize
+                client_id_metadata_document_supported: true
+                code_challenge_methods_supported:
+                - S256
+                grant_types_supported:
+                - authorization_code
+                - refresh_token
+                issuer: https://api.getemboss.ai
+                registration_endpoint: https://api.getemboss.ai/oauth/register
+                response_types_supported:
+                - code
+                revocation_endpoint: https://api.getemboss.ai/oauth/revoke
+                revocation_endpoint_auth_methods_supported:
+                - none
+                - client_secret_post
+                scopes_supported:
+                - forms:read
+                - forms:write
+                service_documentation: https://getemboss.ai/docs/claude
+                token_endpoint: https://api.getemboss.ai/oauth/token
+                token_endpoint_auth_methods_supported:
+                - none
+                - client_secret_post
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /.well-known/oauth-protected-resource/mcp:
+    get:
+      summary: Get the connector's OAuth resource metadata
+      description: 'Publish which authorization server protects Emboss''s MCP endpoint.
+
+
+        Returns the resource identifier and the authorization server a client
+
+        should use to get a token, plus the scopes Emboss''s MCP connector
+
+        supports. No authentication needed; this is standard OAuth
+
+        protected-resource metadata (RFC 9728).'
+      operationId: rs_metadata__well_known_oauth_protected_resource_mcp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                authorization_servers:
+                - https://api.getemboss.ai
+                bearer_methods_supported:
+                - header
+                resource: https://api.getemboss.ai/mcp
+                resource_documentation: https://getemboss.ai/docs/claude
+                resource_name: Emboss
+                scopes_supported:
+                - forms:read
+                - forms:write
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /oauth/register:
+    post:
+      summary: Register an OAuth client
+      description: 'Register a new OAuth client app with Emboss (dynamic client
+
+        registration, RFC 7591).
+
+
+        Send the app''s name, redirect URIs, and how it authenticates. Returns a
+
+        client_id (and a client_secret, if the app authenticates with one) to
+
+        use in the authorize and token calls that follow. No prior credential
+
+        needed; this is how a new integration gets one.'
+      operationId: register_oauth_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                client_name:
+                  type: string
+                redirect_uris:
+                  items:
+                    type: string
+                  type: array
+                grant_types:
+                  items:
+                    type: string
+                  type: array
+                response_types:
+                  items:
+                    type: string
+                  type: array
+                token_endpoint_auth_method:
+                  type: string
+              type: object
+              required:
+              - redirect_uris
+            example:
+              client_name: Example Agent
+              grant_types:
+              - authorization_code
+              - refresh_token
+              redirect_uris:
+              - https://agent.example.com/oauth/callback
+              response_types:
+              - code
+              token_endpoint_auth_method: none
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                client_id: dcr_0123456789abcdef0123456789abcdef
+                client_name: Example Agent
+                grant_types:
+                - authorization_code
+                - refresh_token
+                redirect_uris:
+                - https://agent.example.com/oauth/callback
+                response_types:
+                - code
+                token_endpoint_auth_method: none
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+  /oauth/authorize:
+    get:
+      summary: Start an OAuth sign-in
+      description: 'Start the sign-in and consent step of the OAuth flow.
+
+
+        A browser is sent here with the client''s client_id, redirect_uri, and a
+
+        PKCE code challenge, per standard OAuth 2.1 authorization-code flow.
+
+        Emboss redirects on to its own consent page for the user to approve,
+
+        then back to the client''s redirect_uri with an authorization code (or
+
+        an error) to exchange at POST /oauth/token.'
+      operationId: authorize_oauth_authorize_get
+      responses:
+        '302':
+          description: 'Redirect: to sign in and consent, or back to the client''s redirect_uri with code and state, or with an RFC 6749 section 4.1.2.1 error.'
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          description: 'An unknown client or an unregistered redirect address: an error page, never a redirect.'
+          content:
+            text/html:
+              schema:
+                type: string
+              example: <!doctype html><title>Emboss</title><main style='font-family:sans-serif;max-width:32rem;margin:4rem auto'><h1>Cannot continue</h1><p>Unknown client. Start again from your app.</p></main>
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /oauth/token:
+    post:
+      summary: Get an access token
+      description: 'Exchange an authorization code, or a refresh token, for an access
+
+        token.
+
+
+        Send a form-encoded body with grant_type set to authorization_code
+
+        (with the code from /oauth/authorize and its PKCE verifier) or
+
+        refresh_token (with a token from a previous exchange). Returns a
+
+        bearer access_token plus a refresh_token to renew it once it expires.'
+      operationId: token_oauth_token_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - authorization_code
+                  - refresh_token
+                code:
+                  type: string
+                redirect_uri:
+                  type: string
+                code_verifier:
+                  type: string
+                refresh_token:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              type: object
+              required:
+              - grant_type
+            example:
+              client_id: dcr_0123456789abcdef0123456789abcdef
+              code: ac_EXAMPLEcode
+              code_verifier: EXAMPLEverifier0123456789abcdefghijklmnopqrstuv
+              grant_type: authorization_code
+              redirect_uri: https://agent.example.com/oauth/callback
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                access_token: at_EXAMPLEaccess
+                expires_in: 3600
+                refresh_token: rt_EXAMPLErefresh
+                scope: forms:read forms:write
+                token_type: Bearer
+        '400':
+          description: RFC 6749 section 5.2.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: invalid_grant
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+  /oauth/revoke:
+    post:
+      summary: Revoke a token
+      description: 'Revoke an access or refresh token, ending that sign-in (RFC 7009).
+
+
+        Send the token as a form field, authenticated as the client that
+
+        received it. Once revoked, the whole family of tokens it belongs to
+
+        stops working; a client should call this when a user disconnects the
+
+        integration.'
+      operationId: revoke_oauth_revoke_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                token:
+                  type: string
+                token_type_hint:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              type: object
+              required:
+              - token
+            example:
+              client_id: dcr_0123456789abcdef0123456789abcdef
+              token: rt_EXAMPLErefresh
+              token_type_hint: refresh_token
+        required: true
+      responses:
+        '200':
+          description: Revoked, or the token was already invalid; the body is empty (RFC 7009 section 2.2).
+        '401':
+          description: The client could not be authenticated (RFC 6749 section 5.2).
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: invalid_client
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+  /health:
+    get:
+      summary: Health
+      description: 'Liveness probe: confirms the process is up. Returns no backend or model
+
+        details (a deploy health check only needs a 200).'
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                status: ok
+      security: []
+      tags:
+      - Discovery
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms

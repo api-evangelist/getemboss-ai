@@ -1,0 +1,302 @@
+openapi: 3.2.0
+info:
+  title: Emboss Account API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Account
+  description: Keys, usage and account settings.
+paths:
+  /usage:
+    get:
+      summary: Get your usage
+      description: 'Report how much your account has used Emboss, this billing period and
+
+        all time.
+
+
+        Returns counts of forms created, fills run, and pages and context tokens
+
+        processed, broken out by period-to-date and lifetime totals. No input
+
+        needed beyond your API key.'
+      operationId: get_usage_usage_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageResponse'
+              example:
+                email: grace@example.com
+                owner: 11111111-2222-3333-4444-555555555555
+                period: 2026-09
+                period_context_pages:
+                  create: 0
+                  package: 0
+                  read: 0
+                  send_fax: 0
+                  standard_fill: 0
+                  utility: 0
+                  verify: 0
+                  with_context: 2
+                period_counts:
+                  create: 4
+                  package: 0
+                  read: 0
+                  send_fax: 1
+                  standard_fill: 6
+                  utility: 1
+                  verify: 2
+                  with_context: 1
+                period_ctx_tokens:
+                  create: 0
+                  package: 0
+                  read: 0
+                  send_fax: 0
+                  standard_fill: 0
+                  utility: 0
+                  verify: 0
+                  with_context: 500
+                period_pages:
+                  create: 10
+                  package: 0
+                  read: 0
+                  send_fax: 2
+                  standard_fill: 12
+                  utility: 2
+                  verify: 4
+                  with_context: 2
+                total:
+                  create: 12
+                  package: 0
+                  read: 1
+                  send_fax: 2
+                  standard_fill: 20
+                  utility: 4
+                  verify: 5
+                  with_context: 3
+                total_context_pages:
+                  create: 0
+                  package: 0
+                  read: 0
+                  send_fax: 0
+                  standard_fill: 0
+                  utility: 0
+                  verify: 0
+                  with_context: 6
+                total_ctx_tokens:
+                  create: 0
+                  package: 0
+                  read: 0
+                  send_fax: 0
+                  standard_fill: 0
+                  utility: 0
+                  verify: 0
+                  with_context: 1500
+                total_pages:
+                  create: 30
+                  package: 0
+                  read: 2
+                  send_fax: 4
+                  standard_fill: 40
+                  utility: 8
+                  verify: 10
+                  with_context: 6
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+      tags:
+      - Account
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
+components:
+  schemas:
+    UsageResponse:
+      properties:
+        owner:
+          type: string
+          title: Owner
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        period:
+          type: string
+          title: Period
+        total:
+          $ref: '#/components/schemas/UsageCounts'
+        period_counts:
+          $ref: '#/components/schemas/UsageCounts'
+        total_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        total_ctx_tokens:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_ctx_tokens:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        total_context_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+        period_context_pages:
+          $ref: '#/components/schemas/UsageCounts'
+          default:
+            create: 0
+            with_context: 0
+            standard_fill: 0
+            verify: 0
+            read: 0
+            package: 0
+            send_fax: 0
+            utility: 0
+      type: object
+      required:
+      - owner
+      - period
+      - total
+      - period_counts
+      title: UsageResponse
+    UsageCounts:
+      properties:
+        create:
+          type: integer
+          title: Create
+          default: 0
+        with_context:
+          type: integer
+          title: With Context
+          default: 0
+        standard_fill:
+          type: integer
+          title: Standard Fill
+          default: 0
+        verify:
+          type: integer
+          title: Verify
+          default: 0
+        read:
+          type: integer
+          title: Read
+          default: 0
+        package:
+          type: integer
+          title: Package
+          default: 0
+        send_fax:
+          type: integer
+          title: Send Fax
+          default: 0
+        utility:
+          type: integer
+          title: Utility
+          default: 0
+      type: object
+      title: UsageCounts
+      description: Per-kind counts. One field per kind in billing_math.USAGE_KINDS.
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms

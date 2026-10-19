@@ -1,7 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Fast Fax API
-  version: 0.1.0
+  title: Emboss Fax API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
 security:
 - bearer: []
 - oauth2:
@@ -9,28 +27,23 @@ security:
   - forms:write
 tags:
 - name: Fax
+  description: Send a document to a fax number and follow its delivery.
 paths:
   /fax:
     post:
-      summary: Send Fax
-      description: 'POST /fax: multipart (`to` + one or more PDF `files`, sent as one fax) or
-
-        JSON ({"to", then exactly one of "job_id", "form_id", "pdf_url",
-
-        "pdf_base64"}). JSON references resolve to the owner''s stored PDF through
-
-        service/fax_source.py; multipart bytes go straight to the fax service.
+      summary: Send a fax
+      description: 'Send a PDF to a fax number.
 
 
-        Honours Idempotency-Key (plan 2 task 5): a client-side retry with the same
+        Give the destination as `to` in E.164 form (for example +15035550100).
 
-        key replays the original job''s response instead of submitting a second
+        Send the pages as uploaded PDF files, or as JSON naming exactly one of a
 
-        fax. Independent of (and in addition to) create_fax_job''s own artifact+
+        finished job, a form, a PDF URL or base64 bytes. The call answers 202 with
 
-        destination dedupe window, which catches a retry that used a fresh
+        a fax job to follow on GET /fax/{job_id}. Faxing is billed per transmitted
 
-        Idempotency-Key or none at all.'
+        page, and an account needs a payment method on file to send one. Send an Idempotency-Key header so a retry never sends the fax twice.'
       operationId: send_fax_fax_post
       requestBody:
         content:
@@ -50,6 +63,10 @@ paths:
               required:
               - to
               - files
+            example:
+              files:
+              - <the PDF to fax, sent as a file>
+              to: '+15025550123'
           application/json:
             schema:
               properties:
@@ -96,6 +113,9 @@ paths:
               required:
               - to
               description: Send exactly one of sources, artifact_id, job_id, form_id, pdf_url, or pdf_base64; it resolves to the caller's stored PDF.
+            example:
+              job_id: 77777777-8888-9999-aaaa-bbbbbbbbbbbb
+              to: '+15025550123'
         required: true
       responses:
         '202':
@@ -103,11 +123,114 @@ paths:
           content:
             application/json:
               schema: {}
+              example:
+                artifact_id: 22222222-3333-4444-5555-666666666666
+                destination_masked: +1502******23
+                job_id: cccccccc-dddd-eeee-ffff-000000000000
+                pages: 1
+                price_cents: 3
+                source_artifact_ids:
+                - 22222222-3333-4444-5555-666666666666
+                status: working
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '402':
+          description: No payment method on file, and the monthly free allowance is used up or the document is over the free page limit (a fax always needs a card). The body's detail carries code, message and billing_url.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail:
+                  billing_url: https://getemboss.ai/dashboard/billing
+                  code: card_required
+                  message: Sending a fax needs a payment method on file. Add one at https://getemboss.ai/dashboard/billing.
+        '429':
+          description: 'A limit refused the fax before anything was sent or charged: the account is paused after faxes that did not get through (code account_paused), the number is receiving too many faxes (code destination_busy), or too many fax requests came in a short time (code rate_limited). The body''s detail always carries code, message and retry_after (seconds to wait). An account pause and a busy number also carry until, when the limit ends; a pause also carries count and the masked numbers tried. Do not send again before until.'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail:
+                  code: account_paused
+                  message: Your last 3 faxes did not get through (11:47 UTC, 11:49 UTC, 12:02 UTC, to +1407******84). Faxing is paused until 12:32 UTC. Check the number with the recipient.
+                  retry_after: 1320
+                  until: '2026-10-16T12:32:00Z'
+                  count: 3
+                  numbers:
+                  - +1407******84
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+        '400':
+          description: The request was refused; the problem document's detail says why.
+          content:
+            application/problem+json:
+              schema:
+                type: object
+              example:
+                type: bad_request
+                title: Bad Request
+                status: 400
+                detail: the body is not valid JSON
       tags:
       - Fax
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:write
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        escalation:
+          human-in-the-loop: conditional
+          triggers:
+          - abnormal
+        x-abnormal: more than 10 faxes from one account within an hour
+        x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst does.
+        audit: required
+        x-billed:
+        - send_fax
   /fax/{job_id}:
     get:
-      summary: Get Fax
+      summary: Get a fax receipt
+      description: 'Check the delivery status of a sent fax.
+
+
+        Returns the job''s status, and once it has resolved, the delivery
+
+        receipt (or refund details, if the fax could not be delivered and was
+
+        refunded). A busy, unanswered or dropped call is retried automatically
+
+        up to three more times over about 17 minutes while the status stays
+
+        working; attempts, max_attempts and next_attempt_at say where it is,
+
+        and a failed or expired fax carries a plain failure_message.'
       operationId: get_fax_fax__job_id__get
       parameters:
       - name: job_id
@@ -123,14 +246,67 @@ paths:
           content:
             application/json:
               schema: {}
+              example:
+                artifact_id: 22222222-3333-4444-5555-666666666666
+                artifact_sha256: 285236fa25e49a62d43fffecac4f30a9799467fd0994db61bbbdb82fa9246925
+                attempts: 1
+                created_at: '2026-09-22T14:00:00+00:00'
+                delivered_at: '2026-09-22T14:02:00+00:00'
+                job_id: cccccccc-dddd-eeee-ffff-000000000000
+                max_attempts: 4
+                message: Delivered.
+                pages: 1
+                price:
+                  amount: '0.03'
+                  currency: USD
+                provider: telnyx
+                status: delivered
+                submitted_at: '2026-09-22T14:00:00+00:00'
+                to_masked: +1502******23
+                type: emboss.fax.receipt
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
       tags:
       - Fax
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
 components:
   schemas:
     ValidationError:

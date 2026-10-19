@@ -1,7 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Fast Artifacts API
-  version: 0.1.0
+  title: Emboss Artifacts API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
 security:
 - bearer: []
 - oauth2:
@@ -9,10 +27,23 @@ security:
   - forms:write
 tags:
 - name: Artifacts
+  description: Fetch and manage the files a job produced.
 paths:
   /artifacts/{artifact_id}:
     get:
-      summary: Get Artifact
+      summary: Get an artifact
+      description: 'Look up a file Emboss produced or was given, by its artifact id.
+
+
+        Returns the file''s kind, size, and hash, and the one-hop lineage
+
+        showing what operation produced it, what inputs that operation used,
+
+        and what later operations used it. Owned artifacts need your account''s
+
+        credential; anonymous ones need the token issued alongside them.
+
+        Fetch the bytes themselves from GET /artifacts/{artifact_id}/content.'
       operationId: get_artifact_artifacts__artifact_id__get
       parameters:
       - name: artifact_id
@@ -27,17 +58,87 @@ paths:
           content:
             application/json:
               schema: {}
+              example:
+                artifact_id: 22222222-3333-4444-5555-666666666666
+                created_at: '2026-09-10T14:32:05+00:00'
+                inputs:
+                - artifact_id: 33333333-4444-5555-6666-777777777777
+                  kind: source_pdf
+                  position: null
+                  role: source
+                kind: fillable_pdf
+                mime_type: application/pdf
+                page_count: 1
+                produced_by:
+                  op_id: 11111111-2222-3333-4444-555555555555
+                  op_kind: form
+                  position: null
+                  role: fillable
+                  skill: make_fillable
+                  status: completed
+                sha256: 285236fa25e49a62d43fffecac4f30a9799467fd0994db61bbbdb82fa9246925
+                size_bytes: 184320
+                status: available
+                swept_at: null
+                used_by: []
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
       tags:
       - Artifacts
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
   /artifacts/{artifact_id}/content:
     get:
-      summary: Get Artifact Content
+      summary: Download an artifact
+      description: 'Download the file an artifact holds.
+
+
+        Returns the bytes as an attachment with the artifact''s own file type, for
+
+        example the filled PDF a job produced. Account callers are recognised by
+
+        their key; an anonymous caller must send the artifact token issued with
+
+        it, as ?token= or an X-Artifact-Token header. Answers 410 once the file
+
+        has been deleted under the retention policy.'
       operationId: get_artifact_content_artifacts__artifact_id__content_get
       parameters:
       - name: artifact_id
@@ -48,18 +149,121 @@ paths:
           title: Artifact Id
       responses:
         '200':
-          description: Successful Response
+          description: The stored file, served as its own type.
           content:
-            application/json:
-              schema: {}
+            application/pdf: {}
+            image/png: {}
+            image/jpeg: {}
+            application/json: {}
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+            application/problem+json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+                status: 410
+                title: Gone
+                type: gone
       tags:
       - Artifacts
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
+  /d/{token}:
+    get:
+      summary: Download by link
+      description: 'Download a file using a temporary link token, no API key required.
+
+
+        These short-lived links are handed out alongside a job''s result (for
+
+        example so a web page can offer a direct download) and can be reused
+
+        until they expire. Answers 404 once the link has expired or is
+
+        unknown.'
+      operationId: redeem_d__token__get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: The file.
+          content:
+            application/pdf: {}
+            application/zip: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '404':
+          description: The download link has expired or never existed.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: link expired or unknown
+      security: []
+      tags:
+      - Artifacts
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
 components:
   schemas:
     ValidationError:

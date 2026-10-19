@@ -1,0 +1,280 @@
+openapi: 3.2.0
+info:
+  title: Emboss Administration API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Administration
+  description: Server-to-server maintenance endpoints, not part of the caller-facing API.
+paths:
+  /app/login:
+    post:
+      summary: Sign in to the app
+      description: Sign in to the Emboss app with an email and password. Returns an access token and a refresh token for the app's own calls.
+      operationId: app_login_app_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppLoginRequest'
+            example:
+              device_label: Grace's iPhone
+              email: grace@example.com
+              password: <your account password>
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                access_token: at_EXAMPLEaccess
+                email: grace@example.com
+                expires_in: 3600
+                owner: 12345678-90ab-cdef-1234-567890abcdef
+                refresh_token: rt_EXAMPLErefresh
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Administration
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+  /app/refresh:
+    post:
+      summary: Refresh an app sign-in
+      description: Swap a refresh token for a fresh access token and refresh token. The old refresh token stops working.
+      operationId: app_refresh_app_refresh_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppRefreshRequest'
+            example:
+              refresh_token: rt_EXAMPLErefresh
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                access_token: at_EXAMPLEaccess2
+                expires_in: 3600
+                refresh_token: rt_EXAMPLErefresh2
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Administration
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+  /app/logout:
+    post:
+      summary: Sign out of the app
+      description: 'Sign this device out of the app: its refresh token, and every token renewed from it, stop working.'
+      operationId: app_logout_app_logout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppLogoutRequest'
+            example:
+              refresh_token: rt_EXAMPLErefresh2
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                ok: true
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Administration
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+  /stripe/webhook:
+    post:
+      summary: Receive card payment events
+      description: Card payment events from Stripe, Emboss's card processor. Verified by Stripe's signature; not a call for API users.
+      operationId: stripe_webhook_stripe_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                received: true
+      security: []
+      tags:
+      - Administration
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+  /webhooks/fax:
+    post:
+      summary: Receive fax delivery events
+      description: Fax delivery events from the fax carrier. Verified by the carrier's signature; not a call for API users.
+      operationId: fax_webhook_webhooks_fax_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                received: true
+      security: []
+      tags:
+      - Administration
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AppLoginRequest:
+      properties:
+        email:
+          type: string
+          title: Email
+        password:
+          type: string
+          title: Password
+        device_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Device Label
+      type: object
+      required:
+      - email
+      - password
+      title: AppLoginRequest
+    AppLogoutRequest:
+      properties:
+        refresh_token:
+          type: string
+          title: Refresh Token
+      type: object
+      required:
+      - refresh_token
+      title: AppLogoutRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppRefreshRequest:
+      properties:
+        refresh_token:
+          type: string
+          title: Refresh Token
+      type: object
+      required:
+      - refresh_token
+      title: AppRefreshRequest
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms

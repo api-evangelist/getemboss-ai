@@ -1,0 +1,602 @@
+openapi: 3.2.0
+info:
+  title: Emboss Pay per call API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Pay per call
+  description: 'The anonymous pay-per-call API: quote a job and pay for it without an account.'
+paths:
+  /pay:
+    get:
+      summary: List the pay-per-call operations
+      description: A small JSON index of the pay-per-call operations and their documentation.
+      operationId: pay_index_pay_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                methods:
+                - tempo
+                - stripe
+                ops:
+                  fax:
+                    description: 'Send a PDF to a fax number and track delivery, priced per transmitted page. Input: a PDF file and a destination fax number in E.164 form. Card payments have a 0.50 minimum, stablecoins pay the exact price.'
+                    skill: send_fax
+                  fill:
+                    description: 'Fill a PDF form from structured data such as JSON or key-value answers. Input: a PDF file plus a values JSON object mapping field names to answers.'
+                    skill: fill_form
+                  fill-with-context:
+                    description: 'Fill a PDF form using facts found in supporting documents. Input: a PDF file plus one or more context files and/or context_text/context_urls.'
+                    skill: fill_from_context
+                  make-fillable:
+                    description: 'Turn a flat or scanned PDF form into a fillable PDF with detected fields. Input: a PDF file.'
+                    skill: make_fillable
+                  read:
+                    description: 'Read the values out of a filled PDF form, labelled by field, with a completeness verdict when the form is known. Input: a filled PDF file.'
+                    skill: read_form
+                realm: api.getemboss.ai
+      security: []
+      tags:
+      - Pay per call
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /pay/openapi.json:
+    get:
+      summary: Get the pay-per-call API description
+      description: 'The pay-per-call API''s own description: every operation, its price and how to pay.'
+      operationId: pay_openapi_manifest_pay_openapi_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                info:
+                  title: Emboss
+                  version: 1.1.0
+                openapi: 3.1.0
+                paths:
+                  /pay/fill:
+                    post:
+                      operationId: pay_fill
+                servers:
+                - url: https://api.getemboss.ai
+      security: []
+      tags:
+      - Pay per call
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /pay/llms.txt:
+    get:
+      summary: Get the pay-per-call guide for AI readers
+      description: Floor-plus-pointer llms.txt for the pay-per-call API (from-prices + links).
+      operationId: pay_llms_txt_pay_llms_txt_get
+      responses:
+        '200':
+          description: Plain text.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: '# Emboss pay-per-call (MPP)
+
+
+                Agents pay Emboss per operation over HTTP using the Machine Payments Protocol (MPP). No account. Send the request, get a 402 with a payment challenge, pay, resend with the credential, get a 202 with a job to poll.
+
+                '
+      security: []
+      tags:
+      - Pay per call
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /pay/pricing:
+    get:
+      summary: Get the pay-per-call price list
+      description: The public price list beside /pay/quote; same body as GET /pricing.
+      operationId: pay_pricing_alias_pay_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                currency: usd
+                door:
+                  fax:
+                    ceiling_cents: 300
+                    floor_cents: 3
+                  fill:
+                    ceiling_cents: 102
+                    floor_cents: 7
+                  fill-with-context:
+                    ceiling_cents: 1293
+                    floor_cents: 8
+                  make-fillable:
+                    ceiling_cents: 100
+                    floor_cents: 5
+                  read:
+                    ceiling_cents: 1
+                    floor_cents: 1
+                effective: '2026-09-07'
+                free_page_cap: 5
+                kinds:
+                  create:
+                    cap_pages: 5
+                    flat_cents: 5
+                    free_per_month: 5
+                    overage_per_page_cents: 1
+                  package:
+                    cap_pages: null
+                    flat_cents: 2
+                    free_per_month: 5
+                    overage_per_page_cents: 0
+                  read:
+                    cap_pages: null
+                    flat_cents: 1
+                    free_per_month: 5
+                    overage_per_page_cents: 0
+                  send_fax:
+                    cap_pages: 0
+                    flat_cents: 0
+                    free_per_month: 0
+                    overage_per_page_cents: 3
+                  standard_fill:
+                    cap_pages: null
+                    flat_cents: 2
+                    free_per_month: 5
+                    overage_per_page_cents: 0
+                  verify:
+                    cap_pages: 5
+                    flat_cents: 1
+                    free_per_month: 5
+                    overage_per_page_cents: 1
+                  with_context:
+                    cap_pages: 5
+                    flat_cents: 3
+                    free_per_month: 5
+                    overage_per_page_cents: 2
+                pay_per_call:
+                  card_minimum_cents: 50
+                  fax_card_refunds_per_day: 3
+      security: []
+      tags:
+      - Pay per call
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /pay/quote:
+    post:
+      summary: Price a pay-per-call request
+      description: 'Free, stateless inspect-before-pay: page count, whether the PDF is
+
+        already fillable, and the exact price of every op for THIS PDF, computed
+
+        with the same engine function the 402 uses. No quote row, no staging.
+
+        Shares the per-IP quote throttle with the 402 path.'
+      operationId: pay_quote_pay_quote_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_pay_quote_pay_quote_post'
+            example:
+              context_text: Grace Hopper, born 9 December 1906, 1 Navy Way, Arlington, VA 22202.
+              file: <the PDF form, sent as a file>
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                already_fillable: false
+                card_minimum_usd: '0.50'
+                context_pages: 1
+                expires: null
+                methods:
+                - tempo
+                - stripe
+                - x402
+                next: POST /pay/<op> with the same file. The 402 challenge carries this exact price.
+                pages: 1
+                prices:
+                  fax:
+                    atomic: '30000'
+                    cents: 3
+                    usd: '0.03'
+                  fill:
+                    atomic: '70000'
+                    cents: 7
+                    usd: '0.07'
+                  fill-with-context:
+                    atomic: '80000'
+                    cents: 8
+                    usd: '0.08'
+                  make-fillable:
+                    atomic: '50000'
+                    cents: 5
+                    usd: '0.05'
+                  read:
+                    atomic: '10000'
+                    cents: 1
+                    usd: '0.01'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Pay per call
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+  /pay/{op}:
+    post:
+      summary: Run a pay-per-call operation
+      description: 'Run one Emboss job and pay for it on the call itself, with no account.
+
+
+        This is the pay-per-call API: no account. Send the PDF and whatever that
+
+        job needs, as multipart form data or as a JSON body, naming the job in the
+
+        URL: one of make-fillable, fill, fill-with-context, read or fax. With no
+
+        payment attached the call answers 402 Payment Required and quotes a price
+
+        for this specific document, payable by card or by stablecoin; the 402
+
+        already carries the job''s job_id and status_url. Send the call again
+
+        carrying the payment and it answers 202 Accepted within about 10 seconds
+
+        with the job''s status: ready, working (check status_url, which is free,
+
+        every few seconds until it is ready or failed) or failed. For a fax, ready
+
+        means the carrier accepted it; keep checking until result.status is
+
+        delivered, failed or expired. A failed job runs again at no charge when
+
+        the same request is resent with the same payment (with MPP, only while
+
+        its payment challenge is valid), up to three runs in all.
+
+
+        Every call costs money, priced per job from the document you send, so the
+
+        page count and the context you attach change the price. Nothing here is
+
+        billed to an account, because there is no account: the payment on the call
+
+        is the whole arrangement. To see a price before committing to it, POST the
+
+        document to /pay/quote, which is free and prices every job for that exact
+
+        PDF without running anything or storing it.'
+      operationId: pay_pay__op__post
+      parameters:
+      - name: op
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Op
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_pay_pay__op__post'
+            example:
+              file: <the PDF form, sent as a file>
+              values: '{"Full Name": "Grace Hopper"}'
+      responses:
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '202':
+          description: 'Paid: the job runs; follow status_url.'
+          content:
+            application/json:
+              schema: {}
+              example:
+                job_id: eeeeeeee-ffff-0000-1111-222222222222
+                poll_after_seconds: 3
+                quote_id: eeeeeeee-ffff-0000-1111-222222222222
+                status: working
+                status_url: https://api.getemboss.ai/pay/jobs/eeeeeeee-ffff-0000-1111-222222222222?token=EXAMPLE
+        '402':
+          description: The price, as an RFC 9457 problem and a Payment challenge.
+          content:
+            application/problem+json:
+              schema:
+                type: object
+              example:
+                detail: Payment required for this operation.
+                job_id: eeeeeeee-ffff-0000-1111-222222222222
+                status: 402
+                status_url: https://api.getemboss.ai/pay/jobs/eeeeeeee-ffff-0000-1111-222222222222?token=EXAMPLE
+                title: Payment Required
+                type: https://paymentauth.org/problems/payment-required
+      security: []
+      tags:
+      - Pay per call
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        x-authorization: per-call-payment
+        escalation:
+          human-in-the-loop: conditional
+          triggers:
+          - abnormal
+        x-abnormal: more than 10 faxes from one account within an hour
+        x-curation-reason: Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst does.
+        audit: required
+  /pay/jobs/{job_id}:
+    get:
+      summary: Get a pay-per-call job
+      description: 'Check on a paid job, free: the job''s status in one plain word.
+
+
+        status is awaiting_payment (priced, not yet paid), working (still running:
+
+        check again after poll_after_seconds, also sent as Retry-After), ready
+
+        (result carries the output and, for a job that produces a file, a download
+
+        link that stays the same on every check), failed (error says why; retry,
+
+        when present, says how to run it again at no charge) or expired (the
+
+        result''s files are deleted, about an hour after the job, or a price that
+
+        was never paid has expired). For a fax, ready means the carrier accepted
+
+        it; keep checking until result.status is delivered, failed or expired.
+
+        quote_status keeps the quote''s own older word. The 402 and the 202 both
+
+        carry this link, token included, as status_url.'
+      operationId: pay_job_status_pay_jobs__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Job Id
+      - name: token
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                job_id: eeeeeeee-ffff-0000-1111-222222222222
+                quote_id: eeeeeeee-ffff-0000-1111-222222222222
+                quote_status: executed
+                result:
+                  artifact_id: 99999999-aaaa-bbbb-cccc-dddddddddddd
+                  download_url: https://getemboss.ai/d/EXAMPLE
+                  files:
+                  - content_type: application/pdf
+                    name: building-permit-filled.pdf
+                    url: https://getemboss.ai/d/EXAMPLE
+                runs: 1
+                status: ready
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Pay per call
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: none
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_pay_quote_pay_quote_post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        context_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Text
+        context_urls:
+          items:
+            type: string
+          type: array
+          title: Context Urls
+          default: []
+        values:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Values
+      type: object
+      title: Body_pay_quote_pay_quote_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_pay_pay__op__post:
+      properties:
+        file:
+          anyOf:
+          - type: string
+            contentMediaType: application/octet-stream
+          - type: 'null'
+          title: File
+        context:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Context
+          default: []
+        context_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Text
+        context_urls:
+          items:
+            type: string
+          type: array
+          title: Context Urls
+          default: []
+        values:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Values
+        policy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Policy
+        mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mode
+        package:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package
+        to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: To
+      type: object
+      title: Body_pay_pay__op__post
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms

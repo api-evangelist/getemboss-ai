@@ -1,0 +1,1506 @@
+openapi: 3.2.0
+info:
+  title: Emboss Filling API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
+security:
+- bearer: []
+- oauth2:
+  - forms:read
+  - forms:write
+tags:
+- name: Filling
+  description: Fill a form from values or from documents, in one call or as a proposal you commit.
+paths:
+  /sessions:
+    post:
+      summary: Start a session
+      description: 'Start a session for filling one form field by field.
+
+
+        Send the form_id of a ready form. Returns a session_id along with the
+
+        form''s starting state and the list of required fields still missing a
+
+        value. Use PUT /sessions/{sid}/fields to set values as you collect them,
+
+        then POST /sessions/{sid}/fill to render the finished PDF.'
+      operationId: create_session_sessions_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionCreate'
+            example:
+              form_id: 11111111-2222-3333-4444-555555555555
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                form_state:
+                  fields:
+                    '1':
+                      candidates: []
+                      confidence: null
+                      evidence: []
+                      history: []
+                      invalid_reason: null
+                      note: null
+                      origin: null
+                      reoffered: false
+                      source: null
+                      status: unfilled
+                      value: null
+                  turn_count: 0
+                missing:
+                - 1
+                next_prompt: null
+                pending_confirmation: []
+                session_id: 88888888-9999-aaaa-bbbb-cccccccccccc
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+        '400':
+          description: form_id is not a UUID.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: form_id must be a UUID
+        '404':
+          description: No such form, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: form not found
+        '409':
+          description: The form is not ready yet.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: form not ready
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:write
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: required
+  /sessions/{sid}:
+    get:
+      summary: Get a session
+      description: 'Read back a session''s current state.
+
+
+        Returns the session''s status and the values collected on it so far, so a
+
+        caller can resume a session it started earlier instead of tracking
+
+        field values itself.'
+      operationId: get_session_sessions__sid__get
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                artifact_id: null
+                artifacts: []
+                form_state:
+                  fields:
+                    '1':
+                      candidates: []
+                      confidence: high
+                      evidence: []
+                      history:
+                      - status: filled
+                        turn: 1
+                        value: Grace Hopper
+                      - status: confirmed
+                        turn: 1
+                        value: Grace Hopper
+                      invalid_reason: null
+                      note: null
+                      origin: caller
+                      reoffered: false
+                      source: direct
+                      status: confirmed
+                      value: Grace Hopper
+                  turn_count: 1
+                session_id: 88888888-9999-aaaa-bbbb-cccccccccccc
+                status: active
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
+  /sessions/{sid}/fields:
+    put:
+      summary: Set field values
+      description: 'Set or update values on a session''s fields.
+
+
+        Send a list of field_id/value pairs. Returns the session''s full updated
+
+        state plus the list of fields this call actually applied. Values for
+
+        fields that do not exist on the form are rejected with a 422 naming
+
+        the bad field_ids, and nothing in the request is applied.'
+      operationId: put_fields_sessions__sid__fields_put
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldsRequest'
+            example:
+              updates:
+              - field_id: 1
+                value: Grace Hopper
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                applied:
+                - 1
+                form_state:
+                  fields:
+                    '1':
+                      candidates: []
+                      confidence: high
+                      evidence: []
+                      history:
+                      - status: filled
+                        turn: 1
+                        value: Grace Hopper
+                      - status: confirmed
+                        turn: 1
+                        value: Grace Hopper
+                      invalid_reason: null
+                      note: null
+                      origin: caller
+                      reoffered: false
+                      source: direct
+                      status: confirmed
+                      value: Grace Hopper
+                  turn_count: 1
+                session_id: 88888888-9999-aaaa-bbbb-cccccccccccc
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+        '409':
+          description: 'The session is completed: its PDF was rendered, by a fill or a commit.'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: session already completed
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:write
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: required
+  /sessions/{sid}/fill:
+    post:
+      summary: Render the filled PDF
+      description: 'Render a session''s collected values onto the form''s PDF.
+
+
+        Fills in every value set on the session so far and marks it completed.
+
+        This is the billed step; setting field values with PUT
+
+        /sessions/{sid}/fields is free. Once complete, fetch the PDF with
+
+        GET /sessions/{sid}/pdf.'
+      operationId: fill_sessions__sid__fill_post
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                artifact_id: 99999999-aaaa-bbbb-cccc-dddddddddddd
+                artifacts:
+                - artifact_id: 99999999-aaaa-bbbb-cccc-dddddddddddd
+                  mime_type: application/pdf
+                  role: filled
+                session_id: 88888888-9999-aaaa-bbbb-cccccccccccc
+                status: completed
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+        '402':
+          description: No payment method on file, and the monthly free allowance is used up or the document is over the free page limit (a fax always needs a card). The body's detail carries code, message and billing_url.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail:
+                  code: over_free_tier
+                  billing_url: https://getemboss.ai/dashboard/billing
+                  message: You are over the free tier. Add a payment method at https://getemboss.ai/dashboard/billing to continue.
+        '429':
+          description: Too many calls that start work this clock hour for this API key; the count resets on the hour.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: rate limit exceeded
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+        '409':
+          description: 'The session is completed: its PDF was rendered, by a fill or a commit.'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: session already completed
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:write
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: required
+        x-billed:
+        - standard_fill
+  /sessions/{sid}/pdf:
+    get:
+      summary: Download the filled PDF
+      description: 'Download a session''s filled PDF.
+
+
+        Streams the filled PDF. A session started with POST /sessions downloads
+
+        once POST /sessions/{sid}/fill, the billed step, has filled it; before
+
+        that this answers 409 with code not_filled. A session a fill from
+
+        documents produced is rendered on demand at no extra charge, because
+
+        that fill was already charged.'
+      operationId: session_pdf_sessions__sid__pdf_get
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sid
+      responses:
+        '200':
+          description: The file.
+          content:
+            application/pdf: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: filled PDF not available
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+        '409':
+          description: 'The session has not been filled yet: fill it with POST /sessions/{sid}/fill, the billed step, then download it.'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail:
+                  code: not_filled
+                  message: This session has not been filled yet. Fill it with POST /sessions/9b1c0e2a-4d6f-4a8b-9c1d-2e3f4a5b6c7d/fill, which is the billed step, then download it.
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
+  /proposals/{proposal_id}/commit:
+    post:
+      summary: Commit a proposal
+      description: 'Turn a proposal into a finished, filled PDF. A proposal is the set of
+
+        candidate values a prepare-from-context call left on a form, not yet
+
+        committed to paper.
+
+
+        Send corrected values and confirmed field ids as JSON only; this call
+
+        does not accept files, so attach any new documents first on the
+
+        attachments route. A commit is free unless package is true, which an
+
+        account is billed for as one package. A proposal takes up to 10 commits,
+
+        and each runs in the background, so poll GET /forms/with-context/{job_id}
+
+        for the result or fetch the finished PDF from GET /proposals/{proposal_id}/pdf.
+
+
+        Checkboxes take yes or no; yes ticks that box. In a Yes/No pair, say yes
+
+        to the box you want; two yeses in one pair are refused.'
+      operationId: commit_proposals__proposal_id__commit_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextJobCreated'
+              example:
+                job_id: 77777777-8888-9999-aaaa-bbbbbbbbbbbb
+                status: processing
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+        '402':
+          description: No payment method on file, and the monthly free allowance is used up or the document is over the free page limit (a fax always needs a card). The body's detail carries code, message and billing_url.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail:
+                  code: over_free_tier
+                  billing_url: https://getemboss.ai/dashboard/billing
+                  message: You are over the free tier. Add a payment method at https://getemboss.ai/dashboard/billing to continue.
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+        '400':
+          description: The request was refused; the problem document's detail says why.
+          content:
+            application/problem+json:
+              schema:
+                type: object
+              example:
+                type: https://paymentauth.org/problems/bad-request
+                title: Bad Request
+                status: 400
+                detail: body must be JSON
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $defs:
+                CommitValue:
+                  description: 'One caller decision. A null value SKIPS the field (a deliberate blank),
+
+                    which is not the same as omitting it (leave whatever the proposal holds).'
+                  properties:
+                    field_id:
+                      title: Field Id
+                      type: integer
+                    value:
+                      title: Value
+                    note:
+                      anyOf:
+                      - type: string
+                      - type: 'null'
+                      title: Note
+                  required:
+                  - field_id
+                  title: CommitValue
+                  type: object
+              properties:
+                values:
+                  default: []
+                  items:
+                    $ref: '#/$defs/CommitValue'
+                  title: Values
+                  type: array
+                confirm:
+                  default: []
+                  items:
+                    type: integer
+                  title: Confirm
+                  type: array
+                policy:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Policy
+                idempotency_key:
+                  anyOf:
+                  - type: string
+                  - type: 'null'
+                  title: Idempotency Key
+                package:
+                  default: false
+                  title: Package
+                  type: boolean
+              title: CommitRequest
+              type: object
+            example:
+              confirm:
+              - 2
+              idempotency_key: null
+              package: false
+              policy: safe
+              values:
+              - field_id: 1
+                note: null
+                value: Grace Hopper
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:write
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: required
+        x-billed:
+        - package
+  /proposals/{proposal_id}:
+    get:
+      summary: Read a proposal
+      description: 'Get one proposal, readable by the account that owns it or by an
+
+        anonymous payer on the pay-per-call API holding the token minted for this
+
+        proposal.
+
+
+        A payer''s response echoes that token back as commit_token, the
+
+        credential to send when committing. An owner never sees that field:
+
+        their API key is already proof enough.'
+      operationId: get_proposal_proposals__proposal_id__get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProposalResponse'
+              example:
+                artifacts:
+                - artifact_id: 99999999-aaaa-bbbb-cccc-dddddddddddd
+                  mime_type: application/pdf
+                  role: package
+                attachments: []
+                commit_token: null
+                confirmations:
+                - confidence: low
+                  evidence:
+                  - document_id: d1
+                    document_name: source.pdf
+                    location: born December 9, 1906
+                    method: quote_check
+                    page: 1
+                    text_hash: null
+                  field_id: 2
+                  label: Date of Birth
+                  value: '1906-12-09'
+                error: null
+                expires_at: '2026-09-22T18:00:00+00:00'
+                fields:
+                - candidates: []
+                  confidence: high
+                  evidence:
+                  - document_id: d1
+                    document_name: source.pdf
+                    location: 'Name: Grace Hopper'
+                    method: quote_check
+                    page: 1
+                    text_hash: null
+                  field_id: 1
+                  label: Full Name
+                  origin: document
+                  required: true
+                  state: ready
+                  tiebreak: null
+                  value: Grace Hopper
+                - candidates:
+                  - confidence: low
+                    evidence:
+                    - document_id: d1
+                      document_name: source.pdf
+                      location: born December 9, 1906
+                      method: quote_check
+                      page: 1
+                      text_hash: null
+                    value: '1906-12-09'
+                  confidence: low
+                  evidence: []
+                  field_id: 2
+                  label: Date of Birth
+                  origin: null
+                  required: true
+                  state: needs_confirmation
+                  tiebreak: null
+                  value: null
+                form_id: 11111111-2222-3333-4444-555555555555
+                mode: two_call
+                package_url: https://getemboss.ai/d/EXAMPLE-LINK-TOKEN
+                policy: safe
+                proposal_id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+                questions: []
+                requirements:
+                  attachments: []
+                  signatures: []
+                status: committed
+                summary:
+                  conflict: 0
+                  invalid: 0
+                  missing: 0
+                  needs_confirmation: 1
+                  ready: 1
+                  required_unresolved: 1
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
+  /proposals/{proposal_id}/receipt:
+    get:
+      summary: Get the receipt
+      description: 'Get the receipt for a proposal''s most recent commit.
+
+
+        Returns the record of what was filled, confirmed, or left blank on the
+
+        latest commit of this proposal. Answers 404 if the proposal has not been
+
+        committed yet.'
+      operationId: receipt_proposals__proposal_id__receipt_get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                checks:
+                  fields: []
+                  summary:
+                    checked: 11
+                    cost: 0.0021
+                    doubted: 0
+                    ms: 480
+                    ran: true
+                commits:
+                - at: '2026-09-22T14:05:00+00:00'
+                  auto: false
+                  n: 1
+                  result: complete
+                  values_supplied: 1
+                contract:
+                  detector_version: ffdnet-l-2026-08
+                  schema_version: '1.0'
+                emboss_version: a1b2c3d4e5f6
+                fields:
+                - confidence: high
+                  evidence:
+                  - document_id: d1
+                    document_name: source.pdf
+                    location: 'Name: Grace Hopper'
+                    method: quote_check
+                    page: 1
+                    text_hash: null
+                  field_id: 1
+                  label: Full Name
+                  note: null
+                  origin: document
+                  state: ready
+                  value: Grace Hopper
+                files:
+                  filled_pdf:
+                    artifact_id: 99999999-aaaa-bbbb-cccc-dddddddddddd
+                    bytes: 184320
+                    name: filled.pdf
+                    sha256: 285236fa25e49a62d43fffecac4f30a9799467fd0994db61bbbdb82fa9246925
+                form_id: 11111111-2222-3333-4444-555555555555
+                mode: two_call
+                policy: safe
+                proposal_id: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+                receipt_version: '1'
+                requirements:
+                  attachments: []
+                  signatures: []
+                retention:
+                  documents_deleted_after: null
+                  policy: account_default
+                timestamps:
+                  committed_at: '2026-09-22T14:05:00+00:00'
+                  proposed_at: '2026-09-22T14:00:00+00:00'
+                  verified_at: '2026-09-22T14:05:02+00:00'
+                unresolved:
+                  attachments: []
+                  fields:
+                  - candidates:
+                    - confidence: low
+                      evidence:
+                      - document_id: d1
+                        document_name: source.pdf
+                        location: born December 9, 1906
+                        method: quote_check
+                        page: 1
+                        text_hash: null
+                      value: '1906-12-09'
+                    field_id: 2
+                    state: needs_confirmation
+                verification:
+                  adjustments: []
+                  checked_at: '2026-09-22T14:05:02+00:00'
+                  counts:
+                    fields: 12
+                    issues_blocking: 0
+                    issues_review: 0
+                    required_unfilled: 0
+                    written: 11
+                  issues: []
+                  result: complete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
+  /proposals/{proposal_id}/pdf:
+    get:
+      summary: Download a proposal's filled PDF
+      description: 'Download a proposal''s filled PDF.
+
+
+        Streams the document produced by the most recent commit on this
+
+        proposal. Answers 404 if the proposal has not been committed yet.'
+      operationId: commit_pdf_proposals__proposal_id__pdf_get
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      responses:
+        '200':
+          description: The file.
+          content:
+            application/pdf: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: no filled PDF yet for this proposal
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: connected
+        consequence: read
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:read
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: none
+  /proposals/{proposal_id}/attachments:
+    post:
+      summary: Attach a document
+      description: 'Attach a supporting document to a proposal before committing it.
+
+
+        Send the file, and optionally the requirement it satisfies in the `for`
+
+        field (one of the form''s named requirements). Sending the same `for`
+
+        again replaces the earlier attachment. Returns the attachment''s number,
+
+        filename, and size, for use when committing the proposal.'
+      operationId: add_attachment_proposals__proposal_id__attachments_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_add_attachment_proposals__proposal_id__attachments_post'
+            example:
+              file: <a PDF, PNG or JPEG, sent as a file>
+              for: Proof of insurance
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+              example:
+                artifact_id: bbbbbbbb-cccc-dddd-eeee-ffffffffffff
+                bytes: 48213
+                filename: insurance.pdf
+                for: Proof of insurance
+                n: 1
+                sha256: 9f2c41d79f2c41d79f2c41d79f2c41d79f2c41d79f2c41d79f2c41d79f2c41d7
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: not found
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:write
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: required
+  /proposals/{proposal_id}/attachments/{n}:
+    delete:
+      summary: Remove an attachment
+      description: 'Remove one attachment from a proposal by its number.
+
+
+        Deletes the stored file and its record. Answers 404 if no attachment
+
+        with that number exists on the proposal.'
+      operationId: remove_attachment_proposals__proposal_id__attachments__n__delete
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Proposal Id
+      - name: n
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: N
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: No credential, or an API key or access token that is unknown, revoked or turned off.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: invalid or revoked API key
+        '403':
+          description: An app connected over OAuth whose permission does not cover this call, or whose access was revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: This connection only has forms:read access; this call needs forms:write. Reconnect Emboss to allow it.
+        '404':
+          description: No such resource, or it belongs to another account.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: attachment not found
+        '410':
+          description: The form's documents were deleted under its retention policy.
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                detail: 'Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.'
+      tags:
+      - Filling
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: required
+        audience: https://api.getemboss.ai
+        scope:
+        - forms:write
+        token:
+          max-ttl: 3600
+          x-api-key-lifetime: until-revoked
+        audit: required
+components:
+  schemas:
+    FieldsRequest:
+      properties:
+        updates:
+          items:
+            $ref: '#/components/schemas/FieldUpdate'
+          type: array
+          title: Updates
+      type: object
+      required:
+      - updates
+      title: FieldsRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ContextJobCreated:
+      properties:
+        job_id:
+          type: string
+          title: Job Id
+        status:
+          type: string
+          title: Status
+          default: processing
+      type: object
+      required:
+      - job_id
+      title: ContextJobCreated
+    FieldUpdate:
+      properties:
+        field_id:
+          type: integer
+          title: Field Id
+        value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - field_id
+      - value
+      title: FieldUpdate
+    ProposalResponse:
+      properties:
+        proposal_id:
+          type: string
+          title: Proposal Id
+        form_id:
+          type: string
+          title: Form Id
+        status:
+          type: string
+          title: Status
+        policy:
+          type: string
+          title: Policy
+        mode:
+          type: string
+          title: Mode
+        expires_at:
+          type: string
+          title: Expires At
+        fields:
+          items: {}
+          type: array
+          title: Fields
+        questions:
+          items: {}
+          type: array
+          title: Questions
+        confirmations:
+          items: {}
+          type: array
+          title: Confirmations
+          default: []
+        requirements:
+          additionalProperties: true
+          type: object
+          title: Requirements
+        attachments:
+          items: {}
+          type: array
+          title: Attachments
+          default: []
+        summary:
+          additionalProperties: true
+          type: object
+          title: Summary
+        error:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Error
+        commit_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Commit Token
+        package_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Package Url
+        artifacts:
+          items: {}
+          type: array
+          title: Artifacts
+          default: []
+      type: object
+      required:
+      - proposal_id
+      - form_id
+      - status
+      - policy
+      - mode
+      - expires_at
+      - fields
+      - questions
+      - requirements
+      - summary
+      title: ProposalResponse
+      description: 'The agent-facing view of a proposal: per-field states with evidence, the
+
+        questions still worth asking, what the form needs beyond values, and counts.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_add_attachment_proposals__proposal_id__attachments_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+        for:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: For
+      type: object
+      required:
+      - file
+      title: Body_add_attachment_proposals__proposal_id__attachments_post
+    SessionCreate:
+      properties:
+        form_id:
+          type: string
+          title: Form Id
+      type: object
+      required:
+      - form_id
+      title: SessionCreate
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Emboss API key (sk_...)
+      description: An Emboss API key. See https://getemboss.ai/docs/authentication.
+    oauth2:
+      type: oauth2
+      description: Sign in with your Emboss account. See https://getemboss.ai/docs/authentication.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.getemboss.ai/oauth/authorize
+          tokenUrl: https://api.getemboss.ai/oauth/token
+          scopes:
+            forms:read: Read your forms
+            forms:write: Create and fill forms

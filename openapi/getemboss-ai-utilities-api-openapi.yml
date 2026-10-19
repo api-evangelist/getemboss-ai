@@ -1,7 +1,25 @@
 openapi: 3.2.0
 info:
-  title: Fast Utilities API
-  version: 0.1.0
+  title: Emboss Utilities API
+  summary: Turn a flat PDF into a fillable form, fill it, check it, and send it.
+  description: 'Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable form. Fill that form from structured values or from the documents that hold the answers, and Emboss proposes every answer with its source, says what is missing, and returns the finished PDF with a receipt. It also reads a filled form back into labelled values, fills one copy per spreadsheet row, packages a form with its attachments, and faxes the result. Pricing is per job in cents with a monthly free allowance.
+
+
+    The same engine answers on four interfaces: this REST API, a remote MCP server at /mcp, an A2A agent at /a2a, and an anonymous pay-per-call API at /pay whose own manifest is served at the origin root /openapi.json.
+
+
+    Documents are deleted 60 to 70 minutes after the last activity on a form under ephemeral processing.'
+  contact:
+    name: Emboss
+    url: https://getemboss.ai/
+    email: contact@getemboss.ai
+  license:
+    name: Emboss Terms of Service
+    url: https://getemboss.ai/terms
+  version: 1.0.0
+  x-agentic-access-contract: https://api.getemboss.ai/agentic-access.json
+servers:
+- url: https://api.getemboss.ai
 security:
 - bearer: []
 - oauth2:
@@ -9,6 +27,7 @@ security:
   - forms:write
 tags:
 - name: Utilities
+  description: 'Free PDF operations: compose, merge, split, reorder, rotate and inspect.'
 paths:
   /utilities/{skill}:
     post:
@@ -17,7 +36,7 @@ paths:
 
         merge_pdf, extract_pages, delete_pages, reorder_pages, rotate_pages,
 
-        inspect_pdf) synchronously against prior artifacts, returning the result
+        inspect_pdf, flatten_pdf) synchronously against prior artifacts, returning the result
 
         inline. Account callers authenticate with a Bearer key; anonymous callers
 
@@ -36,19 +55,49 @@ paths:
           content:
             application/json:
               schema: {}
+              example:
+                artifact_id: null
+                artifacts: []
+                operation_id: dddddddd-eeee-ffff-0000-111111111111
+                report:
+                  encrypted: false
+                  has_acroform: true
+                  has_annotations: false
+                  has_embedded_files: false
+                  has_javascript: false
+                  has_outlines: false
+                  mime_type: application/pdf
+                  page_info:
+                  - height_points: 792.0
+                    page: 1
+                    rotation: 0
+                    width_points: 612.0
+                  pages: 1
+                  pdf_version: PDF-1.7
+                  sha256: 285236fa25e49a62d43fffecac4f30a9799467fd0994db61bbbdb82fa9246925
+                  size_bytes: 184320
+                status: ready
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+            application/problem+json:
+              schema:
+                type: object
+              example:
+                detail: This PDF is digitally signed. Locking it would change the file and break the signature.
+                status: 422
+                title: Unprocessable Entity
+                type: pdf_signed
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              description: compose_pdf and merge_pdf take sources; extract_pages, delete_pages, rotate_pages, reorder_pages, and inspect_pdf take a single artifact_id (plus pages for extract_pages/delete_pages, order for reorder_pages, or rotations for rotate_pages).
+              description: compose_pdf and merge_pdf take sources; extract_pages, delete_pages, rotate_pages, reorder_pages, inspect_pdf, and flatten_pdf take a single artifact_id (plus pages for extract_pages/delete_pages, order for reorder_pages, or rotations for rotate_pages).
               properties:
                 sources:
                   type: array
@@ -77,7 +126,7 @@ paths:
                     - artifact_id
                 artifact_id:
                   type: string
-                  description: 'For the single-source skills (extract_pages, delete_pages, reorder_pages, rotate_pages, inspect_pdf): the artifact to operate on.'
+                  description: 'For the single-source skills (extract_pages, delete_pages, reorder_pages, rotate_pages, inspect_pdf, flatten_pdf): the artifact to operate on.'
                 artifact_token:
                   type: string
                   description: 'For pay-per-call callers, alongside artifact_id: the capability token for an anonymous artifact_id.'
@@ -104,9 +153,17 @@ paths:
                         - 90
                         - 180
                         - 270
+            example:
+              artifact_id: 22222222-3333-4444-5555-666666666666
       security: []
       tags:
       - Utilities
+      x-agentic-access:
+        action-class: acting
+        consequence: write
+        subject: optional
+        audience: https://api.getemboss.ai
+        audit: required
 components:
   schemas:
     ValidationError:
