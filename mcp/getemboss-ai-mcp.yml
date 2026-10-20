@@ -82,7 +82,7 @@ tool_schemas: tools/list is auth-gated, so the inputSchema of each tool was NOT 
   markdown twin at /docs/mcp-tools.md) and its plugin reference.md; the real inputSchema requires an authenticated
   introspection. The backing REST operation for each tool, whose OpenAPI parameters+requestBody ARE the
   real input contract, is in mcp/getemboss-ai-tool-crosswalk.yml.
-tool_count: 20
+tool_count: 28
 scopes:
   forms:read:
   - list_forms
@@ -108,10 +108,11 @@ scopes:
   - send_fax
 tools:
 - name: list_forms
+  description: 'Forms in the user''s Emboss library. state: ready (default), processing, failed, or all.
+    Paginate with cursor.'
   category: forms
   scope: forms:read
   billed: free
-  description: Forms already in the user's Emboss library.
   arguments:
     state: 'optional: ready (default), processing, failed, all'
     limit: optional, up to 50
@@ -120,169 +121,287 @@ tools:
   - forms
   - next_cursor
 - name: get_form
+  description: Status of one form. When ready, returns every field (id, label, kind, options, required)
+    and a download link for the fillable PDF.
   category: forms
   scope: forms:read
   billed: free
-  description: Status of one form; when ready, its field inventory, download_url and artifact_id.
   arguments:
     form_id: required
-- name: get_usage
-  category: account
-  scope: forms:read
-  billed: free
-  description: This month's usage, free operations remaining, and the billing page link.
-  arguments: {}
 - name: find_form
+  description: 'Find a blank government form in the Emboss library by name or number, ready to fill. Search
+    the library of blank US federal forms by name, number or alias (w9, W-9, form w 9 and taxpayer identification
+    all find the same form). Returns each match''s slug, title, agency, revision and page count. Send
+    the whole query once, and do not search as the user types: each search spends one of the account''s
+    rate-limit slots. Pass a slug as create_form''s library argument to start from that form. Free.'
   category: library
   scope: forms:read
   billed: free
-  description: Find a blank US federal form in the Emboss library by name, number or alias.
   arguments:
     query: required
+- name: get_usage
+  description: 'This month''s usage and how many free operations remain, plus the billing page link. It
+    also says whether a payment method is on file (payment_method_on_file) and whether the account can
+    send a fax today (fax_ready). Faxes need a payment method: check fax_ready before send_fax.'
+  category: account
+  scope: forms:read
+  billed: free
+  arguments: {}
 - name: create_form
+  description: 'Turn a flat or scanned PDF form into a fillable PDF with detected fields. Upload a PDF
+    (pdf_url: public https link, or pdf_base64) and detect its fields. Returns when detection finishes
+    (usually under two minutes). Give library=<slug> from find_form to start from a form Emboss already
+    keeps. Billed as one form creation; the first 5 each month are free. Optional retention: ephemeral
+    or account_default (default: the account''s own setting). Ephemeral processing: source and output
+    documents are deleted 60 to 70 minutes after the last activity on a form.'
   category: forms
   scope: forms:write
   billed: one form creation
-  description: Upload a PDF and detect its fields.
   arguments:
     pdf_url: exactly one of pdf_url / pdf_base64
     pdf_base64: exactly one of
     title: optional
 - name: delete_form
+  description: Permanently removes a form and its PDFs from the user's library.
   category: forms
   scope: forms:write
   billed: free
-  description: Permanently removes a form and its PDFs from the user's library. Only call when the user
-    explicitly asks.
   arguments:
     form_id: required
 - name: fill_form
+  description: 'Fill a PDF form from structured data such as JSON or key-value answers. Fill a ready form
+    with values keyed by field id or field label. Checkboxes take yes or no; choice fields need one of
+    their options. To lock the filled PDF, call flatten_pdf with its artifact_id; fill_form itself never
+    flattens. Returns a download link plus any labels that did not match (ask the user about those). Billed
+    as one fill; the first 5 each month are free. retention (ephemeral or account_default) is accepted
+    but changes nothing: the form keeps the setting it was created with.'
   category: fill
   scope: forms:write
   billed: one fill
-  description: Fill a ready form with values keyed by field id or label.
   arguments:
     form_id: required
     values: required
     flatten: reserved; passing true returns bad_request
 - name: fill_form_from_context
+  description: 'Fill a PDF form using facts found in supporting documents. Emboss reads the answers out
+    of context_text and/or context_urls (public https links to PDFs, Word, spreadsheets, images, or text)
+    and fills the form. Give form_id for a form already in the library, or pdf_url/pdf_base64 for a new
+    one. Give library=<slug> from find_form to start from a form Emboss already keeps. policy is safe
+    (write high and medium confidence) or strict (high only). Returns a job_id; poll get_job about every
+    20 seconds. Billed as one context fill; the first 5 each month are free. Optional retention: ephemeral
+    or account_default (default: the account''s own setting); it applies only when this call creates the
+    form (pdf_url, pdf_base64 or library), since an existing form keeps the setting it was created with.
+    Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity
+    on a form.'
   category: fill
   scope: forms:write
   billed: one context fill (plus one form creation if a new PDF is given)
-  description: Fill a form using answers pulled out of documents or notes; returns a job_id to poll with
-    get_job.
   arguments:
     form_id: or pdf_url/pdf_base64
     context_text: optional
     context_urls: optional, up to 5
 - name: prepare_form
+  description: 'Prepare a form from documents: a proposal of every answer with its source, what is missing,
+    and where documents disagree, before writing, plus attachments for a package. Same inputs as fill_form_from_context
+    (form_id for a form already in the library, or pdf_url/pdf_base64 for a new one, plus context_text
+    and/or context_urls), but nothing is written into the PDF: read the proposal, answer what is missing,
+    then commit. policy is safe (write high and medium confidence) or strict (high only). Returns a job_id
+    and a proposal_id; poll get_job about every 20 seconds. Billed as one context fill; the first 5 each
+    month are free. Optional retention: ephemeral or account_default (default: the account''s own setting);
+    it applies only when this call creates the form (pdf_url, pdf_base64 or library), since an existing
+    form keeps the setting it was created with. Ephemeral processing: source and output documents are
+    deleted 60 to 70 minutes after the last activity on a form.'
   category: proposal
   scope: forms:write
   billed: one context fill (plus one form creation if a new PDF is given)
-  description: Propose a fill without writing anything into the PDF; returns job_id and proposal_id.
   arguments:
     form_id: or pdf_url/pdf_base64
     context_text: optional
     context_urls: optional
     policy: 'optional: safe (default) | strict'
-- name: get_proposal
-  category: proposal
-  scope: forms:read
-  billed: free
-  description: Read a proposal — every field's state, candidate values with evidence, and open questions.
-  arguments:
-    proposal_id: required
-- name: commit_proposal
-  category: proposal
-  scope: forms:write
-  billed: free within the proposal's already-billed prepare (up to 10 commits); one package if package
-    is true
-  description: Write a proposal into the PDF, render it, check it, and return a receipt (optionally a
-    submission package).
-  arguments:
-    proposal_id: required
-    confirm: optional
-    values: optional
-    policy: optional
-    package: optional, default false
-- name: verify_form
-  category: verification
-  scope: forms:write
-  billed: one verify
-  description: Check a filled PDF against a form's contract. No model call.
-  arguments:
-    form_id: required
-    pdf_url: exactly one of pdf_url / pdf_base64
-    pdf_base64: exactly one of
-- name: read_form
-  category: read-back
-  scope: forms:write
-  billed: one read
-  description: Read a filled PDF's values back out, labelled, without storing the file.
-  arguments:
-    pdf_url: exactly one of pdf_url / pdf_base64
-    pdf_base64: exactly one of
-    form_id: optional
-- name: send_fax
-  category: fax
-  scope: forms:write
-  billed: per transmitted page, at delivery; a failed fax is not charged
-  description: Send a PDF to a fax number (E.164; US, Canada, Mexico) and get a job id back at once.
-  arguments:
-    to: required
-    artifact_id: exactly one of artifact_id / sources / job_id / form_id / pdf_url / pdf_base64
-  dedupe: A repeated fax of the same artifact to the same destination within ten minutes returns the same
-    job with deduplicated true.
-- name: get_fax
-  category: fax
-  scope: forms:read
-  billed: free
-  description: Delivery status and receipt of a send_fax job.
-  arguments:
-    job_id: required
-- name: add_attachment
-  category: proposal
-  scope: forms:write
-  billed: free
-  description: Attach a supporting document (PDF, PNG, JPEG) to a proposal before commit.
-  arguments:
-    proposal_id: required
-    file_url: exactly one of file_url / file_base64
-    file_base64: exactly one of
-    requirement: optional
 - name: get_job
+  description: Status of a fill_form_from_context, prepare_form, or commit_proposal job. When ready, returns
+    the download link, how many fields were filled, and for a commit, the result, receipt_url and, when
+    one was asked for, package_url.
   category: jobs
   scope: forms:read
   billed: free
-  description: Status of a fill_form_from_context, prepare_form, or commit_proposal job.
   arguments:
     job_id: required
 - name: suggest_mapping
+  description: Propose which spreadsheet columns fill which PDF form fields. Given a CSV (csv_text or
+    csv_url), proposes which column fills which field. Only the header row matters. Billed as one context
+    fill (5 free each month).
   category: batch
   scope: forms:write
   billed: one context fill
-  description: Propose which spreadsheet column fills which form field.
   arguments:
     form_id: required
     csv_text: exactly one of csv_text / csv_url
     csv_url: exactly one of
 - name: fill_batch
+  description: 'Fill one copy of a PDF form for every row of a spreadsheet. Fill a form for every row
+    of a CSV (csv_text or csv_url, up to 1000 rows). mapping is {column: field_id}; omit it to use the
+    suggested mapping. If mapping is omitted, suggest_mapping runs first and is billed as one context
+    fill. Batches up to 50 rows finish before this returns; larger ones keep running, poll get_batch.
+    Each row is billed as one fill. retention (ephemeral or account_default) is accepted but changes nothing:
+    the form keeps the setting it was created with.'
   category: batch
   scope: forms:write
   billed: one fill per row, plus one context fill if mapping is omitted
-  description: Fill the form once per spreadsheet row, up to 1000 rows.
   arguments:
     form_id: required
     csv_text: exactly one of csv_text / csv_url
     csv_url: exactly one of
     mapping: optional
 - name: get_batch
+  description: Progress of a fill_batch run with a download link per finished row (first 100) and a zip
+    link when done.
   category: batch
   scope: forms:read
   billed: free
-  description: Progress of a fill_batch run.
   arguments:
     batch_id: required
+- name: commit_proposal
+  description: 'Write or confirm the answers, render the form with text that fits, check it, and return
+    the PDF with a report and a receipt, or one submission package. Give the proposal_id from prepare_form;
+    confirm is a list of field ids whose proposed value is accepted as it is (the ids get_proposal lists
+    under confirmations); plus any values the agent decided for fields still open (field_id, value, and
+    an optional note), and a policy (safe or strict) to override the proposal''s own. Set package to true
+    to also receive one submission package: the filled form, the attachments added to this proposal in
+    the order the form asks for them, and the receipt embedded in the file; that is billed as one package.
+    Returns a job_id; poll get_job about every 20 seconds for the download link, report, receipt and,
+    when asked for, package_url. Free within the proposal''s already-billed prepare, up to 10 commits
+    per proposal. Checkboxes take yes or no; yes ticks that box. In a Yes/No pair, say yes to the box
+    you want; two yeses in one pair are refused.'
+  category: proposal
+  scope: forms:write
+  billed: free within the proposal's already-billed prepare (up to 10 commits); one package if package
+    is true
+  arguments:
+    proposal_id: required
+    confirm: optional
+    values: optional
+    policy: optional
+    package: optional, default false
+- name: get_proposal
+  description: 'Prepare a form from documents: a proposal of every answer with its source, what is missing,
+    and where documents disagree, before writing, plus attachments for a package. Read a proposal by its
+    proposal_id: every field''s state, its candidate values with evidence, and the questions still open.
+    No charge to read it.'
+  category: proposal
+  scope: forms:read
+  billed: free
+  arguments:
+    proposal_id: required
+- name: verify_form
+  description: 'Check a filled form: required fields, allowed options, consistent choices, text that fits,
+    empty signature boxes; returns complete, review required or incomplete. Give a form_id and the filled
+    PDF (pdf_url: public https link, or pdf_base64). Billed as one verify; the first 5 each month are
+    free.'
+  category: verification
+  scope: forms:write
+  billed: one verify
+  arguments:
+    form_id: required
+    pdf_url: exactly one of pdf_url / pdf_base64
+    pdf_base64: exactly one of
+- name: read_form
+  description: 'Read the values out of a filled PDF form, labelled by field, with a completeness verdict
+    when the form is known. Give the filled PDF (pdf_url: public https link, or pdf_base64) and, when
+    you know it, form_id. Returns every form box in the file with its value and whether it is filled;
+    when the form is recognised, each value also carries its label and whether it was required, plus a
+    completeness verdict. Nothing is stored: read-back never keeps your file. Billed as one read; the
+    first 5 each month are free.'
+  category: read-back
+  scope: forms:write
+  billed: one read
+  arguments:
+    pdf_url: exactly one of pdf_url / pdf_base64
+    pdf_base64: exactly one of
+    form_id: optional
+- name: add_attachment
+  description: 'Prepare a form from documents: a proposal of every answer with its source, what is missing,
+    and where documents disagree, before writing, plus attachments for a package. Attach one document
+    (file_url: public https link, or file_base64) to a proposal from prepare_form. PDF, PNG and JPEG only,
+    at most 20 per proposal. requirement: the name of an entry in the form''s attachments_required list
+    to satisfy it; uploading a second document for the same requirement replaces the first. Free: attachments
+    are part of the already-billed prepare.'
+  category: proposal
+  scope: forms:write
+  billed: free
+  arguments:
+    proposal_id: required
+    file_url: exactly one of file_url / file_base64
+    file_base64: exactly one of
+    requirement: optional
+- name: send_fax
+  description: 'Send a PDF to a fax number and track delivery, priced per transmitted page. Give a destination
+    in E.164 form (for example +15025551212; US, Canadian and Mexican numbers only) and the PDF: an artifact_id
+    from any earlier result, a job_id from fill_form_from_context or commit_proposal once get_job reports
+    ready, a form_id for the fillable form, or one PDF by pdf_url or pdf_base64, or a sources list of
+    artifact ids (each with an optional pages range such as 1-3,7) faxed together as one packet. Returns
+    a job id at once; poll get_fax for delivery. Billed per page at delivery; a failed fax is not charged.
+    Needs a payment method on the account; get_usage reports fax_ready.'
+  category: fax
+  scope: forms:write
+  billed: per transmitted page, at delivery; a failed fax is not charged
+  arguments:
+    to: required
+    artifact_id: exactly one of artifact_id / sources / job_id / form_id / pdf_url / pdf_base64
+  dedupe: A repeated fax of the same artifact to the same destination within ten minutes returns the same
+    job with deduplicated true.
+- name: get_fax
+  description: Delivery status and receipt of a send_fax job. status is queued, working, delivered, failed
+    or expired; keep checking about every 20 seconds until it is delivered, failed or expired. A busy,
+    unanswered or dropped call is retried automatically up to three more times over about 17 minutes while
+    the status stays working; attempts, max_attempts and next_attempt_at say where it is. A failed or
+    expired fax carries failure_category, failure_reason, retryable, refund and a plain failure_message
+    saying what happened.
+  category: fax
+  scope: forms:read
+  billed: free
+  arguments:
+    job_id: required
+- name: compose_pdf
+  description: 'Free. Build one PDF from pages of several artifacts, in the order and rotation you name.
+    Build one PDF from several artifacts: sources is a list of {artifact_id, pages, rotate}; pages is
+    a selection like 1-3,7 (omit for every page), rotate is 90, 180 or 270. Returns the new artifact_id
+    and a download_url (a link that works for about an hour). Page selections: https://getemboss.ai/docs/artifacts.'
+- name: merge_pdf
+  description: 'Free. Join whole PDFs into one file in the order given. Join whole PDFs in order: sources
+    is a list of {artifact_id}. Returns the new artifact_id and a download_url (a link that works for
+    about an hour). For page selections use compose_pdf.'
+- name: extract_pages
+  description: Free. Keep only the pages you name from a PDF, in the order you name them. Keep only the
+    pages named in pages (1-based, like 2,5-9, repeats and any order allowed) from artifact_id. Returns
+    the new artifact_id and a download_url (a link that works for about an hour).
+- name: delete_pages
+  description: Free. Remove the pages you name from a PDF and keep the rest in order. Remove the pages
+    named in pages (1-based, like 1-2,17) from artifact_id; every other page stays in order. Returns the
+    new artifact_id and a download_url (a link that works for about an hour).
+- name: reorder_pages
+  description: 'Free. Put a PDF''s pages in a new order you give, every page exactly once. Reorder artifact_id''s
+    pages: order lists every page number exactly once, in the new order. Returns the new artifact_id and
+    a download_url (a link that works for about an hour).'
+- name: rotate_pages
+  description: 'Free. Rotate the pages you name by 90, 180 or 270 degrees. Rotate pages of artifact_id:
+    rotations is a list of {pages, degrees} with degrees 90, 180 or 270, added clockwise to each page''s
+    current rotation. Returns the new artifact_id and a download_url (a link that works for about an hour).'
+- name: inspect_pdf
+  description: 'Free. Report a PDF''s structure: page count, page sizes and rotations, encryption, form
+    fields, annotations. Structural facts about artifact_id: page count, page sizes and rotations, whether
+    it is encrypted, has form fields, annotations, outlines, embedded files or JavaScript. No text, no
+    field values.'
+- name: flatten_pdf
+  description: 'Free. Lock a filled form: draw every field''s value and every comment into the page so
+    nothing can be edited. Lock artifact_id, usually the filled PDF from fill_form: every field''s value,
+    checkbox and comment becomes part of the page, no fields stay editable, links keep working, and the
+    original stays as it is. Returns the new artifact_id, a download_url (a link that works for about
+    an hour) and a report: fields_locked, annotations_locked, pages, and calculated_left_blank (the labels
+    of boxes the form totals itself that were empty). A locked form can''t be read back or checked, so
+    run read_form or verify_form first. Refuses a digitally signed PDF (pdf_signed) and a dynamic XFA
+    form (xfa_dynamic).'
 notes:
 - 'The MCP tool set (20) and the A2A skill set (23) differ: A2A additionally exposes quote_job, execute_quote
   and the seven free PDF utilities (compose_pdf, merge_pdf, extract_pages, delete_pages, reorder_pages,
@@ -316,3 +435,4 @@ tool_quality:
   scored: false
   note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
     from Glimind's agent-readiness audit.
+tools_count: 28
