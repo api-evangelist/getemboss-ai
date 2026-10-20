@@ -1,0 +1,2129 @@
+{
+  "endpoint": "https://api.getemboss.ai/mcp",
+  "captured": "2026-10-20",
+  "method": "initialize + tools/list (anonymous, no tool called; roadmap#992)",
+  "protocol_version": "2025-06-18",
+  "server_info": {
+    "icons": [
+      {
+        "mimeType": "image/png",
+        "sizes": [
+          "512x512"
+        ],
+        "src": "https://getemboss.ai/emboss-logo-512.png"
+      }
+    ],
+    "name": "Emboss",
+    "title": "Emboss",
+    "version": "1.8.1",
+    "websiteUrl": "https://getemboss.ai"
+  },
+  "result": {
+    "tools": [
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "List your forms"
+        },
+        "description": "Forms in the user's Emboss library. state: ready (default), processing, failed, or all. Paginate with cursor.",
+        "inputSchema": {
+          "properties": {
+            "state": {
+              "default": "ready",
+              "title": "State",
+              "type": "string"
+            },
+            "limit": {
+              "default": 20,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "cursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Cursor"
+            }
+          },
+          "type": "object",
+          "title": "list_formsArguments",
+          "examples": [
+            {
+              "limit": 20,
+              "state": "ready"
+            }
+          ]
+        },
+        "name": "list_forms",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "list_formsDictOutput"
+        },
+        "title": "List your forms"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Get a form and its fields"
+        },
+        "description": "Status of one form. When ready, returns every field (id, label, kind, options, required) and a download link for the fillable PDF.",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "title": "Form Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "form_id"
+          ],
+          "type": "object",
+          "title": "get_formArguments",
+          "examples": [
+            {
+              "form_id": "11111111-2222-3333-4444-555555555555"
+            }
+          ]
+        },
+        "name": "get_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "get_formDictOutput"
+        },
+        "title": "Get a form and its fields"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Find a blank government form"
+        },
+        "description": "Find a blank government form in the Emboss library by name or number, ready to fill. Search the library of blank US federal forms by name, number or alias (w9, W-9, form w 9 and taxpayer identification all find the same form). Returns each match's slug, title, agency, revision and page count. Send the whole query once, and do not search as the user types: each search spends one of the account's rate-limit slots. Pass a slug as create_form's library argument to start from that form. Free.",
+        "inputSchema": {
+          "properties": {
+            "query": {
+              "title": "Query",
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "type": "object",
+          "title": "find_formArguments",
+          "examples": [
+            {
+              "query": "IRS Form W-9 request for taxpayer identification number"
+            }
+          ]
+        },
+        "name": "find_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "find_formDictOutput"
+        },
+        "title": "Find a blank government form"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Check free tier and usage"
+        },
+        "description": "This month's usage and how many free operations remain, plus the billing page link. It also says whether a payment method is on file (payment_method_on_file) and whether the account can send a fax today (fax_ready). Faxes need a payment method: check fax_ready before send_fax.",
+        "inputSchema": {
+          "properties": {},
+          "type": "object",
+          "title": "get_usageArguments",
+          "examples": [
+            {}
+          ]
+        },
+        "name": "get_usage",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "get_usageDictOutput"
+        },
+        "title": "Check free tier and usage"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "create"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Create a fillable form from a PDF"
+        },
+        "description": "Turn a flat or scanned PDF form into a fillable PDF with detected fields. Upload a PDF (pdf_url: public https link, or pdf_base64) and detect its fields. Returns when detection finishes (usually under two minutes). Give library=<slug> from find_form to start from a form Emboss already keeps. Billed as one form creation; the first 5 each month are free. Optional retention: ephemeral or account_default (default: the account's own setting). Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.",
+        "inputSchema": {
+          "properties": {
+            "pdf_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Url"
+            },
+            "pdf_base64": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Base64"
+            },
+            "library": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Library"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Title"
+            },
+            "retention": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Retention"
+            }
+          },
+          "type": "object",
+          "title": "create_formArguments",
+          "examples": [
+            {
+              "pdf_url": "https://example.com/forms/building-permit.pdf",
+              "retention": "ephemeral"
+            }
+          ]
+        },
+        "name": "create_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "create_formDictOutput"
+        },
+        "title": "Create a fillable form from a PDF"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "escalation": {
+              "human-in-the-loop": "required"
+            },
+            "x-curation-reason": "Permanently removes the form and its files from the account; it cannot be undone.",
+            "audit": "required"
+          }
+        },
+        "annotations": {
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Delete a form"
+        },
+        "description": "Permanently removes a form and its PDFs from the user's library.",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "title": "Form Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "form_id"
+          ],
+          "type": "object",
+          "title": "delete_formArguments",
+          "examples": [
+            {
+              "form_id": "11111111-2222-3333-4444-555555555555"
+            }
+          ]
+        },
+        "name": "delete_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "delete_formDictOutput"
+        },
+        "title": "Delete a form"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "standard_fill"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Fill a form from values"
+        },
+        "description": "Fill a PDF form from structured data such as JSON or key-value answers. Fill a ready form with values keyed by field id or field label. Checkboxes take yes or no; choice fields need one of their options. To lock the filled PDF, call flatten_pdf with its artifact_id; fill_form itself never flattens. Returns a download link plus any labels that did not match (ask the user about those). Billed as one fill; the first 5 each month are free. retention (ephemeral or account_default) is accepted but changes nothing: the form keeps the setting it was created with.",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "title": "Form Id",
+              "type": "string"
+            },
+            "values": {
+              "additionalProperties": true,
+              "title": "Values",
+              "type": "object"
+            },
+            "flatten": {
+              "default": false,
+              "title": "Flatten",
+              "type": "boolean"
+            },
+            "retention": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Retention"
+            }
+          },
+          "required": [
+            "form_id",
+            "values"
+          ],
+          "type": "object",
+          "title": "fill_formArguments",
+          "examples": [
+            {
+              "form_id": "11111111-2222-3333-4444-555555555555",
+              "values": {
+                "Email": "grace@example.com",
+                "Full Name": "Grace Hopper"
+              }
+            }
+          ]
+        },
+        "name": "fill_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "fill_formDictOutput"
+        },
+        "title": "Fill a form from values"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "with_context",
+              "create"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Fill a form from documents or notes"
+        },
+        "description": "Fill a PDF form using facts found in supporting documents. Emboss reads the answers out of context_text and/or context_urls (public https links to PDFs, Word, spreadsheets, images, or text) and fills the form. Give form_id for a form already in the library, or pdf_url/pdf_base64 for a new one. Give library=<slug> from find_form to start from a form Emboss already keeps. policy is safe (write high and medium confidence) or strict (high only). Returns a job_id; poll get_job about every 20 seconds. Billed as one context fill; the first 5 each month are free. Optional retention: ephemeral or account_default (default: the account's own setting); it applies only when this call creates the form (pdf_url, pdf_base64 or library), since an existing form keeps the setting it was created with. Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Form Id"
+            },
+            "pdf_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Url"
+            },
+            "pdf_base64": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Base64"
+            },
+            "library": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Library"
+            },
+            "context_text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Text"
+            },
+            "context_urls": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Urls"
+            },
+            "policy": {
+              "default": "safe",
+              "title": "Policy",
+              "type": "string"
+            },
+            "retention": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Retention"
+            }
+          },
+          "type": "object",
+          "title": "fill_form_from_contextArguments",
+          "examples": [
+            {
+              "context_text": "Grace Hopper, born 9 December 1906, 1 Navy Way, Arlington, VA 22202.",
+              "form_id": "11111111-2222-3333-4444-555555555555",
+              "policy": "safe"
+            }
+          ]
+        },
+        "name": "fill_form_from_context",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "fill_form_from_contextDictOutput"
+        },
+        "title": "Fill a form from documents or notes"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "with_context",
+              "create"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Prepare a form from documents"
+        },
+        "description": "Prepare a form from documents: a proposal of every answer with its source, what is missing, and where documents disagree, before writing, plus attachments for a package. Same inputs as fill_form_from_context (form_id for a form already in the library, or pdf_url/pdf_base64 for a new one, plus context_text and/or context_urls), but nothing is written into the PDF: read the proposal, answer what is missing, then commit. policy is safe (write high and medium confidence) or strict (high only). Returns a job_id and a proposal_id; poll get_job about every 20 seconds. Billed as one context fill; the first 5 each month are free. Optional retention: ephemeral or account_default (default: the account's own setting); it applies only when this call creates the form (pdf_url, pdf_base64 or library), since an existing form keeps the setting it was created with. Ephemeral processing: source and output documents are deleted 60 to 70 minutes after the last activity on a form.",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Form Id"
+            },
+            "pdf_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Url"
+            },
+            "pdf_base64": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Base64"
+            },
+            "library": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Library"
+            },
+            "context_text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Text"
+            },
+            "context_urls": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Context Urls"
+            },
+            "policy": {
+              "default": "safe",
+              "title": "Policy",
+              "type": "string"
+            },
+            "retention": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Retention"
+            }
+          },
+          "type": "object",
+          "title": "prepare_formArguments",
+          "examples": [
+            {
+              "context_text": "Hopper Analytical LLC, EIN 12-3456789, 1 Navy Way, Arlington, VA 22202.",
+              "library": "irs-w-9",
+              "policy": "safe"
+            }
+          ]
+        },
+        "name": "prepare_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "prepare_formDictOutput"
+        },
+        "title": "Prepare a form from documents"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Check a context fill job"
+        },
+        "description": "Status of a fill_form_from_context, prepare_form, or commit_proposal job. When ready, returns the download link, how many fields were filled, and for a commit, the result, receipt_url and, when one was asked for, package_url.",
+        "inputSchema": {
+          "properties": {
+            "job_id": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "job_id"
+          ],
+          "type": "object",
+          "title": "get_jobArguments",
+          "examples": [
+            {
+              "job_id": "77777777-8888-9999-aaaa-bbbbbbbbbbbb"
+            }
+          ]
+        },
+        "name": "get_job",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "get_jobDictOutput"
+        },
+        "title": "Check a context fill job"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "with_context"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Map spreadsheet columns to form fields"
+        },
+        "description": "Propose which spreadsheet columns fill which PDF form fields. Given a CSV (csv_text or csv_url), proposes which column fills which field. Only the header row matters. Billed as one context fill (5 free each month).",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "title": "Form Id",
+              "type": "string"
+            },
+            "csv_text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Csv Text"
+            },
+            "csv_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Csv Url"
+            }
+          },
+          "required": [
+            "form_id"
+          ],
+          "type": "object",
+          "title": "suggest_mappingArguments",
+          "examples": [
+            {
+              "csv_text": "Full Name,Email\nGrace Hopper,grace@example.com\n",
+              "form_id": "11111111-2222-3333-4444-555555555555"
+            }
+          ]
+        },
+        "name": "suggest_mapping",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "suggest_mappingDictOutput"
+        },
+        "title": "Map spreadsheet columns to form fields"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "standard_fill",
+              "with_context"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Fill the form once per spreadsheet row"
+        },
+        "description": "Fill one copy of a PDF form for every row of a spreadsheet. Fill a form for every row of a CSV (csv_text or csv_url, up to 1000 rows). mapping is {column: field_id}; omit it to use the suggested mapping. If mapping is omitted, suggest_mapping runs first and is billed as one context fill. Batches up to 50 rows finish before this returns; larger ones keep running, poll get_batch. Each row is billed as one fill. retention (ephemeral or account_default) is accepted but changes nothing: the form keeps the setting it was created with.",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "title": "Form Id",
+              "type": "string"
+            },
+            "csv_text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Csv Text"
+            },
+            "csv_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Csv Url"
+            },
+            "mapping": {
+              "anyOf": [
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Mapping"
+            },
+            "retention": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Retention"
+            }
+          },
+          "required": [
+            "form_id"
+          ],
+          "type": "object",
+          "title": "fill_batchArguments",
+          "examples": [
+            {
+              "csv_text": "Full Name,Email\nGrace Hopper,grace@example.com\nAda Lovelace,ada@example.com\n",
+              "form_id": "11111111-2222-3333-4444-555555555555",
+              "mapping": {
+                "Email": 2,
+                "Full Name": 1
+              }
+            }
+          ]
+        },
+        "name": "fill_batch",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "fill_batchDictOutput"
+        },
+        "title": "Fill the form once per spreadsheet row"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Check a batch fill"
+        },
+        "description": "Progress of a fill_batch run with a download link per finished row (first 100) and a zip link when done.",
+        "inputSchema": {
+          "properties": {
+            "batch_id": {
+              "title": "Batch Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "batch_id"
+          ],
+          "type": "object",
+          "title": "get_batchArguments",
+          "examples": [
+            {
+              "batch_id": "44444444-5555-6666-7777-888888888888"
+            }
+          ]
+        },
+        "name": "get_batch",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "get_batchDictOutput"
+        },
+        "title": "Check a batch fill"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "package"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Commit a proposal and produce the PDF"
+        },
+        "description": "Write or confirm the answers, render the form with text that fits, check it, and return the PDF with a report and a receipt, or one submission package. Give the proposal_id from prepare_form; confirm is a list of field ids whose proposed value is accepted as it is (the ids get_proposal lists under confirmations); plus any values the agent decided for fields still open (field_id, value, and an optional note), and a policy (safe or strict) to override the proposal's own. Set package to true to also receive one submission package: the filled form, the attachments added to this proposal in the order the form asks for them, and the receipt embedded in the file; that is billed as one package. Returns a job_id; poll get_job about every 20 seconds for the download link, report, receipt and, when asked for, package_url. Free within the proposal's already-billed prepare, up to 10 commits per proposal. Checkboxes take yes or no; yes ticks that box. In a Yes/No pair, say yes to the box you want; two yeses in one pair are refused.",
+        "inputSchema": {
+          "properties": {
+            "proposal_id": {
+              "title": "Proposal Id",
+              "type": "string"
+            },
+            "values": {
+              "anyOf": [
+                {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Values"
+            },
+            "confirm": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Confirm"
+            },
+            "policy": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Policy"
+            },
+            "package": {
+              "default": false,
+              "title": "Package",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "proposal_id"
+          ],
+          "type": "object",
+          "title": "commit_proposalArguments",
+          "examples": [
+            {
+              "confirm": [
+                3
+              ],
+              "package": false,
+              "proposal_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+              "values": [
+                {
+                  "field_id": 5,
+                  "value": "Grace Hopper"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "commit_proposal",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "commit_proposalDictOutput"
+        },
+        "title": "Commit a proposal and produce the PDF"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Read a proposal"
+        },
+        "description": "Prepare a form from documents: a proposal of every answer with its source, what is missing, and where documents disagree, before writing, plus attachments for a package. Read a proposal by its proposal_id: every field's state, its candidate values with evidence, and the questions still open. No charge to read it.",
+        "inputSchema": {
+          "properties": {
+            "proposal_id": {
+              "title": "Proposal Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "proposal_id"
+          ],
+          "type": "object",
+          "title": "get_proposalArguments",
+          "examples": [
+            {
+              "proposal_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+            }
+          ]
+        },
+        "name": "get_proposal",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "get_proposalDictOutput"
+        },
+        "title": "Read a proposal"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "verify"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Check a filled form"
+        },
+        "description": "Check a filled form: required fields, allowed options, consistent choices, text that fits, empty signature boxes; returns complete, review required or incomplete. Give a form_id and the filled PDF (pdf_url: public https link, or pdf_base64). Billed as one verify; the first 5 each month are free.",
+        "inputSchema": {
+          "properties": {
+            "form_id": {
+              "title": "Form Id",
+              "type": "string"
+            },
+            "pdf_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Url"
+            },
+            "pdf_base64": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Base64"
+            }
+          },
+          "required": [
+            "form_id"
+          ],
+          "type": "object",
+          "title": "verify_formArguments",
+          "examples": [
+            {
+              "form_id": "11111111-2222-3333-4444-555555555555",
+              "pdf_url": "https://example.com/filled/building-permit.pdf"
+            }
+          ]
+        },
+        "name": "verify_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "verify_formDictOutput"
+        },
+        "title": "Check a filled form"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required",
+            "x-billed": [
+              "read"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Read a filled form back"
+        },
+        "description": "Read the values out of a filled PDF form, labelled by field, with a completeness verdict when the form is known. Give the filled PDF (pdf_url: public https link, or pdf_base64) and, when you know it, form_id. Returns every form box in the file with its value and whether it is filled; when the form is recognised, each value also carries its label and whether it was required, plus a completeness verdict. Nothing is stored: read-back never keeps your file. Billed as one read; the first 5 each month are free.",
+        "inputSchema": {
+          "properties": {
+            "pdf_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Url"
+            },
+            "pdf_base64": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Base64"
+            },
+            "form_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Form Id"
+            }
+          },
+          "type": "object",
+          "title": "read_formArguments",
+          "examples": [
+            {
+              "form_id": "11111111-2222-3333-4444-555555555555",
+              "pdf_url": "https://example.com/filled/building-permit.pdf"
+            }
+          ]
+        },
+        "name": "read_form",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "read_formDictOutput"
+        },
+        "title": "Read a filled form back"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "required"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Attach a document to a proposal"
+        },
+        "description": "Prepare a form from documents: a proposal of every answer with its source, what is missing, and where documents disagree, before writing, plus attachments for a package. Attach one document (file_url: public https link, or file_base64) to a proposal from prepare_form. PDF, PNG and JPEG only, at most 20 per proposal. requirement: the name of an entry in the form's attachments_required list to satisfy it; uploading a second document for the same requirement replaces the first. Free: attachments are part of the already-billed prepare.",
+        "inputSchema": {
+          "properties": {
+            "proposal_id": {
+              "title": "Proposal Id",
+              "type": "string"
+            },
+            "file_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "File Url"
+            },
+            "file_base64": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "File Base64"
+            },
+            "requirement": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Requirement"
+            }
+          },
+          "required": [
+            "proposal_id"
+          ],
+          "type": "object",
+          "title": "add_attachmentArguments",
+          "examples": [
+            {
+              "file_url": "https://example.com/docs/proof-of-insurance.pdf",
+              "proposal_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+              "requirement": "Proof of insurance"
+            }
+          ]
+        },
+        "name": "add_attachment",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "add_attachmentDictOutput"
+        },
+        "title": "Attach a document to a proposal"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "escalation": {
+              "human-in-the-loop": "conditional",
+              "triggers": [
+                "abnormal"
+              ]
+            },
+            "x-abnormal": "more than 10 faxes from one account within an hour",
+            "x-curation-reason": "Sends the document to someone else's fax machine. A new fax number alone needs no approval; a burst does.",
+            "audit": "required",
+            "x-billed": [
+              "send_fax"
+            ]
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": true,
+          "readOnlyHint": false,
+          "title": "Send a PDF by fax"
+        },
+        "description": "Send a PDF to a fax number and track delivery, priced per transmitted page. Give a destination in E.164 form (for example +15025551212; US, Canadian and Mexican numbers only) and the PDF: an artifact_id from any earlier result, a job_id from fill_form_from_context or commit_proposal once get_job reports ready, a form_id for the fillable form, or one PDF by pdf_url or pdf_base64, or a sources list of artifact ids (each with an optional pages range such as 1-3,7) faxed together as one packet. Returns a job id at once; poll get_fax for delivery. Billed per page at delivery; a failed fax is not charged. Needs a payment method on the account; get_usage reports fax_ready.",
+        "inputSchema": {
+          "properties": {
+            "to": {
+              "title": "To",
+              "type": "string"
+            },
+            "pdf_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Url"
+            },
+            "pdf_base64": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Pdf Base64"
+            },
+            "job_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Job Id"
+            },
+            "form_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Form Id"
+            },
+            "artifact_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Artifact Id"
+            },
+            "sources": {
+              "anyOf": [
+                {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Sources"
+            }
+          },
+          "required": [
+            "to"
+          ],
+          "type": "object",
+          "title": "send_faxArguments",
+          "examples": [
+            {
+              "job_id": "77777777-8888-9999-aaaa-bbbbbbbbbbbb",
+              "to": "+15025550123"
+            }
+          ]
+        },
+        "name": "send_fax",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "send_faxDictOutput"
+        },
+        "title": "Send a PDF by fax"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "scope": [
+              "forms:read"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            },
+            "audit": "none"
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Check a fax"
+        },
+        "description": "Delivery status and receipt of a send_fax job. status is queued, working, delivered, failed or expired; keep checking about every 20 seconds until it is delivered, failed or expired. A busy, unanswered or dropped call is retried automatically up to three more times over about 17 minutes while the status stays working; attempts, max_attempts and next_attempt_at say where it is. A failed or expired fax carries failure_category, failure_reason, retryable, refund and a plain failure_message saying what happened.",
+        "inputSchema": {
+          "properties": {
+            "job_id": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "job_id"
+          ],
+          "type": "object",
+          "title": "get_faxArguments",
+          "examples": [
+            {
+              "job_id": "cccccccc-dddd-eeee-ffff-000000000000"
+            }
+          ]
+        },
+        "name": "get_fax",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "get_faxDictOutput"
+        },
+        "title": "Check a fax"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "required",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Compose a PDF from artifacts"
+        },
+        "description": "Free. Build one PDF from pages of several artifacts, in the order and rotation you name. Build one PDF from several artifacts: sources is a list of {artifact_id, pages, rotate}; pages is a selection like 1-3,7 (omit for every page), rotate is 90, 180 or 270. Returns the new artifact_id and a download_url (a link that works for about an hour). Page selections: https://getemboss.ai/docs/artifacts.",
+        "inputSchema": {
+          "properties": {
+            "sources": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Sources",
+              "type": "array"
+            }
+          },
+          "required": [
+            "sources"
+          ],
+          "type": "object",
+          "title": "compose_pdfArguments",
+          "examples": [
+            {
+              "sources": [
+                {
+                  "artifact_id": "22222222-3333-4444-5555-666666666666",
+                  "pages": "1-2"
+                },
+                {
+                  "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "compose_pdf",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "compose_pdfDictOutput"
+        },
+        "title": "Compose a PDF from artifacts"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "required",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Merge PDFs"
+        },
+        "description": "Free. Join whole PDFs into one file in the order given. Join whole PDFs in order: sources is a list of {artifact_id}. Returns the new artifact_id and a download_url (a link that works for about an hour). For page selections use compose_pdf.",
+        "inputSchema": {
+          "properties": {
+            "sources": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Sources",
+              "type": "array"
+            }
+          },
+          "required": [
+            "sources"
+          ],
+          "type": "object",
+          "title": "merge_pdfArguments",
+          "examples": [
+            {
+              "sources": [
+                {
+                  "artifact_id": "22222222-3333-4444-5555-666666666666"
+                },
+                {
+                  "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "merge_pdf",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "merge_pdfDictOutput"
+        },
+        "title": "Merge PDFs"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "required",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Extract pages"
+        },
+        "description": "Free. Keep only the pages you name from a PDF, in the order you name them. Keep only the pages named in pages (1-based, like 2,5-9, repeats and any order allowed) from artifact_id. Returns the new artifact_id and a download_url (a link that works for about an hour).",
+        "inputSchema": {
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "pages": {
+              "title": "Pages",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "pages"
+          ],
+          "type": "object",
+          "title": "extract_pagesArguments",
+          "examples": [
+            {
+              "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd",
+              "pages": "1-3"
+            }
+          ]
+        },
+        "name": "extract_pages",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "extract_pagesDictOutput"
+        },
+        "title": "Extract pages"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "required",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Delete pages"
+        },
+        "description": "Free. Remove the pages you name from a PDF and keep the rest in order. Remove the pages named in pages (1-based, like 1-2,17) from artifact_id; every other page stays in order. Returns the new artifact_id and a download_url (a link that works for about an hour).",
+        "inputSchema": {
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "pages": {
+              "title": "Pages",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "pages"
+          ],
+          "type": "object",
+          "title": "delete_pagesArguments",
+          "examples": [
+            {
+              "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd",
+              "pages": "2"
+            }
+          ]
+        },
+        "name": "delete_pages",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "delete_pagesDictOutput"
+        },
+        "title": "Delete pages"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "required",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Reorder pages"
+        },
+        "description": "Free. Put a PDF's pages in a new order you give, every page exactly once. Reorder artifact_id's pages: order lists every page number exactly once, in the new order. Returns the new artifact_id and a download_url (a link that works for about an hour).",
+        "inputSchema": {
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "order": {
+              "items": {
+                "type": "integer"
+              },
+              "title": "Order",
+              "type": "array"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "order"
+          ],
+          "type": "object",
+          "title": "reorder_pagesArguments",
+          "examples": [
+            {
+              "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd",
+              "order": [
+                2,
+                1,
+                3
+              ]
+            }
+          ]
+        },
+        "name": "reorder_pages",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "reorder_pagesDictOutput"
+        },
+        "title": "Reorder pages"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "required",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Rotate pages"
+        },
+        "description": "Free. Rotate the pages you name by 90, 180 or 270 degrees. Rotate pages of artifact_id: rotations is a list of {pages, degrees} with degrees 90, 180 or 270, added clockwise to each page's current rotation. Returns the new artifact_id and a download_url (a link that works for about an hour).",
+        "inputSchema": {
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "rotations": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "title": "Rotations",
+              "type": "array"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "rotations"
+          ],
+          "type": "object",
+          "title": "rotate_pagesArguments",
+          "examples": [
+            {
+              "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd",
+              "rotations": [
+                {
+                  "degrees": 90,
+                  "pages": "1"
+                }
+              ]
+            }
+          ]
+        },
+        "name": "rotate_pages",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "rotate_pagesDictOutput"
+        },
+        "title": "Rotate pages"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "connected",
+            "consequence": "read",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "none",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false,
+          "readOnlyHint": true,
+          "title": "Inspect a PDF"
+        },
+        "description": "Free. Report a PDF's structure: page count, page sizes and rotations, encryption, form fields, annotations. Structural facts about artifact_id: page count, page sizes and rotations, whether it is encrypted, has form fields, annotations, outlines, embedded files or JavaScript. No text, no field values.",
+        "inputSchema": {
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id"
+          ],
+          "type": "object",
+          "title": "inspect_pdfArguments",
+          "examples": [
+            {
+              "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd"
+            }
+          ]
+        },
+        "name": "inspect_pdf",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "inspect_pdfDictOutput"
+        },
+        "title": "Inspect a PDF"
+      },
+      {
+        "_meta": {
+          "ai.getemboss/agentic-access": {
+            "action-class": "acting",
+            "consequence": "write",
+            "subject": "required",
+            "audience": "https://api.getemboss.ai",
+            "audit": "required",
+            "scope": [
+              "forms:write"
+            ],
+            "token": {
+              "max-ttl": 3600,
+              "x-api-key-lifetime": "until-revoked"
+            }
+          }
+        },
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false,
+          "readOnlyHint": false,
+          "title": "Lock a filled form"
+        },
+        "description": "Free. Lock a filled form: draw every field's value and every comment into the page so nothing can be edited. Lock artifact_id, usually the filled PDF from fill_form: every field's value, checkbox and comment becomes part of the page, no fields stay editable, links keep working, and the original stays as it is. Returns the new artifact_id, a download_url (a link that works for about an hour) and a report: fields_locked, annotations_locked, pages, and calculated_left_blank (the labels of boxes the form totals itself that were empty). A locked form can't be read back or checked, so run read_form or verify_form first. Refuses a digitally signed PDF (pdf_signed) and a dynamic XFA form (xfa_dynamic).",
+        "inputSchema": {
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id"
+          ],
+          "type": "object",
+          "title": "flatten_pdfArguments",
+          "examples": [
+            {
+              "artifact_id": "99999999-aaaa-bbbb-cccc-dddddddddddd"
+            }
+          ]
+        },
+        "name": "flatten_pdf",
+        "outputSchema": {
+          "type": "object",
+          "additionalProperties": true,
+          "title": "flatten_pdfDictOutput"
+        },
+        "title": "Lock a filled form"
+      }
+    ]
+  }
+}
