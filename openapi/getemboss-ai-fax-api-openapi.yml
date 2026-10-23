@@ -360,3 +360,9 @@ components:
           scopes:
             forms:read: Read your forms
             forms:write: Create and fill forms
+x-provenance:
+  method: harvested
+  publisher: Emboss
+  source: https://api.getemboss.ai/internal/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
