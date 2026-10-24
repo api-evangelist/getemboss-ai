@@ -9,12 +9,18 @@ artifacts:
   a2a/getemboss-ai-agent-card.json:
     method: unknown
     evidence: no authorship recorded
+  agentic-access/getemboss-ai-agentic-access.yml:
+    method: unknown
+    evidence: no authorship recorded
   asyncapi/getemboss-ai-callbacks.yml:
     method: searched
     evidence: declared in the artifact
   authentication/getemboss-ai-authentication.yml:
     method: searched
     evidence: declared in the artifact
+  capabilities/getemboss-ai-capability-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
   changelog/getemboss-ai-changelog.yml:
     method: searched
     evidence: declared in the artifact
@@ -33,7 +39,13 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/getemboss-ai-integration-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-19T193153.yml:
@@ -66,6 +78,21 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/getemboss-ai-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
@@ -78,30 +105,113 @@ artifacts:
   llms/getemboss-ai-pay-llms.txt:
     method: searched
     evidence: 'derive-llms-provenance.py: harvested'
+  mcp/getemboss-ai-mcp-tools.json:
+    method: unknown
+    evidence: no authorship recorded
   mcp/getemboss-ai-mcp.yml:
     method: unknown
     evidence: no authorship recorded
   mcp/getemboss-ai-tool-crosswalk.yml:
     method: derived
     evidence: declared in the artifact
-  openapi/_original/getemboss-ai-account-openapi.json:
+  openapi/_original/getemboss-ai-openapi.json:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/_original/getemboss-ai-pay-per-call-openapi.json:
-    method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/getemboss-ai-account-openapi.yml:
+    evidence: byte-identical to https://api.getemboss.ai/internal/openapi.json (sha256 aff449887076, fetched
+      2026-10-19)
+  openapi/getemboss-ai-account-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/getemboss-ai-pay-per-call-openapi.yml:
+  openapi/getemboss-ai-administration-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/getemboss-ai-artifacts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/getemboss-ai-discovery-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/getemboss-ai-fax-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/getemboss-ai-filling-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/getemboss-ai-forms-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/getemboss-ai-pay-per-call-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/getemboss-ai-utilities-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   overlays/getemboss-ai-account-overlay.yaml:
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/getemboss-ai-admin-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-app-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-artifacts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-d-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-fax-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-forms-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-health-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-keys-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-library-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-oauth-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-openapi-json-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-pay-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/getemboss-ai-pay-per-call-overlay.yaml:
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/getemboss-ai-pricing-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-proposals-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-sessions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-stripe-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-usage-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-users-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-utilities-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-webhooks-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/getemboss-ai-well-known-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   packages/getemboss-ai-packages.yml:
@@ -129,7 +239,7 @@ artifacts:
     method: searched
     evidence: declared in the artifact
   skills/_index.yml:
-    method: generated
+    method: searched
     evidence: declared in the artifact
   skills/getemboss-ai-GEMINI.md:
     method: unknown
@@ -158,13 +268,28 @@ artifacts:
   well-known/getemboss-ai-a2a-jwks.json:
     method: unknown
     evidence: no authorship recorded
+  well-known/getemboss-ai-agent-card.json:
+    method: unknown
+    evidence: no authorship recorded
   well-known/getemboss-ai-ai-catalog.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/getemboss-ai-api-catalog.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/getemboss-ai-api-llms.txt:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/getemboss-ai-api-robots.txt:
     method: unknown
     evidence: no authorship recorded
   well-known/getemboss-ai-ard.json:
     method: unknown
     evidence: no authorship recorded
   well-known/getemboss-ai-did.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/getemboss-ai-llms.txt:
     method: unknown
     evidence: no authorship recorded
   well-known/getemboss-ai-mcp.json:
@@ -176,7 +301,13 @@ artifacts:
   well-known/getemboss-ai-oauth-protected-resource-mcp.json:
     method: unknown
     evidence: no authorship recorded
+  well-known/getemboss-ai-robots.txt:
+    method: unknown
+    evidence: no authorship recorded
   well-known/getemboss-ai-security.txt:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/getemboss-ai-ucp.json:
     method: unknown
     evidence: no authorship recorded
   well-known/getemboss-ai-well-known.yml:
