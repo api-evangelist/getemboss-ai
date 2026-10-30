@@ -64,11 +64,182 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Emboss is a PDF form-filling API for developers and agents: it turns a flat or scanned PDF into a fillable form, fills it from data or supporting documents, verifies and reads it back, batch-fills from a spreadsheet, and faxes the result. One engine behind four doors on api.getemboss.ai — a 115-operation REST API (OpenAPI 3.1), a remote OAuth-protected MCP server, a signed A2A 1.0 agent card with 23 skills, and an anonymous x402/MPP pay-per-call door.
+Emboss is a PDF form-filling API for developers and agents. Hand it a flat or scanned PDF and it detects the fields and returns a fillable AcroForm, fills the form from structured values or from supporting documents (proposing every answer with its source, asking about what is missing), verifies the result, reads a filled form back into labelled values, batch-fills one copy per spreadsheet row, packages the filled form with its attachments and a receipt, and faxes the result to any US, Canadian or Mexican fax number. Usage-based pricing in cents with a monthly free allowance and no subscription. The same engine is exposed through four doors on api.getemboss.ai: a 115-operation authenticated REST API (OpenAPI 3.1, Bearer API key or OAuth 2.1 with dynamic client registration), a remote MCP server (20 tools, OAuth-protected, listed in the MCP registry), a signed A2A 1.0 agent card with 23 skills, and an anonymous pay-per-call door priced per job over x402 (USDC on Base) or MPP (Tempo stablecoin or card). Every document is deleted 60-70 minutes after the last activity under ephemeral processing.
 
-- Website: https://getemboss.ai/
-- Docs: https://getemboss.ai/docs
-- OpenAPI: https://api.getemboss.ai/internal/openapi.json (account) and https://api.getemboss.ai/openapi.json (pay-per-call)
-- MCP: https://api.getemboss.ai/mcp
-- A2A agent card: https://api.getemboss.ai/.well-known/agent-card.json
-- Machine index: https://getemboss.ai/llms.txt
+**Areas:** PDF · Forms · Document Processing · Form Filling · Fax · Data Extraction · Agent-Native · MCP · A2A · x402 · pay-per-call · Government Forms
+
+## Emboss on APIs.io
+
+Everything profiled for Emboss is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/getemboss-ai/](https://apis.io/providers/getemboss-ai/)** — or go straight to one of the APIs or properties below.
+
+### APIs (23)
+
+- [Emboss MCP Server](https://apis.io/apis/getemboss-ai/emboss-mcp-server/) — Remote Model Context Protocol server at https://api.getemboss.ai/mcp (Streamable HTTP) exposing twenty form-filling tools under forms:read / forms:write…
+- [Emboss A2A Agent](https://apis.io/apis/getemboss-ai/emboss-a2a-agent/) — Agent2Agent interface at https://api.getemboss.ai/a2a (JSON-RPC, A2A 1.0) discovered through a signed agent card served at /.well-known/agent-card.json on…
+- [Emboss Admin API](https://apis.io/apis/getemboss-ai/getemboss-ai-admin-api/) — The Admin API from Emboss — 40 operation(s) for admin.
+- [Emboss App API](https://apis.io/apis/getemboss-ai/getemboss-ai-app-api/) — The App API from Emboss — 3 operation(s) for app.
+- [Emboss Artifacts API](https://apis.io/apis/getemboss-ai/getemboss-ai-artifacts-api/) — The Artifacts API from Emboss — 2 operation(s) for artifacts.
+- [Emboss D API](https://apis.io/apis/getemboss-ai/getemboss-ai-d-api/) — The D API from Emboss — 1 operation(s) for d.
+- [Emboss Fax API](https://apis.io/apis/getemboss-ai/getemboss-ai-fax-api/) — The Fax API from Emboss — 2 operation(s) for fax.
+- [Emboss Forms API](https://apis.io/apis/getemboss-ai/getemboss-ai-forms-api/) — The Forms API from Emboss — 25 operation(s) for forms.
+- [Emboss Health API](https://apis.io/apis/getemboss-ai/getemboss-ai-health-api/) — The Health API from Emboss — 1 operation(s) for health.
+- [Emboss Keys API](https://apis.io/apis/getemboss-ai/getemboss-ai-keys-api/) — The Keys API from Emboss — 2 operation(s) for keys.
+- [Emboss Library API](https://apis.io/apis/getemboss-ai/getemboss-ai-library-api/) — The Library API from Emboss — 1 operation(s) for library.
+- [Emboss OAuth API](https://apis.io/apis/getemboss-ai/getemboss-ai-oauth-api/) — The Oauth API from Emboss — 5 operation(s) for oauth.
+- [Emboss Openapi.json API](https://apis.io/apis/getemboss-ai/getemboss-ai-openapi-json-api/) — The Openapi.json API from Emboss — 1 operation(s) for openapi.json.
+- [Emboss Pay API](https://apis.io/apis/getemboss-ai/getemboss-ai-pay-api/) — The Pay API from Emboss — 7 operation(s) for pay.
+- [Emboss Pricing API](https://apis.io/apis/getemboss-ai/getemboss-ai-pricing-api/) — The Pricing API from Emboss — 1 operation(s) for pricing.
+- [Emboss Proposals API](https://apis.io/apis/getemboss-ai/getemboss-ai-proposals-api/) — The Proposals API from Emboss — 6 operation(s) for proposals.
+- [Emboss Sessions API](https://apis.io/apis/getemboss-ai/getemboss-ai-sessions-api/) — The Sessions API from Emboss — 5 operation(s) for sessions.
+- [Emboss Stripe API](https://apis.io/apis/getemboss-ai/getemboss-ai-stripe-api/) — The Stripe API from Emboss — 1 operation(s) for stripe.
+- [Emboss Usage API](https://apis.io/apis/getemboss-ai/getemboss-ai-usage-api/) — The Usage API from Emboss — 1 operation(s) for usage.
+- [Emboss Users API](https://apis.io/apis/getemboss-ai/getemboss-ai-users-api/) — The Users API from Emboss — 7 operation(s) for users.
+- [Emboss Utilities API](https://apis.io/apis/getemboss-ai/getemboss-ai-utilities-api/) — The Utilities API from Emboss — 1 operation(s) for utilities.
+- [Emboss Webhooks API](https://apis.io/apis/getemboss-ai/getemboss-ai-webhooks-api/) — The Webhooks API from Emboss — 1 operation(s) for webhooks.
+- [Emboss .well Known API](https://apis.io/apis/getemboss-ai/getemboss-ai-well-known-api/) — The .well Known API from Emboss — 3 operation(s) for .well known.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Getemboss Ai Callbacks](https://apis.io/asyncapis/getemboss-ai/getemboss-ai-callbacks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [emboss](https://apis.io/servers/getemboss-ai/emboss/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Getemboss Ai Agentic Access](https://apis.io/agentic-access/getemboss-ai/getemboss-ai-agentic-access/)
+
+#### Overlays (23)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Getemboss Ai Account Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-account-overlay/)
+- [Getemboss Ai Admin Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-admin-api-phrasing-overlay/)
+- [Getemboss Ai App Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-app-api-phrasing-overlay/)
+- [Getemboss Ai Artifacts Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-artifacts-api-phrasing-overlay/)
+- [Getemboss Ai D Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-d-api-phrasing-overlay/)
+- [Getemboss Ai Fax Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-fax-api-phrasing-overlay/)
+- [Getemboss Ai Forms Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-forms-api-phrasing-overlay/)
+- [Getemboss Ai Health Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-health-api-phrasing-overlay/)
+- [Getemboss Ai Keys Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-keys-api-phrasing-overlay/)
+- [Getemboss Ai Library Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-library-api-phrasing-overlay/)
+- [Getemboss Ai Oauth Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-oauth-api-phrasing-overlay/)
+- [Getemboss Ai Openapi Json Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-openapi-json-api-phrasing-overlay/)
+- [Getemboss Ai Pay Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-pay-api-phrasing-overlay/)
+- [Getemboss Ai Pay Per Call Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-pay-per-call-overlay/)
+- [Getemboss Ai Pricing Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-pricing-api-phrasing-overlay/)
+- [Getemboss Ai Proposals Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-proposals-api-phrasing-overlay/)
+- [Getemboss Ai Sessions Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-sessions-api-phrasing-overlay/)
+- [Getemboss Ai Stripe Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-stripe-api-phrasing-overlay/)
+- [Getemboss Ai Usage Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-usage-api-phrasing-overlay/)
+- [Getemboss Ai Users Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-users-api-phrasing-overlay/)
+- [Getemboss Ai Utilities Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-utilities-api-phrasing-overlay/)
+- [Getemboss Ai Webhooks Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-webhooks-api-phrasing-overlay/)
+- [Getemboss Ai Well Known Api Phrasing Overlay](https://apis.io/overlays/getemboss-ai/getemboss-ai-well-known-api-phrasing-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Getemboss Ai Authentication](https://apis.io/security/getemboss-ai/getemboss-ai-authentication/)
+- [Getemboss Ai Domain Security](https://apis.io/security/getemboss-ai/getemboss-ai-domain-security/)
+- [Getemboss Ai Vulnerability Disclosure](https://apis.io/security/getemboss-ai/getemboss-ai-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Getemboss Ai Scopes](https://apis.io/scopes/getemboss-ai/getemboss-ai-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Getemboss Ai Plans Pricing](https://apis.io/plans/getemboss-ai/getemboss-ai-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Getemboss Ai Rate Limits](https://apis.io/rate-limits/getemboss-ai/getemboss-ai-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://getemboss.ai/)
+- [Documentation](https://getemboss.ai/docs)
+- [Getting started](https://getemboss.ai/docs/quickstart)
+- [API reference](https://getemboss.ai/docs/reference/create-form)
+- [Pricing](https://getemboss.ai/pricing)
+- [Sign up](https://getemboss.ai/signup)
+- [Security](https://getemboss.ai/security)
+- [Terms of service](https://getemboss.ai/terms)
+- [Privacy policy](https://getemboss.ai/privacy)
+- [GitHub](https://github.com/GetEmboss-ai)
+
+## API Evangelist rating
+
+**Kin Score 68.2** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 85.0 |
+| Contract quality | 54.6 |
+| Contract governance | 18.2 |
+| Operational transparency | 60.5 |
+| Developer ergonomics | 64.3 |
+| Access clarity | 76.3 |
+
+**Agent readiness 75.2** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | yes |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | yes |
+| Well Known Catalog | yes |
+| Consent Identity | yes |
+| Agent Card | conformant |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | self |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 52.0** — Government & Public Sector
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/getemboss-ai/](https://apis.io/providers/getemboss-ai/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Emboss: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/getemboss-ai/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
